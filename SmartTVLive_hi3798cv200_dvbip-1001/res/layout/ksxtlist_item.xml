@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="135dip"
+    android:layout_height="55dip"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:gravity="center_vertical|center_horizontal"
+    android:minHeight="55dip" >
+
+    <ImageView
+        android:id="@+id/ItemImage"
+        android:layout_width="30dip"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/ItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip"
+        android:textColor="@color/white"
+        android:textSize="20dip" />
+
+</LinearLayout>

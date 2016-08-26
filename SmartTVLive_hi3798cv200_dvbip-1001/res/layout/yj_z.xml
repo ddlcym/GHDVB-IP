@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </SurfaceView>
+
+    <LinearLayout
+        android:layout_width="1100dip"
+        android:layout_height="650dip"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/epg119"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dip"
+            android:layout_marginTop="50dip"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/yj_z1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginTop="25dip"
+                android:text="@string/yj_title1_z"
+                android:textColor="@color/white"
+                android:textSize="@dimen/FONT_SIZE_BIG" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="1048dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/epgbkgz6" />
+
+        <TextView
+            android:layout_width="1000dip"
+            android:layout_height="42dip"
+            android:layout_marginLeft="100dip"
+            android:layout_marginTop="20dip"
+            android:text="  序号             状态                                 标题                              时间"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+
+        <RelativeLayout
+            android:layout_width="11000dip"
+            android:layout_height="360dip"
+            android:layout_marginLeft="80dip"
+            android:layout_marginTop="5dip" >
+
+         <com.changhong.app.dtv.EpgListview
+                android:id="@+id/yj_conten_z"
+                android:layout_width="900dip"
+                android:layout_height="360dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginTop="5dip"
+                android:divider="#00000000"
+                android:scrollbars="none"
+                android:listSelector="@drawable/selector"
+                android:textSize="@dimen/FONT_SIZE_NORMAL" />
+
+            <Button
+                android:id="@+id/yj_remove_z"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/remove_button"
+                android:gravity="center"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="1048dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/epgbkgz6" />
+
+        <TextView
+            android:id="@+id/yj_prompt_z"
+            android:layout_width="160dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="3dip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_SMALL" />
+    </LinearLayout>
+
+</RelativeLayout>

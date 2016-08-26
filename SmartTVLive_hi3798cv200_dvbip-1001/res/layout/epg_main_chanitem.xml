@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" 
+     android:gravity="center_horizontal"
+       android:layout_gravity="center_horizontal"
+    android:id="@+id/epg_chan_itemlayout"
+    android:descendantFocusability="blocksDescendants">
+    
+    <!-- 设置 background,避免按钮自动填充背景-->
+	<TextView android:id="@+id/epg_chan_Tview_chanindex"
+	    android:layout_width="60dip"
+		android:layout_height="60dip"
+		android:textColor="@color/white"
+		android:textSize="24sp"
+		android:gravity="center"/>
+	
+	<TextView android:id="@+id/epg_chan_Tview_channame"
+	    android:layout_width="100dip"
+		android:layout_height="60dip"
+		android:textColor="@color/white"
+		android:textSize="24sp"
+		android:layout_marginLeft="10dip"
+		android:singleLine="true"
+		android:ellipsize="marquee" 
+		android:marqueeRepeatLimit="marquee_forever" 
+		android:focusable="true" 
+		android:focusableInTouchMode="true" 
+		android:gravity="left|center_vertical"/>
+	
+	<TextView
+	    android:id="@+id/channelId"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
+		
+</LinearLayout>

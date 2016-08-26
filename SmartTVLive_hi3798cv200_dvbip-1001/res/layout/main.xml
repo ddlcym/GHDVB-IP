@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible" >
+    </SurfaceView>
+
+    <FrameLayout
+        android:id="@+id/id_dtv_init_fl"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:id="@+id/id_dtv_init_pic"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/smart_main_full_back" />
+
+        <ProgressBar
+            android:id="@+id/widget196"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="570dip"
+            android:layout_marginTop="245dip" >
+        </ProgressBar>
+
+        <TextView
+            android:id="@+id/id_dtv_init_text"
+            android:layout_width="300dip"
+            android:layout_height="50dip"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="980dip"
+            android:layout_marginTop="650dip"
+            android:textSize="30sp" >
+        </TextView>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/id_dtv_switchfailed"
+        android:layout_width="300dip"
+        android:layout_height="200dip"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="490dip"
+        android:layout_marginTop="260dip"
+        android:background="@drawable/smart_dialog_back"
+        android:orientation="vertical"
+        android:visibility="invisible" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginTop="5dip"
+            android:gravity="center"
+            android:text="@string/str_zhn_information"
+            android:textSize="26dp" />
+
+        <TextView
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="50dip"
+            android:layout_marginTop="40dip"
+            android:gravity="center"
+            android:text="@string/str_zhn_switchfailed"
+            android:textSize="26sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_dtv_prompt_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="490dip"
+        android:layout_marginTop="260dip"
+        android:background="@drawable/smart_dialog_back"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginTop="5dip"
+            android:gravity="center"
+            android:text="@string/str_zhn_information"
+            android:textSize="26dp" />
+
+        <TextView
+            android:layout_width="180dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="65dip"
+            android:layout_marginTop="20dip"
+            android:gravity="center"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+    <com.changhong.app.dtv.TextMarquee
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="30dip"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="20dip"
+        android:background="@color/black"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/gray_white"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/id_root_CI_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smart_root_info_back" />
+
+        <TextView
+            android:id="@+id/id_root_ci_init_textview"
+            android:layout_width="224dip"
+            android:layout_height="126dip"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="80dip"
+            android:gravity="center_horizontal"
+            android:text="@string/str_zhn_ci_init_begin"
+            android:textSize="35sp" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_root_CA_info"
+        android:layout_width="400dip"
+        android:layout_height="300dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/searchprompt"
+        android:visibility="invisible" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dip"
+            android:text="温馨提示"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_BIG" />
+
+        <TextView
+            android:id="@+id/ id_root_ca_init_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/promptyellow"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/id_root_PFTUpdate_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smart_root_info_back" />
+
+        <TextView
+            android:id="@+id/id_root_pft_update_textview"
+            android:layout_width="224dip"
+            android:layout_height="126dip"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="30dip"
+            android:layout_marginTop="80dip"
+            android:gravity="center_horizontal"
+            android:text="@string/pft_program_update"
+            android:textSize="35sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/id_root_timeshift_support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_marginLeft="1000dip"
+            android:layout_marginTop="30dip"
+            android:background="@drawable/tshift_support" />
+    </FrameLayout>
+
+    <com.changhong.app.dtv.CAMarquee
+        android:id="@+id/id_ca_subtitleDown"
+        android:layout_width="1900dip"
+        android:layout_height="40dip"
+        android:layout_gravity="left"
+        android:layout_marginTop="670dip"
+        android:background="@drawable/epg_week_unselect"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/gray_white"
+        android:textSize="28sp"
+        android:visibility="invisible" />
+
+    <com.changhong.app.dtv.CAMarquee
+        android:id="@+id/id_ca_subtitleUp"
+        android:layout_width="1900dip"
+        android:layout_height="40dip"
+        android:layout_gravity="left"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/epg_week_unselect"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/gray_white"
+        android:textSize="28sp"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/id_root_nosignal_info"
+        android:layout_width="400dip"
+        android:layout_height="300dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/searchprompt"
+        android:visibility="invisible" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dip"
+            android:text="温馨提示"
+            android:textSize="@dimen/FONT_SIZE_BIG" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/str_zhn_nosignal"
+            android:textColor="@color/promptyellow"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/id_dtv_channel_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/chan_name_background"
+        android:gravity="center_horizontal|center_vertical"
+        android:paddingLeft="23dip"
+        android:paddingRight="23dip"
+        android:textColor="#ffc600"
+        android:textSize="36sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/id_dtv_digital_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/dtv_digital_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/dtv_digital_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/dtv_digital_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    
+   <RelativeLayout
+        android:id="@+id/id_dtv_digital_root_invalid"
+        android:layout_width="600dip"
+        android:layout_height="100dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/errorwindow4" 
+        android:visibility="invisible" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/str_zhn_input_channel_logicnum_error"
+            android:textColor="#b3b3b3"
+            android:textSize="@dimen/ghFONT_SIZE_BIG" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/id_dtv_digital_root_invalid_bk"
+        android:layout_width="400dip"
+        android:layout_height="300dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/searchprompt"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dip"
+            android:text="温馨提示"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_BIG" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="无此节目"
+            android:textColor="@color/promptyellow"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/id_is_mute"
+        android:layout_width="145dip"
+        android:layout_height="70dip"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="900dip"
+        android:layout_marginTop="50dip"
+        android:background="@drawable/smart_dialog_back"
+        android:gravity="center"
+        android:text="@string/str_zhn_vo_mute"
+        android:textSize="30sp"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/volume_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="150dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dip"
+        android:background="@drawable/banner_z4"
+        android:gravity="center_vertical"
+        android:visibility="invisible" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ProgressBar
+                android:id="@+id/volume_progress_view"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="520dip"
+                android:layout_height="45dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dip"
+                android:max="31"
+                android:progressDrawable="@drawable/volume_progress" >
+            </ProgressBar>
+
+            <TextView
+                android:id="@+id/volume_value"
+                android:layout_width="100dip"
+                android:layout_height="140dip"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="650dip"
+                android:background="@drawable/volume_z"
+                android:gravity="center_horizontal"
+                android:paddingTop="100dip" />
+
+            <com.xormedia.adplayer.AdPlayer
+            android:id="@+id/adplayer_volume"
+            android:layout_width="350dip"
+            android:layout_height="140dip"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:visibility="visible" >
+        </com.xormedia.adplayer.AdPlayer>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

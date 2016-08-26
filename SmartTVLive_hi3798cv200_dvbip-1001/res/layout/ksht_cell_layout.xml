@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="261dip"
+    android:layout_height="62dip"
+    android:gravity="center" >
+    
+    
+        <FrameLayout
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+        
+      
+
+
+    <com.changhong.app.dtv.TextMarquee
+        android:id="@+id/ksht_number"
+        android:layout_width="261dip"
+        android:layout_height="62dip"
+
+         android:ellipsize="marquee"
+         android:marqueeRepeatLimit="marquee_forever"
+         android:singleLine="true"
+            
+        android:gravity="center_vertical"
+
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+    
+        </FrameLayout>
+
+    <TextView
+        android:id="@+id/PositionID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+</RelativeLayout>

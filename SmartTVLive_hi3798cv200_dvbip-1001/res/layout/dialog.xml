@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+    <SurfaceView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+			<LinearLayout
+				android:layout_width="384dip"
+				android:layout_height="204dip"
+				android:layout_gravity="top|left"
+				android:orientation="vertical"
+				android:id="@+id/id_dtv_exit_dia"
+				android:background="@drawable/smart_root_info_back"
+				android:layout_marginLeft="448dip"
+				android:layout_marginTop="220dip">
+				<TextView
+					android:layout_width="match_parent"
+					android:textSize="@dimen/FONT_SIZE_NORMAL"
+					android:gravity="center"
+					android:layout_gravity="top|left"
+					android:layout_marginTop="5dip"
+					android:layout_height="32dip"
+					android:id="@+id/id_dtv_dialog_title" 
+					android:visibility="invisible"/>
+				<TextView
+					android:textSize="32dip"
+					android:layout_gravity="top|left"
+					android:layout_marginLeft="33dip"
+					android:layout_height="80dip"
+					android:layout_marginTop="20dip"
+					android:id="@+id/id_dtv_dialog_details"
+					android:gravity="center_horizontal"
+					android:layout_width="325dip" />
+				<FrameLayout
+					android:layout_gravity="top|left"
+					android:layout_width="match_parent"
+					android:layout_height="50dip" android:layout_marginTop="25dip">
+					<Button
+						android:id="@+id/id_dtv_dia_yes"
+						android:layout_gravity="top|left"
+						android:layout_height="wrap_content" 
+						android:layout_width="192dip" 
+						android:background="@drawable/dialog_btn_ok_selector"
+						android:visibility="visible"
+						android:textSize="20sp"
+							android:text="@string/str_zhn_yes"
+						android:textColor="@color/white"/>
+					<Button
+						android:layout_height="wrap_content"
+						android:layout_gravity="top|left"
+						android:id="@+id/id_dtv_dia_no"
+						android:layout_width="192dip"
+						android:textSize="20sp"
+						android:visibility="visible"
+						android:layout_marginLeft="192dip"
+						android:textColor="@color/white"
+							android:text="@string/str_zhn_no"
+						android:background="@drawable/dialog_btn_cancel_selector" />
+					<Button
+						android:layout_height="wrap_content"
+						android:layout_gravity="top|left"
+						android:id="@+id/id_dtv_dia_single_yes"
+						android:visibility="invisible"
+						android:layout_width="384dip"
+						android:textColor="@color/white"
+						android:background="@drawable/dialog_btn_ok_selector" 
+						android:text="@string/str_zhn_yes"
+						android:textSize="20sp"/>
+				</FrameLayout>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+</FrameLayout>

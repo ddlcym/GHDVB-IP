@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyTheme" parent="android:Theme.Dialog">
+    <item name="android:backgroundDimEnabled">false</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFrame">@null</item>
+    </style>
+    
+    <style name="theme_noannimation" parent="android:Theme.NoTitleBar.Fullscreen">
+	<item name="android:windowAnimationStyle">@style/Animation</item>
+    </style>
+    
+    <style name="theme_Transparent_full" parent="android:Theme.NoTitleBar.Fullscreen">
+    <item name="android:windowIsTranslucent">true</item>
+	<item name="android:windowAnimationStyle">@style/Animation</item>
+    </style>
+    
+    <style name="theme_dtv" parent="android:Theme.NoTitleBar.Fullscreen">
+	<item name="android:windowBackground">@drawable/smart_main_full_back</item>
+	<item name="android:windowAnimationStyle">@style/Animation</item>
+    </style>
+    <style name="Animation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <!-- 
+        <item name="android:taskOpenEnterAnimation">@null</item>
+        <item name="android:taskOpenExitAnimation">@null</item>
+         -->
+        <item name="android:taskCloseEnterAnimation">@null</item>
+        <item name="android:taskCloseExitAnimation">@null</item>
+        <item name="android:taskToFrontEnterAnimation">@null</item>
+        <item name="android:taskToFrontExitAnimation">@null</item>
+        <item name="android:taskToBackEnterAnimation">@null</item>
+        <item name="android:taskToBackExitAnimation">@null</item>
+
+    </style>
+    
+    <style name="Animation_alltransparent" parent="android:Theme.NoTitleBar.Fullscreen">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        
+        <item name="android:taskOpenEnterAnimation">@null</item>
+        <item name="android:taskOpenExitAnimation">@null</item>
+        
+        <item name="android:taskCloseEnterAnimation">@null</item>
+        <item name="android:taskCloseExitAnimation">@null</item>
+        <item name="android:taskToFrontEnterAnimation">@null</item>
+        <item name="android:taskToFrontExitAnimation">@null</item>
+        <item name="android:taskToBackEnterAnimation">@null</item>
+        <item name="android:taskToBackExitAnimation">@null</item>
+        
+        <item name="android:windowBackground">@color/transparent</item>
+	<item name="android:windowIsTranslucent">true</item>
+	<item name="android:windowAnimationStyle">@+android:style/Animation.Translucent</item>
+    </style>
+    
+    <style name="Transparent"> 
+        <item name="android:windowBackground">@color/transparent</item> 
+        <item name="android:windowIsTranslucent">true</item>    
+        <item name="android:windowAnimationStyle">@+android:style/Animation.Translucent</item> 
+    </style>
+    
+     <style name="activitytransparent"> 
+        <item name="android:windowBackground">@color/activity_transparent</item> 
+        <item name="android:windowIsTranslucent">true</item>    
+        <item name="android:windowAnimationStyle">@+android:style/Animation.Translucent</item> 
+    </style> 
+    
+         <style name="Theme" parent="android:Theme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+   	<style name="Theme.Popup" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+    
+   	<!-- 
+    <style name="GifAnimStyle" parent="@android:style/Widget.ProgressBar.Large">
+		<item name="android:indeterminateDrawable">@anim/gif</item>
+	</style>
+	 -->
+	<style name="ContentOverlay" parent="android:style/Theme.Dialog">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowIsTranslucent">true</item>
+		<item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+	</style>
+ 
+	<style name="DialogTheme" parent="android:Theme.Dialog">
+		<item name="android:windowBackground">@android:color/transparent</item>
+    	<item name="android:windowNoTitle">true</item>
+    	<item name="android:windowIsTranslucent">true</item>
+    	<item name="android:windowContentOverlay">@null</item>
+    	<item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+    
+	<style name="DialogPopup" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+	    <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item> 
+    </style>
+    <style name="CA_Popup" 
+           parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" > 
+	<item name="android:windowNoTitle">true</item>
+	<item name="android:windowFrame">@null</item> <!--边框-->
+	<item name="android:backgroundDimEnabled">true</item> <!--蒙版- 模糊 -->	
+	</style>
+
+	<style name="TestDialog" parent="android:style/Theme.Dialog"> 
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowFrame">@null</item> <!--边框-->
+		<item name="android:windowIsFloating">true</item> <!--是否浮现在activity之上-->
+		<item name="android:windowIsTranslucent">true</item><!--半透明-->  
+		<item name="android:background">@android:color/transparent</item><!--背景透明-->
+		<item name="android:windowBackground">@android:color/transparent</item><!--背景透明-->
+		<item name="android:backgroundDimEnabled">true</item> <!--蒙版- 模糊 -->
+		</style>
+</resources>

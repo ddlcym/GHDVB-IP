@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible" >
+    </SurfaceView>
+    <!-- 直播菜单 不带时移 -->
+
+    <RelativeLayout
+        android:id="@+id/volume_layout_z_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="150dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dip"
+        android:background="@drawable/banner_z4"
+        android:gravity="center_vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/volume_progress_view_z_menu"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="520dip"
+            android:layout_height="45dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dip"
+            android:max="31"
+            android:progressDrawable="@drawable/volume_progress" >
+        </ProgressBar>
+
+        <TextView
+            android:id="@+id/volume_value_z_menu"
+            android:layout_width="100dip"
+            android:layout_height="140dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="650dip"
+            android:background="@drawable/volume_z"
+            android:gravity="center_horizontal"
+            android:paddingTop="100dip" />
+
+        <ImageView
+            android:id="@+id/volume_adv_z_menu"
+            android:layout_width="350dip"
+            android:layout_height="140dip"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dip"
+            android:background="@drawable/volume_adv" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/program_menu1"
+        android:layout_width="470dip"
+        android:layout_height="320dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="0dip"
+        android:background="@drawable/zhibo_menu_z1124"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:layout_width="213dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="24dip" >
+
+            <RelativeLayout
+                android:layout_width="212dip"
+                android:layout_height="80dip" >
+
+                <Button
+                    android:id="@+id/program_menu_huantai"
+                    android:layout_width="199dip"
+                    android:layout_height="57dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:paddingLeft="50dip"
+                    android:text="@string/program_menu_item1"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z12" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="212dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="64dip" >
+
+                <Button
+                    android:id="@+id/program_menu_xiai"
+                    android:layout_width="199dip"
+                    android:layout_height="59dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:paddingLeft="50dip"
+                    android:text="@string/program_menu_item2"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z2" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="212dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="128dip" >
+
+                <Button
+                    android:id="@+id/program_menu_pindaoxinxi"
+                    android:layout_width="199dip"
+                    android:layout_height="57dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="12dip"
+                    android:background="@drawable/selector"
+                    android:paddingLeft="50dip"
+                    android:text="@string/program_menu_item3"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z3" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="212dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="193dip" >
+
+                <Button
+                    android:id="@+id/program_menu_main"
+                    android:layout_width="199dip"
+                    android:layout_height="60dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:paddingLeft="30dip"
+                    android:text="@string/program_menu_item5"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z5" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="213dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="34dip"
+            android:layout_marginTop="24dip" >
+
+            <RelativeLayout
+                android:layout_width="213dip"
+                android:layout_height="80dip" >
+
+                <Button
+                    android:id="@+id/program_menu_set"
+                    android:layout_width="199dip"
+                    android:layout_height="57dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="80dip"
+                    android:text="@string/program_menu_item7"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z7" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="213dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="64dip" >
+
+                <Button
+                    android:id="@+id/program_menu_msg"
+                    android:layout_width="199dip"
+                    android:layout_height="59dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="80dip"
+                    android:text="@string/program_menu_item10"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="25dip"
+                    android:background="@drawable/z10" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="213dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="128dip" >
+
+                <Button
+                    android:id="@+id/program_menu_yudingguanli"
+                    android:layout_width="199dip"
+                    android:layout_height="57dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="12dip"
+                    android:background="@drawable/selector"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="80dip"
+                    android:text="@string/program_menu_item4"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="25dip"
+                    android:background="@drawable/z4" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="213dip"
+                android:layout_height="80dip"
+                android:layout_marginTop="193dip" >
+
+                <Button
+                    android:id="@+id/program_menu_return1"
+                    android:layout_width="199dip"
+                    android:layout_height="60dip"
+                    android:layout_marginLeft="7dip"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/selector"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="80dip"
+                    android:text="@string/program_menu_item11"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:layout_marginTop="23dip"
+                    android:background="@drawable/z11" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

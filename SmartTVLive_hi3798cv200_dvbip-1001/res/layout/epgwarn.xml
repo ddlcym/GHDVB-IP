@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/ghWindow_epgwarn_w"
+    android:layout_height="@dimen/ghWindow_epgwarn_h" 
+    android:layout_gravity="center"
+    android:background="@drawable/epgwarn_bg" >
+    <!-- 
+    android:layout_width="400dip"
+    android:layout_height="300dip"
+ -->    
+    <TextView
+        style="@style/ghTextEpgWarnTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dip"
+        android:text="@string/str_EPGwarnTitle"/>
+
+    <com.changhong.app.dtv.TextMarquee
+        android:id="@+id/jiemuinfo"
+        style="@style/ghTextEpgWarnBodyStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dip"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"/>
+
+    <TextView
+        style="@style/ghTextEpgWarnBodyStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jiemuinfo"
+        android:layout_centerInParent="true"
+        android:text="@string/str_EPGwarn"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dip" >
+
+        <Button
+            android:id="@+id/guankanjiemu"    
+            style="@style/ghTextEpgWarnButtonStyle"
+            android:layout_width="@dimen/ghWindow_epgwarn_button_w"
+            android:layout_height="@dimen/ghWindow_epgwarn_button_h"
+            android:background="@drawable/selector3"
+            android:gravity="center"
+            android:text="@string/str_OKButton"
+        	android:textSize="@dimen/ghFONT_SIZE_36"/>
+
+        <Button
+            android:id="@+id/cancelguankanjiemu"
+            style="@style/ghTextEpgWarnButtonStyle"            
+            android:layout_width="@dimen/ghWindow_epgwarn_button_w"
+            android:layout_height="@dimen/ghWindow_epgwarn_button_h"
+            android:layout_toRightOf="@+id/guankanjiemu"
+            android:background="@drawable/selector3"
+            android:gravity="center"
+            android:text="@string/str_cancelButton"
+            android:focusable="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

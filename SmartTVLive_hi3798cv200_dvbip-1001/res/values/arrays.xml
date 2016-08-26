@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string-array name="select_dialog_items">
+        <item>program list</item>
+        <item>search</item>
+        <item>exit</item>
+    </string-array>
+    <string-array name="spinner_scanmode">
+        <item>auto search</item>
+        <item>manual search</item>
+        <item>all frequency search</item>
+        <item>list search</item>
+    </string-array>
+    <string-array name="spinner_modulation">
+        <item>8QAM</item>
+        <item>16QAM</item>
+        <item>32QAM</item>
+        <item>64QAM</item>
+        <item>128QAM</item>
+        <item>256QAM</item>
+    </string-array>
+    <string-array name="str_dtv_audio_track">
+        <item>stereo</item>
+        <item>left</item>
+        <item>right</item>
+        <item>single</item>
+        <item>auto</item>
+        <item>invalid</item>
+    </string-array>
+    <string-array name="str_dtv_prolist_title">
+        <item>tv list</item>
+        <item>radio list</item>
+    </string-array>
+    <string-array name="str_dtv_usrset_switchmode">
+        <item>confirm</item>
+        <item>follow</item>
+    </string-array>
+    <string-array name="str_dtv_usrset_bannertime">
+        <item>3 seconds</item>
+        <item>4 seconds</item>
+        <item>5 seconds</item>
+        <item>6 seconds</item>
+        <item>7 seconds</item>
+        <item>8 seconds</item>
+    </string-array>
+    <string-array name="str_dtv_epg_week_name">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string-array name="str_dtv_ca_notify_info">
+        <item>PIN error,please input the PIN again!</item>
+        <item>Set rate success!</item>
+        <item>Set rate failed!</item>
+        <item>Set worktime success!</item>
+        <item>Set worktime failed!</item>
+        <item>Set PIN success!</item>
+        <item>Set PIN failed!</item>
+        <item>Two new PIN not the same,please input PIN again!</item>
+    </string-array>
+    <string-array name="str_dtv_usrset_newchannelmode">
+        <item>black</item>
+        <item>freeze</item>
+    </string-array>
+    <string-array name="str_dtv_usrset_city">
+        <item>SCN</item>
+    </string-array>
+    <string-array name="str_dtv_usrset_city_frequency">
+        <item>331000</item>
+    </string-array>
+    <string-array name="str_dtv_pvr_rec_info">
+        <item>invalid program</item>
+        <item>no signal</item>
+        <item>no stored</item>
+        <item>no space</item>
+        <item>no space,switch disk</item>
+        <item>record fail</item>
+    </string-array>
+    <string-array name="str_dtv_pvr_event_info">
+        <item>record time end,stop record</item>
+        <item>no space,stop record</item>
+        <item>remove disk</item>
+        <item>stop record</item>
+    </string-array>
+    <!-- add by zhpj -->
+    <string-array name="epg_chl_classify">
+        <item>ALL</item>
+        <item>Fav_TV</item>
+        <item>CCTV</item>
+        <item>Star-TV</item>
+        <item>Locality</item>
+        <item>HD</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="week">
+        <item>Mon.</item>
+        <item>Tues.</item>
+        <item>Wed.</item>
+        <item>Thurs.</item>
+        <item>Fri.</item>
+        <item>Sat.</item>
+        <item>Sun.</item>
+    </string-array>
+    <string-array name="city_list">
+        <item>beijing</item>
+        <item>shanghai</item>
+        <item>tianjin</item>
+        <item>chongqong</item>
+        <item>chengdu</item>
+        <item>wuhan</item>
+        <item>mianyang</item>
+        <item>xian</item>
+        <item>wulumuqi</item>
+        <item>changsha</item>
+        <item>yinchuan</item>
+        <item>hefei</item>
+        <item>huhehaote</item>
+        <item>nanjing</item>
+        <item>shijiazhuang</item>
+        <item>taiyuan</item>
+        <item>shenyang</item>
+        <item>changchun</item>
+        <item>haerbing</item>
+        <item>jinan</item>
+        <item>hangzhou</item>
+        <item>fuzhou</item>
+        <item>nanchang</item>
+        <item>zhengzhou</item>
+        <item>guangzhou</item>
+        <item>haikou</item>
+        <item>guiyang</item>
+        <item>kunming</item>
+        <item>lanzhou</item>
+        <item>xining</item>
+        <item>nanning</item>
+        <item>lasa</item>
+    </string-array>
+    <string-array name="str_init_text">
+        <item>Program initialization . . .</item>
+        <item>ready data . . .</item>
+        <item>startup . . .</item>
+    </string-array>
+    <string-array name="beijingTV">
+        <item>北京卫视</item>
+        <item>北京台</item>
+        <item>BJTV</item>
+    </string-array>
+    <string-array name="shanghaiTV">
+        <item>东方卫视</item>
+        <item>东方台</item>
+        <item>DFTV</item>
+        <item>上海卫视</item>
+        <item>上海台</item>
+        <item>SHTV</item>
+    </string-array>
+    <string-array name="fujianTV">
+        <item>东南卫视</item>
+        <item>东南台</item>
+        <item>DNTV</item>
+        <item>福建卫视</item>
+        <item>福建台</item>
+        <item>FJTV</item>
+    </string-array>
+    <string-array name="gansuTV">
+        <item>甘肃卫视</item>
+        <item>甘肃台</item>
+        <item>GSTV</item>
+    </string-array>
+    <string-array name="guangdongTV">
+        <item>广东卫视</item>
+        <item>广东台</item>
+        <item>GDTV</item>
+    </string-array>
+    <string-array name="guangxiTV">
+        <item>广西卫视</item>
+        <item>广西台</item>
+        <item>GXTV</item>
+    </string-array>
+    <string-array name="guizhouTV">
+        <item>贵州卫视</item>
+        <item>贵州台</item>
+        <item>GZTV</item>
+    </string-array>
+    <string-array name="hebeiTV">
+        <item>河北卫视</item>
+        <item>河北台</item>
+        <item>HEBEITV</item>
+    </string-array>
+    <string-array name="heilongjiangTV">
+        <item>黑龙江卫视</item>
+        <item>黑龙江台</item>
+        <item>HLJTV</item>
+    </string-array>
+    <string-array name="hubeiTV">
+        <item>湖北卫视</item>
+        <item>湖北台</item>
+        <item>HUBEITV</item>
+    </string-array>
+    <string-array name="hunanTV">
+        <item>湖南卫视</item>
+        <item>湖南台</item>
+        <item>HUNANTV</item>
+    </string-array>
+    <string-array name="jiangsuTV">
+        <item>江苏卫视</item>
+        <item>江苏台</item>
+        <item>JSTV</item>
+    </string-array>
+    <string-array name="jiangxiTV">
+        <item>江西卫视</item>
+        <item>江西台</item>
+        <item>JXTV</item>
+    </string-array>
+    <string-array name="liaoningTV">
+        <item>辽宁卫视</item>
+        <item>辽宁台</item>
+        <item>LNTV</item>
+    </string-array>
+    <string-array name="lvyouTV">
+        <item>旅游卫视</item>
+        <item>旅游台</item>
+        <item>LYTV</item>
+    </string-array>
+    <string-array name="neimengguTV">
+        <item>内蒙古卫视</item>
+        <item>内蒙卫视</item>
+        <item>内蒙古台</item>
+        <item>内蒙台</item>
+        <item>NMGTV</item>
+        <item>NMTV</item>
+    </string-array>
+    <string-array name="ningxiaTV">
+        <item>宁夏卫视</item>
+        <item>宁夏台</item>
+        <item>NXTV</item>
+    </string-array>
+    <string-array name="qinghaiTV">
+        <item>青海卫视</item>
+        <item>青海台</item>
+        <item>QHTV</item>
+    </string-array>
+    <string-array name="shandongTV">
+        <item>山东卫视</item>
+        <item>山东台</item>
+        <item>SDTV</item>
+    </string-array>
+    <string-array name="shanxiTV">
+        <item>山西卫视</item>
+        <item>山西台</item>
+    </string-array>
+    <string-array name="shannxiTV">
+        <item>陕西卫视</item>
+        <item>陕西台</item>
+    </string-array>
+    <string-array name="shenzhenTV">
+        <item>深圳卫视</item>
+        <item>深圳台</item>
+        <item>SZTV</item>
+    </string-array>
+    <string-array name="tianjinTV">
+        <item>天津卫视</item>
+        <item>天津台</item>
+        <item>TJTV</item>
+    </string-array>
+    <string-array name="xizangTV">
+        <item>西藏卫视</item>
+        <item>西藏台</item>
+        <item>XZTV</item>
+    </string-array>
+    <string-array name="zhejiangTV">
+        <item>浙江卫视</item>
+        <item>浙江台</item>
+        <item>ZJTV</item>
+    </string-array>
+    <string-array name="chongqingTV">
+        <item>重庆卫视</item>
+        <item>重庆台</item>
+        <item>CQTV</item>
+    </string-array>
+    <string-array name="anhuiTV">
+        <item>安徽卫视</item>
+        <item>安徽台</item>
+        <item>AHTV</item>
+    </string-array>
+    <string-array name="henanTV">
+        <item>河南卫视</item>
+        <item>河南台</item>
+        <item>HENANTV</item>
+    </string-array>
+    <string-array name="sichuanTV">
+        <item>四川卫视</item>
+        <item>四川台</item>
+        <item>SCTV</item>
+    </string-array>
+    <string-array name="yunnanTV">
+        <item>云南卫视</item>
+        <item>云南台</item>
+        <item>YNTV</item>
+    </string-array>
+    <string-array name="dongmanxiuchang">
+        <item>SiTV动漫秀场</item>
+        <item>动漫秀场</item>
+    </string-array>
+    <string-array name="youxifengyun">
+        <item>SiTV游戏风云</item>
+        <item>游戏风云</item>
+        <item>游戏风云(试)</item>
+    </string-array>
+    <string-array name="cctv1">
+        <item>CCTV-1</item>
+        <item>中央1台</item>
+        <item>央视1套</item>
+        <item>CCTV1</item>
+        <item>ＣＣＴＶ－１</item>
+    </string-array>
+    <string-array name="cctv2">
+        <item>CCTV-2</item>
+        <item>中央2台</item>
+        <item>央视2套</item>
+        <item>CCTV2</item>
+        <item>ＣＣＴＶ－２</item>
+    </string-array>
+    <string-array name="cctv3">
+        <item>CCTV-3</item>
+        <item>中央3台</item>
+        <item>央视3套</item>
+        <item>CCTV3</item>
+        <item>ＣＣＴＶ－３</item>
+    </string-array>
+    <string-array name="cctv4">
+        <item>CCTV-4亚洲</item>
+        <item>CCTV-4</item>
+        <item>中央4台</item>
+        <item>央视4套</item>
+        <item>CCTV4</item>
+        <item>ＣＣＴＶ－４</item>
+        <item>ＣＣＴＶ－４亚洲</item>
+    </string-array>
+    <string-array name="cctv5">
+        <item>CCTV-5</item>
+        <item>中央5台</item>
+        <item>央视5套</item>
+        <item>CCTV5</item>
+        <item>ＣＣＴＶ－５</item>
+    </string-array>
+    <string-array name="cctv6">
+        <item>CCTV-6</item>
+        <item>中央6台</item>
+        <item>央视6套</item>
+        <item>CCTV6</item>
+        <item>ＣＣＴＶ－６</item>
+    </string-array>
+    <string-array name="cctv7">
+        <item>CCTV-7</item>
+        <item>中央7台</item>
+        <item>央视7套</item>
+        <item>CCTV7</item>
+        <item>ＣＣＴＶ－７</item>
+    </string-array>
+    <string-array name="cctv9">
+        <item>CCTV-纪录</item>
+        <item>CCTV-9</item>
+        <item>中央9台</item>
+        <item>央视9套</item>
+        <item>CCTV9</item>
+        <item>ＣＣＴＶ－９</item>
+        <item>ＣＣＴＶ－９纪录</item>
+    </string-array>
+    <string-array name="cctv10">
+        <item>CCTV-10</item>
+        <item>中央10台</item>
+        <item>央视10套</item>
+        <item>CCTV10</item>
+        <item>ＣＣＴＶ－１０</item>
+    </string-array>
+    <string-array name="cctv11">
+        <item>CCTV-11</item>
+        <item>中央11台</item>
+        <item>央视11套</item>
+        <item>CCTV11</item>
+        <item>ＣＣＴＶ－１１</item>
+    </string-array>
+    <string-array name="cctv12">
+        <item>CCTV-12</item>
+        <item>中央12台</item>
+        <item>央视12套</item>
+        <item>CCTV12</item>
+        <item>ＣＣＴＶ－１２</item>
+    </string-array>
+    <string-array name="cctv_news">
+        <item>CCTV-新闻</item>
+        <item>CCTV-13</item>
+        <item>中央13台</item>
+        <item>央视13套</item>
+        <item>CCTV13</item>
+        <item>ＣＣＴＶ－１３</item>
+        <item>ＣＣＴＶ－新闻</item>
+    </string-array>
+    <string-array name="cctv_guide">
+        <item>CCTV-电视指南</item>
+        <item>ＣＣＴＶ－电视指南</item>
+    </string-array>
+    <string-array name="cctv_golf">
+        <item>CCTV高尔夫网球</item>
+        <item>ＣＣＴＶ高尔夫网球</item>
+    </string-array>
+    <string-array name="TVlist">
+        <item>北京卫视</item>
+        <item>北京台</item>
+        <item>BJTV</item>
+        <item>东方卫视</item>
+        <item>东方台</item>
+        <item>DFTV</item>
+        <item>上海卫视</item>
+        <item>上海台</item>
+        <item>SHTV</item>
+        <item>东南卫视</item>
+        <item>东南台</item>
+        <item>DNTV</item>
+        <item>福建卫视</item>
+        <item>福建台</item>
+        <item>FJTV</item>
+        <item>甘肃卫视</item>
+        <item>甘肃台</item>
+        <item>GSTV</item>
+        <item>广东卫视</item>
+        <item>广东台</item>
+        <item>GDTV</item>
+        <item>广西卫视</item>
+        <item>广西台</item>
+        <item>GXTV</item>
+        <item>贵州卫视</item>
+        <item>贵州台</item>
+        <item>GZTV</item>
+        <item>河北卫视</item>
+        <item>河北台</item>
+        <item>HEBEITV</item>
+        <item>黑龙江卫视</item>
+        <item>黑龙江台</item>
+        <item>HLJTV</item>
+        <item>湖北卫视</item>
+        <item>湖北台</item>
+        <item>HUBEITV</item>
+        <item>湖南卫视</item>
+        <item>湖南台</item>
+        <item>HUNANTV</item>
+        <item>江苏卫视</item>
+        <item>江苏台</item>
+        <item>JSTV</item>
+        <item>江西卫视</item>
+        <item>江西台</item>
+        <item>JXTV</item>
+        <item>辽宁卫视</item>
+        <item>辽宁台</item>
+        <item>LNTV</item>
+        <item>旅游卫视</item>
+        <item>旅游台</item>
+        <item>LYTV</item>
+        <item>内蒙古卫视</item>
+        <item>内蒙卫视</item>
+        <item>内蒙古台</item>
+        <item>内蒙台</item>
+        <item>NMGTV</item>
+        <item>NMTV</item>
+        <item>宁夏卫视</item>
+        <item>宁夏台</item>
+        <item>NXTV</item>
+        <item>青海卫视</item>
+        <item>青海台</item>
+        <item>QHTV</item>
+        <item>山东卫视</item>
+        <item>山东台</item>
+        <item>SDTV</item>
+        <item>山西卫视</item>
+        <item>山西台</item>
+        <item>陕西卫视</item>
+        <item>陕西台</item>
+        <item>深圳卫视</item>
+        <item>深圳台</item>
+        <item>SZTV</item>
+        <item>天津卫视</item>
+        <item>天津台</item>
+        <item>TJTV</item>
+        <item>西藏卫视</item>
+        <item>西藏台</item>
+        <item>XZTV</item>
+        <item>浙江卫视</item>
+        <item>浙江台</item>
+        <item>ZJTV</item>
+        <item>重庆卫视</item>
+        <item>重庆台</item>
+        <item>CQTV</item>
+        <item>安徽卫视</item>
+        <item>安徽台</item>
+        <item>AHTV</item>
+        <item>河南卫视</item>
+        <item>河南台</item>
+        <item>HENANTV</item>
+        <item>四川卫视</item>
+        <item>四川台</item>
+        <item>SCTV</item>
+        <item>云南卫视</item>
+        <item>云南台</item>
+        <item>YNTV</item>
+        <item>SiTV动漫秀场</item>
+        <item>动漫秀场</item>
+        <item>SiTV游戏风云</item>
+        <item>游戏风云</item>
+        <item>游戏风云(试)</item>
+        <item>CCTV-1</item>
+        <item>中央1台</item>
+        <item>央视1套</item>
+        <item>CCTV1</item>
+        <item>ＣＣＴＶ－１</item>
+        <item>CCTV-2</item>
+        <item>中央2台</item>
+        <item>央视2套</item>
+        <item>CCTV2</item>
+        <item>ＣＣＴＶ－２</item>
+        <item>CCTV-3</item>
+        <item>中央3台</item>
+        <item>央视3套</item>
+        <item>CCTV3</item>
+        <item>ＣＣＴＶ－３</item>
+        <item>CCTV-4亚洲</item>
+        <item>CCTV-4</item>
+        <item>中央4台</item>
+        <item>央视4套</item>
+        <item>CCTV4</item>
+        <item>ＣＣＴＶ－４</item>
+        <item>ＣＣＴＶ－４亚洲</item>
+        <item>CCTV-5</item>
+        <item>中央5台</item>
+        <item>央视5套</item>
+        <item>CCTV5</item>
+        <item>ＣＣＴＶ－５</item>
+        <item>CCTV-6</item>
+        <item>中央6台</item>
+        <item>央视6套</item>
+        <item>CCTV6</item>
+        <item>ＣＣＴＶ－６</item>
+        <item>CCTV-7</item>
+        <item>中央7台</item>
+        <item>央视7套</item>
+        <item>CCTV7</item>
+        <item>ＣＣＴＶ－７</item>
+        <item>CCTV-纪录</item>
+        <item>CCTV-9</item>
+        <item>中央9台</item>
+        <item>央视9套</item>
+        <item>CCTV9</item>
+        <item>ＣＣＴＶ－９</item>
+        <item>ＣＣＴＶ－９纪录</item>
+        <item>CCTV-10</item>
+        <item>中央10台</item>
+        <item>央视10套</item>
+        <item>CCTV10</item>
+        <item>ＣＣＴＶ－１０</item>
+        <item>CCTV-11</item>
+        <item>中央11台</item>
+        <item>央视11套</item>
+        <item>CCTV11</item>
+        <item>ＣＣＴＶ－１１</item>
+        <item>CCTV-12</item>
+        <item>中央12台</item>
+        <item>央视12套</item>
+        <item>CCTV12</item>
+        <item>ＣＣＴＶ－１２</item>
+        <item>CCTV-新闻</item>
+        <item>CCTV-13</item>
+        <item>中央13台</item>
+        <item>央视13套</item>
+        <item>CCTV13</item>
+        <item>ＣＣＴＶ－１３</item>
+        <item>ＣＣＴＶ－新闻</item>
+        <item>CCTV-电视指南</item>
+        <item>ＣＣＴＶ－电视指南</item>
+        <item>CCTV高尔夫网球</item>
+        <item>ＣＣＴＶ高尔夫网球</item>
+    </string-array>
+    <string-array name="str_prg_class">
+        <item>Fav_TV</item>
+        <item>ALL</item>
+        <item>CCTV</item>
+        <item>Star-TV</item>
+        <item>Local</item>
+        <item>HD-TV</item>
+        <item>Others</item>
+    </string-array>
+    <string-array name="tvtype">
+        <item>"All"</item>
+        <item>"CCTV"</item>
+        <item>"Star-TV"</item>
+        <item>"Local-TV"</item>
+        <item>"HD-TV"</item>
+        <item>"Love"</item>
+        <item>"Other"</item>
+    </string-array>
+    <string-array name="epgweek">
+        <item>"Sunday"</item>
+        <item>"Monday"</item>
+        <item>"Tuesday"</item>
+        <item>"Wednesday"</item>
+        <item>"Thursday"</item>
+        <item>"Friday"</item>
+        <item>"Saturday"</item>
+    </string-array>
+    <string-array name="settype">
+        <item>1.显示设置</item>
+        <item>2.系统信息</item>
+        <item>3.系统升级</item>
+        <item>4.数字电视搜索</item>
+        <item>5.CA设置</item>
+        <item>6.应用管理</item>
+        <item>7.恢复出厂设置</item>
+    </string-array>
+    <string-array name="ca_settype">
+        <item>CA信息</item>
+        <item>观看级别设置</item>
+        <item>工作时段设置</item>
+        <item>PIN码设置</item>
+    </string-array>
+
+</resources>

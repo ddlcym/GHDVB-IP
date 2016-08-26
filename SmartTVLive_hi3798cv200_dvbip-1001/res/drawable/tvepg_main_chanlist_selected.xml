@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+       
+ <!-- 没有焦点时的背景图片 --> 
+ 
+ <!-- 非触摸模式下获得焦点并单击时的背景图片 -->   
+
+ <!--选中时的图片背景  -->   
+
+ <!--获得焦点时的图片背景  -->   
+
+</selector>

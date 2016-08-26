@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dip"
+        android:singleLine="true"
+        android:text="温馨提示"
+        android:textColor="@color/white"
+        android:textSize="@dimen/FONT_SIZE_BIG" />
+    
+     
+
+    <TextView
+        android:id="@+id/zhibo_prompt_z"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+         android:gravity="center"
+        android:layout_marginTop="120dip"
+        android:singleLine="true"
+        android:textColor="@color/promptyellow"
+        android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    
+    
+    <TextView
+        android:id="@+id/zhibo_prompt_z1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+         android:gravity="center"
+        android:layout_marginTop="150dip"
+        android:singleLine="true"
+        android:textColor="@color/promptyellow"
+         android:visibility="gone"
+        android:textSize="@dimen/FONT_SIZE_NORMAL" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dip" >
+
+        <Button
+            android:id="@+id/reset_submit"
+            android:layout_width="150dip"
+            android:layout_height="60dip"
+            android:background="@drawable/selector"
+            android:gravity="center"
+            android:text="确    认"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+
+        <Button  
+            android:id="@+id/reset_cancel"
+            android:layout_width="150dip"
+            android:layout_height="60dip"
+            android:layout_toRightOf="@+id/reset_submit"
+            android:background="@drawable/selector"
+            android:gravity="center"
+            android:text="取    消"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    </RelativeLayout>
+
+</RelativeLayout>

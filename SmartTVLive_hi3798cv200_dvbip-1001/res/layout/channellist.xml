@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </SurfaceView>
+
+    <RelativeLayout
+        android:id="@+id/epg_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/epg_weekeventlayout_old"
+            android:layout_width="1150dip"
+            android:layout_height="558dip"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="265dip"
+                android:layout_height="558dip"
+                android:background="@drawable/l_z"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dip"
+                    android:layout_gravity="top|left"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginTop="18dip" >
+
+                    <TextView
+                        android:id="@+id/id_epglist_title"
+                        android:layout_width="220dip"
+                        android:layout_height="65dip"
+                        android:layout_gravity="top|center_horizontal"
+                        android:layout_marginLeft="18dip"
+                        android:layout_marginTop="8dip"
+                        android:background="@drawable/selector"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:text="所有频道"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/FONT_SIZE_NORMAL" >
+                    </TextView>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="218dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dip"
+                    android:background="@drawable/epgbkgz6" />
+
+                <com.changhong.app.dtv.EpgListview
+                    android:id="@+id/id_epg_chlist"
+                    android:layout_width="220dip"
+                    android:layout_height="440dip"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginTop="5dip"
+                    android:divider="#00000000"
+                    android:drawSelectorOnTop="false"
+                    android:fadingEdge="none"
+                    android:listSelector="@drawable/selector"
+                    android:nextFocusDown="@+id/id_epg_chlist"
+                    android:nextFocusLeft="@+id/id_epg_chlist"
+                    android:nextFocusRight="@+id/EpgWeekInfo"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/epg_weekeventlayout"
+                android:layout_width="900dip"
+                android:layout_height="558dip"
+                android:background="@drawable/r_z"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="43dip"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="27dip" >
+
+                    <Button
+                        android:id="@+id/week_1"
+                        android:layout_width="130dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="30dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_2"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="175dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_3"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="290dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_4"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="400dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_5"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="510dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_6"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="620dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/week_7"
+                        android:layout_width="100dip"
+                        android:layout_height="43dip"
+                        android:layout_marginLeft="730dip"
+                        android:background="@drawable/week_button"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="849dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="2dip"
+                    android:background="@drawable/epgbkgz6" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <!-- 设置 listSelector,避免listview自动对选中条填充纯色背景 -->
+
+                    <com.changhong.app.dtv.EpgListview
+                        android:id="@+id/EpgEventInfo"
+                        android:layout_width="580dip"
+                        android:layout_height="458dip"
+                        android:layout_marginLeft="30dip"
+                        android:divider="@drawable/epgbkgz6"
+                        android:listSelector="@drawable/selector"
+                        android:nextFocusDown="@+id/EpgEventInfo"
+                        android:nextFocusLeft="@+id/id_epg_chlist"
+                        android:nextFocusUp="@+id/EpgWeekInfo" >
+                    </com.changhong.app.dtv.EpgListview>
+
+                    <com.xormedia.adplayer.AdPlayer
+                        android:id="@+id/adplayer_proguide"
+                        android:layout_width="253dip"
+                        android:layout_height="452dip"
+                        android:layout_marginLeft="6dip"
+                        android:layout_marginTop="2dip"
+                        android:visibility="visible" >
+                    </com.xormedia.adplayer.AdPlayer>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/epg_prompt1"
+            android:layout_width="400dip"
+            android:layout_height="300dip"
+            android:layout_centerInParent="true"
+            android:background="@drawable/searchprompt"
+            android:visibility="invisible" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="35dip"
+                android:text="温馨提示"
+                android:textColor="@color/white"
+                android:textSize="@dimen/FONT_SIZE_BIG" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="当前节目正在播放！"
+                android:textColor="@color/promptyellow"
+                android:textSize="@dimen/FONT_SIZE_NORMAL" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/noprogram_prompt"
+        android:layout_width="400dip"
+        android:layout_height="300dip"
+        android:layout_centerInParent="true"
+        android:background="@drawable/searchprompt"
+        android:visibility="invisible" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dip"
+            android:text="温馨提示"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_BIG" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="没有节目！"
+            android:textColor="@color/promptyellow"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+    </RelativeLayout>
+
+</RelativeLayout>

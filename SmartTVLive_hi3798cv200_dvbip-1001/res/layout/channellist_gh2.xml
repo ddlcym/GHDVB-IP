@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <SurfaceView
+        android:id="@+id/surfaceView2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </SurfaceView>
+
+    <ImageView
+        android:id="@+id/set_focus_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/chanselect3"
+        android:scaleType="fitXY"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/chlist_back"
+        android:layout_width="420dip"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dip"
+        android:background="@drawable/dtv_prolist_back"
+        android:clickable="true" >
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="0dip"
+            android:layout_marginTop="20dip"
+            android:addStatesFromChildren="true"
+            android:orientation="vertical" >
+<!-- 节目分类选择 -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="0dip"
+                android:layout_marginTop="1dip"
+                android:addStatesFromChildren="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="40dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginTop="8dip"
+                    android:background="#00000000"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/lift" />
+
+                <TextView
+                    android:id="@+id/id_epglist_title"
+                    android:layout_width="160dip"
+                    android:layout_height="42dip"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginTop="5dip"
+                    android:gravity="center"
+                    android:textSize="@dimen/FONT_SIZE_BIG" >
+                </TextView>
+
+                <ImageView
+                    android:layout_width="40dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginTop="8dip"
+                    android:background="#00000000"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/rightlift" />
+            </LinearLayout>
+<!-- 频道列表 -->
+            <ImageView
+                android:id="@+id/set_focus_id2"
+                android:layout_width="52dip"
+                android:layout_height="52dip"
+                android:layout_marginLeft="227dip"
+                android:layout_marginTop="16dip"
+                android:background="#00000000"
+                android:contentDescription="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/listfav"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="392dip"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="50dip"
+                android:layout_marginTop="-55dip"
+                android:addStatesFromChildren="true"
+                android:orientation="horizontal" >
+<!-- 
+                    android:divider="@drawable/smart_list_divider"
+ -->
+                <ListView
+                    android:id="@+id/id_epg_chlist"
+                    android:layout_width="360dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|top"
+                    android:layout_marginBottom="0dip"
+                    android:layout_marginLeft="-5dip"
+                    android:layout_marginTop="0dip"
+                    android:cacheColorHint="#00000000"
+                    android:clipChildren="true"
+					android:divider="#00000000"
+                    android:drawSelectorOnTop="false"
+                    android:fadingEdge="none"
+                    android:listSelector="#00000000"
+                    android:scrollbars="vertical" 
+                    android:scrollbarFadeDuration="0"
+                    android:fadeScrollbars="false"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+<LinearLayout
+        android:id="@+id/id_dtv_digital_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft ="1200dp"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/dtv_digital_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/dtv_digital_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/dtv_digital_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+ 
+</FrameLayout>

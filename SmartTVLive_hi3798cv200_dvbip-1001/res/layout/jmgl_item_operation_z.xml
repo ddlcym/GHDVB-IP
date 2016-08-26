@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/jmgl_z14"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dip"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/jmgl_item_move_z"
+            android:layout_width="124dip"
+            android:layout_height="60dip"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginLeft="0dip"
+            android:gravity="center_horizontal|center_vertical"
+            
+            android:background="@drawable/selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusDown="@+id/jmgl_item_favor_z"
+            android:nextFocusLeft="@+id/jmgl_item_move_z"
+            android:nextFocusRight="@+id/jmgl_item_move_z"
+            android:nextFocusUp="@+id/jmgl_item_move_z"
+            android:text="@string/jmgl_item_move_z"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_SMALL" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dip"
+            android:layout_marginTop="14dip"
+            android:background="@drawable/jmgl_z6"
+            android:focusable="false" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="0dip"
+        android:gravity="center_horizontal" >
+
+        
+        <TextView
+            android:id="@+id/jmgl_item_favor_z"
+            android:layout_width="124dip"
+            android:layout_height="60dip"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginLeft="0dip"
+            android:gravity="center_horizontal|center_vertical"
+            
+            android:background="@drawable/selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusDown="@+id/jmgl_item_remove_z"
+            android:nextFocusLeft="@+id/jmgl_item_favor_z"
+            android:nextFocusRight="@+id/jmgl_item_favor_z"
+            android:nextFocusUp="@+id/jmgl_item_move_z"
+            android:text="@string/jmgl_item_favor_z"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_SMALL" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_marginLeft="13dip"
+            android:layout_marginTop="14dip"
+            android:background="@drawable/jmgl_z7"
+            android:focusable="false" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="0dip"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/jmgl_item_remove_z"
+            android:layout_width="124dip"
+            android:layout_height="60dip"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginLeft="0dip"
+            android:background="@drawable/selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:nextFocusDown="@+id/jmgl_item_remove_z"
+            android:nextFocusLeft="@+id/jmgl_item_remove_z"
+            android:nextFocusRight="@+id/jmgl_item_remove_z"
+            android:nextFocusUp="@+id/jmgl_item_favor_z"
+            android:text="@string/jmgl_item_remove_z"
+            android:textColor="@color/white"
+            android:textSize="@dimen/FONT_SIZE_SMALL" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_marginLeft="13dip"
+            android:layout_marginTop="14dip"
+            android:background="@drawable/jmgl_z8"
+            android:focusable="false" />
+    </FrameLayout>
+
+</LinearLayout>

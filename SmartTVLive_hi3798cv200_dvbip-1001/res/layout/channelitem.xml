@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dtv_chlistitemFrameLayout01"
+    android:layout_width="220dip"
+    android:layout_height="55dip"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:gravity="center_vertical"
+    android:minHeight="55dip"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/chanIndex"
+        android:layout_width="48dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dip"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/chanId"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/dtv_chlist_Item_RelativLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <com.changhong.app.dtv.TextMarquee
+            android:id="@+id/chanName"
+            android:layout_width="140dip"
+            android:layout_height="50dip"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_marginLeft="10dip"
+            android:ellipsize="marquee"
+            android:gravity="left|center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/chan_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginLeft="1dip"
+        android:background="#00000000"
+        android:contentDescription="@null"
+        android:scaleType="centerInside" />
+
+</LinearLayout>

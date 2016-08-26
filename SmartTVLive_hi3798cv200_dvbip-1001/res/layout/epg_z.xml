@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <SurfaceView
+        android:id="@+id/surfaceView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </SurfaceView>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:background="@drawable/epgbkg118_z"
+        android:gravity="center_horizontal" >
+
+        <LinearLayout
+            android:id="@+id/epg_chanlistlayout"
+            android:layout_width="1100dip"
+            android:layout_height="550dip"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="120dip"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="240dip"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="0dip"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dip"
+                    android:background="@drawable/epgbkgz2" >
+
+                    <LinearLayout
+                        android:id="@+id/epg_chan_classifylayout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="60dip"
+                        android:visibility="gone" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dip"
+                            android:layout_marginTop="20dip"
+                            android:contentDescription="@null"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dip"
+                        android:layout_marginTop="20dip"
+                        android:contentDescription="@null"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/epg_chanlistTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selector"
+                        android:focusable="false"
+                        android:gravity="center_horizontal|center"
+                        android:nextFocusDown="@+id/ChanlIstView"
+                        android:nextFocusLeft="@+id/epg_chanlistTitle"
+                        android:nextFocusRight="@+id/epg_chanlistTitle"
+                        android:nextFocusUp="@+id/epg_chanlistTitle"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" >
+                    </Button>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dip"
+                        android:layout_marginTop="20dip"
+                        android:contentDescription="@null"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginTop="10dip"
+                    android:background="@drawable/epgbkgz3" >
+
+                    <!-- 设置 listSelector,避免listview自动对选中条填充纯色背景 -->
+
+                    <com.changhong.app.dtv.EpgListview
+                        android:id="@+id/ChanlIstView"
+                        android:layout_width="240dip"
+                        android:layout_height="480dip"
+                        android:cacheColorHint="#00000000"
+                        android:divider="#00000000"
+                        android:focusable="true"
+                        android:listSelector="@drawable/selector"
+                        android:nextFocusDown="@+id/ChanlIstView"
+                        android:nextFocusLeft="@+id/ChanlIstView"
+                        android:nextFocusRight="@+id/EpgWeekInfo"
+                        android:nextFocusUp="@+id/epg_chanlistTitle"
+                        android:scrollbarThumbHorizontal="@drawable/epgbkgz9"
+                        android:scrollbars="vertical" >
+                    </com.changhong.app.dtv.EpgListview>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/epg_weekeventlayout"
+                android:layout_width="835dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dip"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dip"
+                    android:layout_marginTop="10dip"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/epgbkgz2" >
+
+                    <Button
+                        android:id="@+id/week_1"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_2"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_3"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_4"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_5"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_6"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+
+                    <Button
+                        android:id="@+id/week_7"
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+                    
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:orientation="horizontal" >
+
+                    <!-- 设置 listSelector,避免listview自动对选中条填充纯色背景 -->
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <com.changhong.app.dtv.EpgListview
+                            android:id="@+id/EpgEventInfo"
+                            android:layout_width="600dip"
+                            android:layout_height="wrap_content"
+                            android:divider="@drawable/epgbkgz6"
+                            android:drawSelectorOnTop="false"
+                            android:focusable="true"
+                            android:listSelector="@drawable/selector"
+                            android:nextFocusLeft="@+id/ChanlIstView"
+                            android:nextFocusUp="@+id/EpgWeekInfo"
+                            android:scrollbars="vertical" >
+                        </com.changhong.app.dtv.EpgListview>
+
+                        <ImageView
+                            android:id="@+id/epg_event_Tview_timer"
+                            android:layout_width="80dip"
+                            android:layout_height="50dip"
+                            android:layout_marginLeft="15dip"
+                            android:background="@drawable/epgbkgz10"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <ImageView
+                        android:id="@+id/adv1_z"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/epg122"
+                        android:focusable="false" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/epgdate_z"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="950dip"
+            android:layout_marginTop="55dip"
+            android:focusable="false"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/epgtime_z"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1050dip"
+            android:layout_marginTop="55dip"
+            android:focusable="false"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="500dip"
+            android:layout_marginTop="650dip"
+            android:focusable="false"
+            android:text="@string/epg_prompt1"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+</FrameLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:visibility="invisible">
+	
+	<com.changhong.app.dtv.CAMarquee
+		android:textColor="@color/gray_white"
+		android:layout_width="1900dip"
+		android:layout_height="50dip"
+		android:ellipsize="marquee"
+		android:singleLine="true"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:layout_gravity="left"
+		android:layout_marginTop="650dip"
+		android:id="@+id/id_osd_roll_buttom"
+		android:textSize="35sp"
+		android:background="@drawable/epg_week_unselect" 
+		android:visibility="gone"/>
+	
+	<com.changhong.app.dtv.CAMarquee
+		android:textColor="@color/gray_white"
+		android:layout_width="1900dip"
+		android:layout_height="50dip"
+		android:ellipsize="marquee"
+		android:singleLine="true"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:layout_gravity="left"
+		android:id="@+id/id_osd_roll_top"
+		android:textSize="35sp"
+		android:layout_marginTop="20dip"
+		android:background="@drawable/epg_week_unselect" 
+		android:visibility="gone"/>
+
+</FrameLayout>

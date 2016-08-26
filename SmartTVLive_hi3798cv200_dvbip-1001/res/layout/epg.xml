@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg" >
+
+    <TextView
+        android:id="@+id/title_SelectbackTview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/eventselect"
+        android:focusable="false"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/epg_chanlistlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dip"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:contentDescription="@null"
+                android:src="@drawable/chanlistboder" />
+
+            <LinearLayout
+                android:layout_width="221dip"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="0dip"
+                android:background="@drawable/chanlistback"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/epg_chan_classifylayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="80dip"
+                    android:background="@drawable/tvepg_main_chanclassify_selector"
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dip"
+                        android:layout_marginTop="20dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/leftlift" />
+
+                    <Button
+                        android:id="@+id/epg_chanlistTitle"
+                        android:layout_width="140dip"
+                        android:layout_height="fill_parent"
+                        android:background="@drawable/tvepg_main_chanlist_selected"
+                        android:gravity="center"
+                        android:nextFocusDown="@+id/ChanlIstView"
+                        android:nextFocusLeft="@+id/epg_chanlistTitle"
+                        android:nextFocusRight="@+id/epg_chanlistTitle"
+                        android:nextFocusUp="@+id/epg_chanlistTitle"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" >
+                    	<requestFocus />
+                    </Button>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dip"
+                        android:layout_marginTop="20dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/rightlift" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@drawable/chanlistdivider" />
+
+                <!-- 设置 listSelector,避免listview自动对选中条填充纯色背景 -->
+
+                <com.changhong.app.dtv.EpgListview
+                    android:id="@+id/ChanlIstView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:cacheColorHint="#00000000"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:divider="@drawable/chanlistdivider"
+                    android:listSelector="@drawable/tvepg_main_chanlist_selected"
+                    android:nextFocusDown="@+id/ChanlIstView"
+                    android:nextFocusLeft="@+id/ChanlIstView"
+                    android:nextFocusRight="@+id/epg_weekeventlayout"
+                    android:nextFocusUp="@+id/epg_chanlistTitle"
+                    android:scrollbars="none" >
+                </com.changhong.app.dtv.EpgListview>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:src="@drawable/chanlistboder" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/epg_weekeventlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/epg_chanlistlayout"
+            android:background="@drawable/weekevent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="80dip" >
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontalView"
+                    android:layout_width="900dip"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentLeft="true"
+                    android:scrollbars="none" >
+
+                    <LinearLayout
+                        android:id="@+id/Weeklistlayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal" >
+
+                        <GridView
+                            android:id="@+id/EpgWeekInfo"
+                            android:layout_width="900dip"
+                            android:layout_height="fill_parent"
+                            android:columnWidth="110dip"
+                            android:gravity="center"
+                            android:horizontalSpacing="12dp"
+                            android:listSelector="@drawable/tvepg_main_weekitem_selected" >
+                        </GridView>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <Button
+                    android:id="@+id/epg_timerbt0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="32dip"
+                    android:layout_marginTop="15dip"
+                    android:layout_toRightOf="@id/horizontalView"
+                    android:background="@drawable/tvepg_main_timerbt_selected"
+                    android:gravity="center" />
+            </RelativeLayout>
+
+            <!-- 设置 listSelector,避免listview自动对选中条填充纯色背景 -->
+
+            <com.changhong.app.dtv.EpgListview
+                android:id="@+id/EpgEventInfo"
+                android:layout_width="fill_parent"
+                android:layout_height="160dip"
+                android:divider="@drawable/eventlistdivider"
+                android:listSelector="@drawable/tvepg_main_eventlist_selected" >
+            </com.changhong.app.dtv.EpgListview>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/epg_Videolayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/epg_weekeventlayout"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/epg_chanlistlayout"
+            android:orientation="horizontal" >
+
+            <SurfaceView
+                android:id="@+id/epg_VideosurfaceView"
+                android:layout_width="750dip"
+                android:layout_height="422dip"
+                android:layout_marginBottom="29dip"
+                android:layout_marginLeft="24dip"
+                android:layout_marginRight="29dip"
+                android:layout_marginTop="29dip"
+                android:focusable="false" >
+            </SurfaceView>
+
+            <LinearLayout
+                android:layout_width="220dip"
+                android:layout_height="422dip"
+                android:layout_marginTop="29dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_Title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="80dip"
+                    android:text="@string/str_epg_playing_info"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_chan"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_epg_playing_channelname"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_chan1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="80dip"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_program"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_epg_playing_enventname"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_program1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/epg_videoTvinfo_program2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_SelectbackTview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/eventselect"
+            android:focusable="false"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+</FrameLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/dtv_prolist_back"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#960000"
+        android:gravity="center"
+        android:text="@string/str_zhn_popskiptext"
+        android:textColor="@color/white"
+        android:textSize="@dimen/pop_titletextsize" />
+
+    <ListView
+        android:id="@+id/pop_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:clipChildren="true"
+        android:divider="@drawable/smart_list_divider"
+        android:drawSelectorOnTop="false"
+        android:fadingEdge="none"
+        android:listSelector="@drawable/chanselect"
+        android:scrollbars="@null" />
+
+</LinearLayout>
