@@ -21,5 +21,8 @@
     <color name="ghColor_535353">#535353</color>
     <color name="ghColor_8aacca">#8aacca</color>    
     
-    
+    <color name="shift_curtime">#001326</color>
+    <color name="timeshift_program_list_unfocuse">#939393</color>
+    <color name="timeshift_program_list_focuse">#b8e2ff</color>
+    <color name="seekbar_curtext">#001326</color>
 </resources>

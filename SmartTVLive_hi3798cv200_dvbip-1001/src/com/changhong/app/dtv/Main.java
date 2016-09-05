@@ -2,24 +2,8 @@ package com.changhong.app.dtv;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-import com.changhong.app.book.BookInfo;
-import com.changhong.app.constant.Advertise_Constant;
-import com.changhong.app.constant.Class_Constant;
-import com.changhong.app.constant.Class_Global;
-import com.changhong.app.dtv.DialogUtil.DialogBtnOnClickListener;
-import com.changhong.app.dtv.DialogUtil.DialogMessage;
-import com.changhong.dvb.Channel;
-import com.changhong.dvb.DVB;
-import com.changhong.dvb.ProtoMessage.DVB_RectSize;
-import com.iflytek.xiri.Feedback;
-import com.iflytek.xiri.scene.ISceneListener;
-import com.iflytek.xiri.scene.Scene;
-import com.xormedia.adplayer.AdItem;
-import com.xormedia.adplayer.AdPlayer;
-import com.xormedia.adplayer.AdStrategy;
-import com.xormedia.adplayer.IAdPlayerCallbackListener;
-import com.xormedia.adplayer.IAdStrategyResponseListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -34,9 +18,11 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
@@ -46,6 +32,39 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.changhong.app.book.BookInfo;
+import com.changhong.app.constant.Advertise_Constant;
+import com.changhong.app.constant.Class_Constant;
+import com.changhong.app.constant.Class_Global;
+import com.changhong.app.dtv.DialogUtil.DialogBtnOnClickListener;
+import com.changhong.app.dtv.DialogUtil.DialogMessage;
+import com.changhong.app.timeshift.common.CacheData;
+import com.changhong.app.timeshift.common.MyApp;
+import com.changhong.app.timeshift.common.PlayVideo;
+import com.changhong.app.timeshift.common.ProcessData;
+import com.changhong.app.timeshift.common.ProgramInfo;
+import com.changhong.app.timeshift.common.VolleyTool;
+import com.changhong.app.timeshift.datafactory.BannerDialog;
+import com.changhong.app.timeshift.datafactory.HandleLiveData;
+import com.changhong.dvb.Channel;
+import com.changhong.dvb.ChannelDB;
+import com.changhong.dvb.DVB;
+import com.changhong.dvb.PlayingInfo;
+import com.changhong.dvb.ProtoMessage.DVB_RectSize;
+import com.iflytek.xiri.Feedback;
+import com.iflytek.xiri.scene.ISceneListener;
+import com.iflytek.xiri.scene.Scene;
+import com.xormedia.adplayer.AdItem;
+import com.xormedia.adplayer.AdPlayer;
+import com.xormedia.adplayer.AdStrategy;
+import com.xormedia.adplayer.IAdPlayerCallbackListener;
+import com.xormedia.adplayer.IAdStrategyResponseListener;
 
 public class Main extends Activity implements ISceneListener {
 
@@ -185,6 +204,17 @@ public class Main extends Activity implements ISceneListener {
 	private AdPlayer adPlayer;
 	private ArrayList<AdItem> adList = new ArrayList<AdItem>();
 	private AdStrategy ads;
+	
+	/*
+	 * timeshift data
+	 */
+	private VolleyTool volleyTool;
+	private RequestQueue mReQueue;
+	private ProcessData processData;
+	private static BannerDialog programBannerDialog;
+	private static List<ProgramInfo> curChannelPrograms = new ArrayList<ProgramInfo>();// 当前频道下的上一个节目，当前节目，下一个节目信息
+	
+	private SurfaceView surfaceView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -718,9 +748,9 @@ public Runnable volumeAdRunnable = new Runnable() {
 
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 		case KeyEvent.KEYCODE_ENTER: {
-/*
+
 			bKeyUsed = true;
-			this.onVkey(keyCode);*/
+			this.onVkey(keyCode);
 		}
 			break;
 
@@ -955,7 +985,7 @@ public void getYiHanVolumeAD(int channelId) {
 		adPlayer.setVisibility(View.VISIBLE);
 		adPlayer.play(id);
 	}
-	public static class UI_Handler extends Handler {
+	public class UI_Handler extends Handler {
 		
 		WeakReference<Main> mActivity;
 
@@ -1264,6 +1294,17 @@ public void getYiHanVolumeAD(int channelId) {
 			case MESSAGE_STOP_RECORD: {
 
 			}
+				break;
+			case Class_Constant.BACK_TO_LIVE:
+				if (programBannerDialog != null) {
+					programBannerDialog.dismiss();
+					Toast.makeText(MyApp.getContext(), "退回到直播模式", Toast.LENGTH_SHORT).show();
+					Log.i("mmmm", "退回到直播模式");
+				}
+				break;
+			case Class_Constant.TOAST_BANNER_PROGRAM_PASS:
+				curChannelPrograms = CacheData.getCurPrograms();
+				showDialogBanner();
 				break;
 			}
 		}
@@ -1623,20 +1664,39 @@ public void getYiHanVolumeAD(int channelId) {
 			break;
 		case Class_Constant.KEYCODE_OK_KEY:
 		case KeyEvent.KEYCODE_ENTER: {
-			if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
-				mUiHandler.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
-				mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY);
-
+			
+			//这个是之前项目遗留下来的，用不上，后面会删掉
+//			if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
+//				mUiHandler.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
+//				mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY);
+//
+//			} else {
+//				// show channel list
+//				
+//
+//				Intent Huantai_fast_zIntentz = new Intent(Main.this,
+//						FastChangeChannel_z.class);
+//
+//				startActivity(Huantai_fast_zIntentz);
+//				
+//	
+//			}
+			//时移模块
+			if (tvRootDigitalkey.isShown()) {
+				//当数字键显示的时候，响应数字换台逻辑
+				
+				
 			} else {
-				// show channel list
 				
-
-				Intent Huantai_fast_zIntentz = new Intent(Main.this,
-						FastChangeChannel_z.class);
-
-				startActivity(Huantai_fast_zIntentz);
+				//获取当前道信息
+				ChannelDB db=DVB.getManager().getChannelDBInstance();
+				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
+				//获取当前Channel详细信息
+				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
 				
-	
+				//获取节目
+				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
+				
 			}
 
 		}
@@ -1798,7 +1858,7 @@ public void getYiHanVolumeAD(int channelId) {
 	}
 
 	private void findView() {
-		
+		surfaceView=(SurfaceView)findViewById(R.id.surfaceView1);
 		flCaInfo = (RelativeLayout) findViewById(R.id.id_root_CA_info);
 		tvCaSubtitleDown = (CAMarquee) findViewById(R.id.id_ca_subtitleDown);
 		tvCaSubtitleUp = (CAMarquee) findViewById(R.id.id_ca_subtitleUp);
@@ -1851,6 +1911,13 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 		filter.addAction("com.changhong.action.DTV_CHANGED");
 		filter.addAction("com.changhong.action.CTL_CHANGED");
 		registerReceiver(dtvctlReceiver, filter);
+		
+		volleyTool = VolleyTool.getInstance();
+		mReQueue = volleyTool.getRequestQueue();
+		if (null == processData) {
+			processData = new ProcessData();
+		}
+		initTimeshiftData();
 	}
 
 	BroadcastReceiver dtvctlReceiver = new BroadcastReceiver() {
@@ -2154,4 +2221,62 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 		}
 	*/}
 
+	private void initTimeshiftData(){
+		Channel DBchan=null;
+		// 获取频道是否支持时移和频道logoURL
+		
+		//获取当前频道信息
+		ChannelDB db=DVB.getManager().getChannelDBInstance();
+		PlayingInfo thisPlayingInfo = DVB.getManager().getChannelDBInstance().getSavedPlayingInfo();
+		//获取当前Channel详细信息
+		if(thisPlayingInfo!=null)
+		{
+			DBchan = db.getChannel(thisPlayingInfo.mChannelId );
+		}
+		if(null==DBchan||TextUtils.isEmpty(DBchan.is_ttv))
+		{
+			String URL = processData.getChannelsInfo();
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+					new Response.Listener<org.json.JSONObject>() {
+
+						@Override
+						public void onResponse(org.json.JSONObject arg0) {
+							// TODO Auto-generated method stub
+							Log.i("mmmm", "Main=getUserChannel:" + arg0);
+
+							HandleLiveData.getInstance().dealChannelExtra(arg0);
+						}
+					}, errorListener);
+			jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+			mReQueue.add(jsonObjectRequest);
+		}
+	}
+	private Response.ErrorListener errorListener = new Response.ErrorListener() {
+		@Override
+		public void onErrorResponse(VolleyError arg0) {
+			// TODO Auto-generated method stub
+			Log.i("mmmm", "Main=error：" + arg0);
+		}
+	};
+	
+	/* show time-shifting banner dialog */
+	public void showDialogBanner() {
+		
+		//获取当前道信息
+		ChannelDB db=DVB.getManager().getChannelDBInstance();
+		PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
+		//获取当前Channel详细信息
+		Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
+		
+		
+		if(null==curChannelPrograms||curChannelPrograms.size()<=0){
+			Toast.makeText(Main.this, "节目信息为空，不能进入时移模式", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (programBannerDialog != null) {
+			programBannerDialog.cancel();
+		}
+		programBannerDialog = new BannerDialog(this, DBchan, curChannelPrograms, mUiHandler, surfaceView);
+		programBannerDialog.show();
+	}
 }

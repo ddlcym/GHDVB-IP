@@ -30,6 +30,8 @@
 
 	<!-- livemail window size -->
 	<dimen name ="ghWindow_livemail_w">1340dp</dimen>
-	<dimen name ="ghWindow_livemail_h">750dp</dimen>				
+	<dimen name ="ghWindow_livemail_h">750dp</dimen>			
+	
+	<dimen name="seekbar_margin">42dp</dimen>	
 	
 </resources>
