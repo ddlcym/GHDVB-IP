@@ -276,6 +276,11 @@ public class Banner {
 		banner_PF_F_time.setText(PF_time_F);
 
 	}
+	
+	public void cancel(){
+		if(bannerToast!=null)
+		bannerToast.cancel();
+	}
 
 	private void updateChannelStatus(int chanId) {
 		//TODO 

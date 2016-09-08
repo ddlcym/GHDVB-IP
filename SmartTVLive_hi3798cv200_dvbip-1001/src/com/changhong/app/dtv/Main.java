@@ -2272,12 +2272,12 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 	private boolean dealOnKeyUp(int keyCode){
 		switch (keyCode) {
 		case Class_Constant.KEYCODE_OK_KEY:
-			if (tvRootDigitalkey.isShown()) {
-				//当数字键显示的时候，响应数字换台逻辑
-				
-				
-			} else {
-				
+//			if (tvRootDigitalkey.isShown()) {
+//				//当数字键显示的时候，响应数字换台逻辑
+//				
+//				
+//			} else {
+				banner.cancel();
 				if (DVB.getManager().getDefaultLivePlayer() != null) {
 					DVB.getManager().getDefaultLivePlayer().stop();
 					DVB.getManager().getDefaultLivePlayer();
@@ -2291,7 +2291,7 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 				//获取节目
 				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
 				
-			}
+//			}
 			break;
 		}
 		return true;
