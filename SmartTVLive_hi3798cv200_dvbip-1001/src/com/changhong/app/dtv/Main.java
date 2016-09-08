@@ -1306,6 +1306,10 @@ public void getYiHanVolumeAD(int channelId) {
 				curChannelPrograms = CacheData.getCurPrograms();
 				showDialogBanner();
 				break;
+				
+			case Class_Constant.DIALOG_ONKEY_UP:
+				dealOnKeyUp(msg.arg1);
+				break;
 			}
 		}
 	}
@@ -1682,22 +1686,7 @@ public void getYiHanVolumeAD(int channelId) {
 //	
 //			}
 			//时移模块
-			if (tvRootDigitalkey.isShown()) {
-				//当数字键显示的时候，响应数字换台逻辑
-				
-				
-			} else {
-				
-				//获取当前道信息
-				ChannelDB db=DVB.getManager().getChannelDBInstance();
-				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
-				//获取当前Channel详细信息
-				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
-				
-				//获取节目
-				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
-				
-			}
+			dealOnKeyUp(ri_KeyCode);
 
 		}
 			break;
@@ -2278,5 +2267,29 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 		}
 		programBannerDialog = new BannerDialog(this, DBchan, curChannelPrograms, mUiHandler, surfaceView);
 		programBannerDialog.show();
+	}
+	
+	private boolean dealOnKeyUp(int keyCode){
+		switch (keyCode) {
+		case Class_Constant.KEYCODE_OK_KEY:
+			if (tvRootDigitalkey.isShown()) {
+				//当数字键显示的时候，响应数字换台逻辑
+				
+				
+			} else {
+				
+				//获取当前道信息
+				ChannelDB db=DVB.getManager().getChannelDBInstance();
+				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
+				//获取当前Channel详细信息
+				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
+				
+				//获取节目
+				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
+				
+			}
+			break;
+		}
+		return true;
 	}
 }
