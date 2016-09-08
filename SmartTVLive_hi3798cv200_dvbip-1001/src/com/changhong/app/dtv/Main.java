@@ -2278,6 +2278,10 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 				
 			} else {
 				
+				if (DVB.getManager().getDefaultLivePlayer() != null) {
+					DVB.getManager().getDefaultLivePlayer().stop();
+					DVB.getManager().getDefaultLivePlayer();
+				}
 				//获取当前道信息
 				ChannelDB db=DVB.getManager().getChannelDBInstance();
 				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
