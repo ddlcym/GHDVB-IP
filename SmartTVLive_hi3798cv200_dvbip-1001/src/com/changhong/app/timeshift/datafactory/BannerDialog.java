@@ -145,11 +145,6 @@ public class BannerDialog extends Dialog {
 		} else {
 			muteIconImage.setVisibility(View.GONE);
 		}
-		// android.view.ViewGroup.LayoutParams ps =
-		// timeShiftIcon.getLayoutParams();
-		// ps.height = 90;
-		// ps.width = 90;
-		// timeShiftIcon.setLayoutParams(ps);
 		programPlayBar.setFocusable(false);
 		programPlayBar.setClickable(false);
 
@@ -179,16 +174,19 @@ public class BannerDialog extends Dialog {
 					
 					long curTime=System.currentTimeMillis();
 					int delayTime=(int) (curTime-program.getBeginTime().getTime())/1000;
-					playLiveBack(curChannel, delayTime);
-					palyButton.setMyBG(PlayButton.Play);
 					CacheData.setCurProgram(program);
 					programListInfo.remove(1);
 					programListInfo.add(1, program);
+					initData();
+					playLiveBack(curChannel, delayTime);
+					palyButton.setMyBG(PlayButton.Play);
+					
+					
 					if(programListInfo.size()!=0&&(list.size()-1)!=position){
 						programListInfo.remove(2);
 						programListInfo.add(2, list.get(position+1));
 					}
-					initData();
+					
 					nextProgramContainer.setVisibility(View.VISIBLE);
 					programListContainer.setVisibility(View.GONE);
 				}
@@ -229,7 +227,7 @@ public class BannerDialog extends Dialog {
 		player = new Player(parentHandler, surView,
 				programPlayBar.getSeekBar(), programPlayBar.getCurText());
 		player.setLiveFlag(true);
-		programPlayBar.getSeekBar().setProgress(0);
+		player.initSeekbar();
 		
 
 	}
@@ -258,7 +256,8 @@ public class BannerDialog extends Dialog {
 		/* 返回--取消 */
 		case KeyEvent.KEYCODE_BACK:
 			if (bannerView.isShown()) {
-				bannerView.setVisibility(View.INVISIBLE);
+				parentHandler.removeCallbacks(bannerRunnable);
+				parentHandler.post(bannerRunnable);
 				return false;
 			} else {
 				player.setLiveFlag(false);
@@ -279,6 +278,14 @@ public class BannerDialog extends Dialog {
 			break;
 		case Class_Constant.KEYCODE_UP_ARROW_KEY:
 			Log.i("zyt", "dialog up key is pressed");
+			
+			if(!bannerView.isShown()){
+				bannerView.setVisibility(View.VISIBLE);
+				if (bannerRunnable != null) {
+					parentHandler.removeCallbacks(bannerRunnable);
+					parentHandler.postDelayed(bannerRunnable, 5000);
+				}
+			}
 			nextProgramContainer.setVisibility(View.GONE);
 			programListContainer.setVisibility(View.VISIBLE);
 
@@ -440,6 +447,8 @@ public class BannerDialog extends Dialog {
 		public void run() {
 			// TODO Auto-generated method stub
 			bannerView.setVisibility(View.GONE);
+			nextProgramContainer.setVisibility(View.VISIBLE);
+			programListContainer.setVisibility(View.GONE);
 		}
 	};
 

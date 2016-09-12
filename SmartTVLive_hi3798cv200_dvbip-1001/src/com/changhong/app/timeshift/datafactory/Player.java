@@ -89,7 +89,6 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			curTextWidth = videoCurrentTime.getWidth();
 			curTextHeight = videoCurrentTime.getHeight();
 		}
-		
 
 		surfaceHolder = surfaceView.getHolder();
 		surfaceHolder.addCallback(this);
@@ -131,7 +130,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			// CacheData.getCurProgram().getBeginTime().getTime());
 			int maxTimes = getDuration();
 			moveStep = (float) ((float) arg1 / (float) maxTimes);
-			seekwidth = skbProgress.getWidth();
+			seekwidth = skbProgress.getWidth();//seekbar隐藏后宽度会变，所以需要每次都获取
 			if (videoCurrentTime != null) {
 				long beginTime = CacheData.getCurProgram().getBeginTime()
 						.getTime();
@@ -259,8 +258,8 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				}
 				if (liveFlag) {
 					int curmedPos = mediaPlayer.getCurrentPosition();
-					position = curmedPos + curBeginTime - delayTime * 1000;
-					if (position >= curProlength) {
+					desPositon = curmedPos + curBeginTime - delayTime * 1000;
+					if (desPositon >= curProlength) {
 						// 通知更新banner条
 						// parentHandler.sendEmptyMessage(Class_Constant.LIVE_BACK_PROGRAM_OVER);
 						// liveFlag=false;
@@ -269,15 +268,15 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 //						long beginTime = CacheData.getCurProgram()
 //								.getBeginTime().getTime();
 //						videoCurrentTime.setText(Utils
-//								.millToLiveBackString(position + beginTime));
+//								.millToLiveBackString(desPositon + beginTime));
 					}
 				} else {
-					position = mediaPlayer.getCurrentPosition();
-					videoCurrentTime.setText(Utils.millToDateStr(position));
+					desPositon = mediaPlayer.getCurrentPosition();
+					videoCurrentTime.setText(Utils.millToDateStr(desPositon));
 
 				}
-				if (duration > 0) {
-					Player.skbProgress.setProgress(position);
+				if (duration > 0&&desPositon<duration) {
+					Player.skbProgress.setProgress(desPositon);
 				}
 				break;
 
@@ -555,8 +554,8 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 	private static int getPlayDelayTimes() {
 		long times = 0;
 		Date date = new Date();
-		times = (date.getTime() - Player.skbProgress.getProgress() - CacheData
-				.getCurProgram().getBeginTime().getTime()) / 1000;
+		ProgramInfo program=CacheData.getCurProgram();
+		times = (date.getTime() - Player.skbProgress.getProgress() - program.getBeginTime().getTime()) / 1000;
 
 		return (int) times;
 	}
@@ -635,5 +634,10 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			keyFlag = false;
 		}
 	};
+	
+	public void initSeekbar(){
+		skbProgress.setProgress(0);
+		desPositon=0;
+	}
 
 }
