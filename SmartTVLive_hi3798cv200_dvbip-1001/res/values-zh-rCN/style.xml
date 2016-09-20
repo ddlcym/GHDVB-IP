@@ -194,4 +194,9 @@
         <!-- item name="android:windowBackground">@drawable/tv_background</item> -->
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+    
+    <style name="replayDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/dialog_back</item>
+	 </style>
 </resources>
