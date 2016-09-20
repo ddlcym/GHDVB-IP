@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.changhong.app.timeshift.common.CacheData;
+import com.changhong.app.timeshift.common.ChannelType;
 import com.changhong.app.timeshift.common.PosterInfo;
 import com.changhong.app.timeshift.common.ProgramInfo;
 import com.changhong.app.timeshift.common.Utils;
@@ -72,6 +73,33 @@ public class JsonResolve {
 		return channel;
 	}
 
+	public ChannelType jsonToType(JSONObject json){
+		ChannelType type=new ChannelType();
+		type.setPramKey(getJsonObjectString(json, "pramKey"));
+		type.setPramValue(getJsonObjectString(json, "pramValue"));
+		type.setRank(getJsonObjInt(json, "rank"));
+		return type;
+	}
+	
+	//get channel type
+	public  List<ChannelType> jsonToTypes(JSONObject json){
+		List<ChannelType> list=new ArrayList<ChannelType>();
+		JSONArray types = getJsonObjectArray(json, "datas");
+		for (int i = 0; i < types.length(); i++) {
+			ChannelType type=null;
+			try {
+				JSONObject obj=(JSONObject) types.get(i);
+				type=jsonToType(obj);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(type!=null){
+				list.add(type);
+			}
+		}
+		return list;
+	}
 	// get all channel info
 	public List<Channel> jsonToChannels(JSONObject jsonObject) {
 		List<Channel> list = new ArrayList<Channel>();
@@ -215,6 +243,7 @@ public class JsonResolve {
 				list.add(program);
 			}
 		}
+		CacheData.setTimeshiftPrograms(list);
 		return list;
 	}
 

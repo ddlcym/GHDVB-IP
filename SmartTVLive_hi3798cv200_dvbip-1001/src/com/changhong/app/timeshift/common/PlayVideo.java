@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.changhong.app.timeshift.datafactory.JsonResolve;
+import com.changhong.app.timeshift.datafactory.Player;
 import com.changhong.dvb.Channel;
 
 public class PlayVideo {
@@ -147,7 +148,7 @@ public class PlayVideo {
 
 						Message msg = new Message();
 						msg.what = Class_Constant.TOAST_BANNER_PROGRAM_PASS;
-						CacheData.setCurPrograms(jsonResolve.curJsonProToString(arg0));
+						jsonResolve.curJsonProToString(arg0);
 						handler.sendEmptyMessage(Class_Constant.TOAST_BANNER_PROGRAM_PASS);
 
 					}
@@ -256,4 +257,45 @@ public class PlayVideo {
 		}
 	};
 
+	/*
+	 * 播放指定频道，指定时移节目
+	 * player:当前播放类
+	 * curChannel:当前频道
+	 * curProgram：时移节目
+	 * 
+	 */
+	public void playLiveBack(final Player player,Channel curChannel,ProgramInfo curProgram) {
+		long curTime=System.currentTimeMillis();
+		int delayTime=(int) (curTime-curProgram.getBeginTime().getTime())/1000;
+		CacheData.setCurProgram(curProgram);
+		Player.setDuration((int)(curProgram.getEndTime().getTime()-curProgram.getBeginTime().getTime()));
+		playTSDelayTime(player,curChannel,delayTime);
+		player.initSeekbar();
+	}
+	
+	/*
+	 * 播放指定频道，指定延迟时间
+	 */
+	public void playTSDelayTime(final Player player,Channel curChannel,int delayTime){
+		mReQueue.cancelAll("bannerDialog");
+		String requestURL = processData.getLiveBackPlayUrl(curChannel, delayTime);
+		Player.setDelayTime(delayTime);
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+				Request.Method.POST, requestURL, null,
+				new Response.Listener<org.json.JSONObject>() {
+					@Override
+					public void onResponse(org.json.JSONObject arg0) {
+						final String url = JsonResolve.getInstance()
+								.getLivePlayURL(arg0);
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								player.playUrl(url);
+							}
+						}).start();
+					}
+				}, errorListener);
+		jsonObjectRequest.setTag("bannerDialog");// 设置tag,cancelAll的时候使用
+		mReQueue.add(jsonObjectRequest);
+	}
 }

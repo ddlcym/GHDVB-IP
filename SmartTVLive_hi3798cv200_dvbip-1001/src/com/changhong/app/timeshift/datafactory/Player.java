@@ -142,6 +142,16 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 						(int) (seekwidth * moveStep) + videoCurrentTime.getWidth(),
 						videoCurrentTime.getHeight());
 			}
+			//进度条移到末尾
+			if (liveFlag && arg1 == arg0.getMax()) {
+				if (handlerFlag) {
+					handlerFlag = false;
+					Log.i("test", "parentHandler.sendEmptyMessage:SHIFT_NEXT_PROGRAM");
+					 parentHandler
+					 .sendEmptyMessage(Class_Constant.SHIFT_NEXT_PROGRAM);
+				}
+			}
+			
 		}
 
 		@Override
@@ -227,7 +237,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				keyFlag = true;
 				desPositon = Player.skbProgress.getProgress() - 30000;
 
-				if (desPositon < 0) {
+				/*if (desPositon < 0) {
 					if (handlerFlag) {
 						handlerFlag = false;
 						parentHandler
@@ -235,7 +245,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 						Log.i("xb", "Player*********");
 					}
 					desPositon = 0;
-				}
+				}*/
 
 				Player.skbProgress.setProgress(desPositon);
 				//
@@ -275,7 +285,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 					videoCurrentTime.setText(Utils.millToDateStr(desPositon));
 
 				}
-				if (duration > 0&&desPositon<duration) {
+				if (duration > 0&&desPositon<(duration+2000)) {
 					Player.skbProgress.setProgress(desPositon);
 				}
 				break;
@@ -305,10 +315,17 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 					mediaPlayer.pause();
 				}
 				keyFlag = true;
+				Log.i("mmmm", "**Player.skbProgress.getProgress():" + Player.skbProgress.getProgress());
 				desPositon = Player.skbProgress.getProgress() - 30000;
+				Log.i("mmmm", "**desPositon:" + desPositon);
 				if (desPositon < 0) {
+					Log.i("mmmm", "parentHandler.sendEmptyMessage:SHIFT_LAST_PROGRAM");
 					// 提示已经到开始位置了
-
+					if (handlerFlag) {
+						handlerFlag = false;
+						parentHandler
+						.sendEmptyMessage(Class_Constant.SHIFT_LAST_PROGRAM);// 回退到最开始
+					}
 					desPositon = 0;
 				}
 
@@ -602,6 +619,9 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 	public static void setDuration(int duration) {
 		Player.duration = duration;
 	}
+	public static void setDelayTime(int delayTime) {
+		Player.delayTime = delayTime;
+	}
 
 	private static int getStartTime() {
 		long time = 0;
@@ -622,9 +642,21 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			if (null == mediaPlayer)
 				return;
 			if (!liveFlag) {
+				Log.i("mmmm", "%%%%"+liveFlag);
+				if (desPositon < 0) {
+					if (handlerFlag) {
+						handlerFlag = false;
+						parentHandler
+								.sendEmptyMessage(Class_Constant.RE_LAST_PROGRAM);// 回退到最开始
+						Log.i("xb", "Player*********");
+					}
+					desPositon = 0;
+				}
 				mediaPlayer.seekTo(desPositon);
 				mediaPlayer.start();
 			} else {
+				Log.i("mmmm", "#####"+liveFlag);
+				Log.i("mmmm", "####desPositon:"+desPositon);
 				if (desPositon >= 0) {
 					delayTime = getPlayDelayTimes();
 					playLiveBack(curChannel, delayTime);

@@ -28,6 +28,7 @@ public class CacheData {
 	public static ProgramInfo curProgram;
 	public static List<ProgramInfo> curPrograms=new ArrayList<ProgramInfo>();//当前频道的3个节目
 	
+	public static List<ProgramInfo> timeshiftPrograms=new ArrayList<ProgramInfo>();//时移下的节目列表
 	public static List<Channel> getAllChannelExtraInfo() {
 		return allChannelExtraInfo;
 	}
@@ -107,6 +108,12 @@ public class CacheData {
 		if(curPrograms!=null&&curPrograms.size()>1){
 		setCurProgram(curPrograms.get(1));
 		}
+	}
+	public static List<ProgramInfo> getTimeshiftPrograms() {
+		return timeshiftPrograms;
+	}
+	public static void setTimeshiftPrograms(List<ProgramInfo> timeshiftPrograms) {
+		CacheData.timeshiftPrograms = timeshiftPrograms;
 	}
 		
 }

@@ -22,6 +22,7 @@ public class ProcessData {
 	private String MD5Key = "aidufei";
 	private String conStr = "&authKey=";
 
+	private String getCatalog="msis/getCatalog?";
 	/* chnList:频道列表 param of must */
 	private String chListPendingStr = "msis/getChannels?";
 	private String chListVersion = "V001";
@@ -79,6 +80,13 @@ public class ProcessData {
 	/*   获取用户注册信息 */
 	private String sendRegValidCode="msis/sendRegValidCode?";
 	
+	/*
+	 * 获取频道分类信息
+	 */
+	public String getTypes(){
+		String catalogURL=serverAdress+"msis/getPram?version=V001&PramName=ChannelType&terminalType=3";
+		return strGETReturn(catalogURL);
+	}
 
 	/* generate channel list ： 获取频道列表 */
 	public String getChannelList() {
@@ -188,6 +196,14 @@ public class ProcessData {
 	public String getChannelsInfo(){
 		String requestURL=null;
 		requestURL=serverAdress+getChannelsInfo+"version="+version1+"&userCode="+userCode+"&terminalType="+3;
+		return strGETReturn(requestURL);
+	}
+	
+	
+	//获取系统时间
+	public String getSystemTime(){
+		String requestURL=null;
+		requestURL="http://ip:port/msis/getSystemTime?";
 		
 		return strGETReturn(requestURL);
 	}
