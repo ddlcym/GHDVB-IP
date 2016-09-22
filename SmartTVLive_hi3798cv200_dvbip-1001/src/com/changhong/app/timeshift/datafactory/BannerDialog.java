@@ -749,6 +749,7 @@ public class BannerDialog extends Dialog {
 		super.dismiss();
 		if(player!=null){
 		player.stopTimer();
+		player.stop();
 			player=null;
 		}
 	}
