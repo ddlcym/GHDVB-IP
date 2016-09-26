@@ -2222,6 +2222,7 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 		{
 			DBchan = db.getChannel(thisPlayingInfo.mChannelId );
 		}
+		Log.i("mmmm", "Main=initTimeshiftData_DBchan:"+DBchan+"thisPlayingInfo:"+thisPlayingInfo);
 		if(null==DBchan||TextUtils.isEmpty(DBchan.is_ttv))
 		{
 			String URL = processData.getChannelsInfo();

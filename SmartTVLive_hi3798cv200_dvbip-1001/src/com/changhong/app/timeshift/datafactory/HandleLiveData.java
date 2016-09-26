@@ -60,7 +60,7 @@ public class HandleLiveData {
 	
 	public void dealChannelExtra(JSONObject json){
 		int chanId=0;
-		L.i("handlelivedata-dealChannelExtra:"+json.toString());
+//		L.i("handlelivedata-dealChannelExtra:"+json.toString());
 		List<Channel> timeshiftChannel=JsonResolve.jsonToChannelExtra(json);
 		CacheData.setAllChannelExtraInfo(timeshiftChannel);
 		if(null==timeshiftChannel||timeshiftChannel.size()==0) 
