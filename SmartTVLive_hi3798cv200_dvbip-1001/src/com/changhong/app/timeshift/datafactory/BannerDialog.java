@@ -604,7 +604,7 @@ public class BannerDialog extends Dialog {
 			
 			
 			
-			AudioManager am1 = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+			AudioManager am1 = (AudioManager)mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 			boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
 			//set mute state
 			if (isMute1) {
@@ -613,7 +613,7 @@ public class BannerDialog extends Dialog {
 			} else {
 				muteIconImage.setVisibility(View.VISIBLE);
 			}
-			am1.setStreamMute(AudioManager.STREAM_MUSIC, !isMute1);
+//			am1.setStreamMute(AudioManager.STREAM_MUSIC, !isMute1);
 			
 			L.i( "mute key arrived."+isMute1);
 			//Assure the volume is old value.

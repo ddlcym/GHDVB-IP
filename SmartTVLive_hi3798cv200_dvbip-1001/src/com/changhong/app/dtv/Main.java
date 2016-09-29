@@ -2266,7 +2266,7 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 		if (programBannerDialog != null) {
 			programBannerDialog.cancel();
 		}
-		programBannerDialog = new BannerDialog(this, DBchan, curChannelPrograms, mUiHandler, surfaceView);
+		programBannerDialog = new BannerDialog(Main.this, DBchan, curChannelPrograms, mUiHandler, surfaceView);
 		programBannerDialog.show();
 	}
 	
