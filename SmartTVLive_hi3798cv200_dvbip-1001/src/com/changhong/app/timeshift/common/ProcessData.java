@@ -18,7 +18,7 @@ public class ProcessData {
 
 	private MD5Encrypt MD5;
 	private static final String serverAdress = "http://ott.yun.gehua.net.cn:8080/";
-//	private static final String serverAdress = "http://172.28.3.68:8080/";
+	private static final String serverNewAdress = "http://api.ott.yun.gehua.net.cn:8080/";
 	private String MD5Key = "aidufei";
 	private String conStr = "&authKey=";
 

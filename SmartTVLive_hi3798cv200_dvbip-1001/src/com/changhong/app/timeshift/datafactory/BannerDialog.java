@@ -3,9 +3,12 @@ package com.changhong.app.timeshift.datafactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -30,6 +33,7 @@ import com.changhong.app.dtv.SysApplication;
 import com.changhong.app.timeshift.common.CacheData;
 import com.changhong.app.timeshift.common.Class_Constant;
 import com.changhong.app.timeshift.common.CommonMethod;
+import com.changhong.app.timeshift.common.L;
 import com.changhong.app.timeshift.common.MyApp;
 import com.changhong.app.timeshift.common.PlayVideo;
 import com.changhong.app.timeshift.common.ProcessData;
@@ -476,6 +480,7 @@ public class BannerDialog extends Dialog {
 		super.hide();
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
@@ -596,16 +601,29 @@ public class BannerDialog extends Dialog {
 			break;
 
 		case Class_Constant.KEYCODE_MUTE:// mute
-			// int current =
-			// audioMgr.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
-			whetherMute = !whetherMute;
-			CommonMethod.saveMutesState((whetherMute + ""), SysApplication.getInstance());
-			// Log.i("zyt", "keycode mute is " + whetherMute);
-			if (muteIconImage.isShown()) {
+			
+			
+			
+			AudioManager am1 = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+			boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
+			//set mute state
+			if (isMute1) {
 				muteIconImage.setVisibility(View.GONE);
+				
 			} else {
 				muteIconImage.setVisibility(View.VISIBLE);
 			}
+			am1.setStreamMute(AudioManager.STREAM_MUSIC, !isMute1);
+			
+			L.i( "mute key arrived."+isMute1);
+			//Assure the volume is old value.
+			am1.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_SAME, 0); 
+			//send broadcast to show/hide mute icon
+			Intent mIntent1 = new Intent("chots.anction.muteon");
+			mContext.sendBroadcast(mIntent1);
+			//get current volume value, here you can show your own volume bar or do nothing.
+			int currentVolume1 = am1.getStreamVolume(AudioManager.STREAM_MUSIC);
+			
 			break;
 		case Class_Constant.KEYCODE_VOICE_UP:
 		case Class_Constant.KEYCODE_VOICE_DOWN:
@@ -614,7 +632,7 @@ public class BannerDialog extends Dialog {
 			}
 			// audioMgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
 			whetherMute = false;
-			CommonMethod.saveMutesState((whetherMute + ""), SysApplication.getInstance());
+//			CommonMethod.saveMutesState((whetherMute + ""), SysApplication.getInstance());
 			break;
 		case Class_Constant.KEYCODE_MENU_KEY:
 			// Log.i("zyt", "onkeydown menukey is pressed " + keyCode);
