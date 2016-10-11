@@ -18,7 +18,7 @@ public class ProcessData {
 
 	private MD5Encrypt MD5;
 	private static final String serverAdress = "http://ott.yun.gehua.net.cn:8080/";
-	private static final String serverNewAdress = "http://api.ott.yun.gehua.net.cn:8080/";
+	private static final String serverInspurAdress = "http://api.ott.yun.gehua.net.cn:8080/";
 	private String MD5Key = "aidufei";
 	private String conStr = "&authKey=";
 
@@ -92,11 +92,17 @@ public class ProcessData {
 	public String getChannelList() {
 //		String rawPlainStr = serverAdress + chListPendingStr + "version=" + chListVersion + "&channelVersion="
 //				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
-		String rawPlainStr = "http://hd.ott.yun.gehua.net.cn/getChannels?" + "version=" + chListVersion + "&channelVersion="
+		
+		
+//		String rawPlainStr = "http://hd.ott.yun.gehua.net.cn/getChannels?" + "version=" + chListVersion + "&channelVersion="
+//				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
+		String rawPlainStr = serverAdress+"msis/getChannels?" + "version=" + chListVersion + "&channelVersion="
 				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
+		
 		return strGETReturn(rawPlainStr);
+		
 	}
-
+	
 	/* generate channel's program list ：频道下的节目列表 */
 	public String getChannelProgramList(Channel outterchanInfo) {
 		String rawPlainStr = serverAdress + chPgmListPendingStr + "version=" + chPgmListVersion + "&resolution="
