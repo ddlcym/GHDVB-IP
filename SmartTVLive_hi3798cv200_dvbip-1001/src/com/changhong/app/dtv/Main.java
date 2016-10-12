@@ -46,6 +46,7 @@ import com.changhong.app.dtv.DialogUtil.DialogBtnOnClickListener;
 import com.changhong.app.dtv.DialogUtil.DialogMessage;
 import com.changhong.app.timeshift.common.CacheData;
 import com.changhong.app.timeshift.common.MyApp;
+import com.changhong.app.timeshift.common.NetworkUtils;
 import com.changhong.app.timeshift.common.PlayVideo;
 import com.changhong.app.timeshift.common.ProcessData;
 import com.changhong.app.timeshift.common.ProgramInfo;
@@ -2278,20 +2279,24 @@ adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
 //				
 //				
 //			} else {
-				banner.cancel();
-				if (DVB.getManager().getDefaultLivePlayer() != null) {
-					DVB.getManager().getDefaultLivePlayer().stop();
-					DVB.getManager().getDefaultLivePlayer();
+			
+				if(!NetworkUtils.isConnectInternet(Main.this)){
+					Toast.makeText(Main.this, "网络不可用，请检查!", Toast.LENGTH_SHORT).show();
+				}else{
+					banner.cancel();
+					if (DVB.getManager().getDefaultLivePlayer() != null) {
+						DVB.getManager().getDefaultLivePlayer().stop();
+						DVB.getManager().getDefaultLivePlayer();
+					}
+					//获取当前道信息
+					ChannelDB db=DVB.getManager().getChannelDBInstance();
+					PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
+					//获取当前Channel详细信息
+					Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
+					
+					//获取节目
+					PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
 				}
-				//获取当前道信息
-				ChannelDB db=DVB.getManager().getChannelDBInstance();
-				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
-				//获取当前Channel详细信息
-				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
-				
-				//获取节目
-				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
-				
 //			}
 			break;
 		}
