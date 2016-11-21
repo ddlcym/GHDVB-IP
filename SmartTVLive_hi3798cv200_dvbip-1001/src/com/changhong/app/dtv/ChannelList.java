@@ -61,6 +61,7 @@ import com.iflytek.xiri.scene.Scene;
 
 public class ChannelList extends Activity implements ISceneListener {
 	private static final String TAG = "ChannelList";
+	private static final String TAA = "YYY";
 	private Context context;
 	private String sceneJson;
 
@@ -80,21 +81,40 @@ public class ChannelList extends Activity implements ISceneListener {
 	private String[] TVtype;// all tv type
 	private int curChannelIndex=-1;// selected channelindex
 	private int lastViewPos=-1,firstViewPos=-1;// channelist中失去焦点前所在屏幕的第一个和最后一个可见view位置
-	private int lastFocuPos=-1; // channelist中失去焦点的位置
-
+	private int lastFocuPos=-1,lastLastPos=-1,lastFirstPos=-1; // channelist中失去焦点的位置
+	
+    private static final int DEF_PAGESIZE = 7;  //每页最大显示条数    
+    private int totalCount=0;    //内容总条数   
+    private int pageSize=0;    //一页显示的行数   
+    private int pageIndex=0;    //当前页码,取值0~x,仅用于翻页键有效
+    private int pageCount=0;    //总页数   
+    private int opMode = 0;		//默认上下键单行滚动,==1 翻页操作
 	private int curType = 0;
 	private int curListIndex = 0;
 
 	// all type channel
+	List<Channel> favTvList = new ArrayList<Channel>();
+	List<Channel> otherTvList = new ArrayList<Channel>();
+
 	List<Channel> allTvList = new ArrayList<Channel>();
 	List<Channel> CCTVList = new ArrayList<Channel>();
 	List<Channel> starTvList = new ArrayList<Channel>();
-	List<Channel> favTvList = new ArrayList<Channel>();
+	List<Channel> audList = new ArrayList<Channel>();
 	List<Channel> localTvList = new ArrayList<Channel>();
 	List<Channel> HDTvList = new ArrayList<Channel>();
-	List<Channel> otherTvList = new ArrayList<Channel>();
-	boolean []bChanListAdded = {false,false,false,false,false,false,false};
+	List<Channel> testTvList = new ArrayList<Channel>();
+	List<Channel> bTvList = new ArrayList<Channel>();
+	List<Channel> shopTvList = new ArrayList<Channel>();
+	
+	private static final int tvTypeNoMax = 8; //0~8
+	/* Integer: 取值 0 全部频道all, 1:央视频道CCTV;2:北京频道BTV;3:卫视频道STV;4:高清频道HDTV;5:区县频道Area;
+	6:购物频道Shopping;7:体验频道Experience;8:音频广播Radio
+*/	
+	boolean []bChanListAdded = new boolean[tvTypeNoMax+1];
+	boolean bChanListLoad = false;
 
+	//private static HashMap<Integer, List<Channel>> tvCategoryList = new HashMap<Integer, List<Channel>>();
+	
 	// animation
 
 	// application
@@ -107,7 +127,7 @@ public class ChannelList extends Activity implements ISceneListener {
 	private boolean lockSwap = false;
 	private int old_chanId;
 	private int new_ChanId;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -119,19 +139,23 @@ public class ChannelList extends Activity implements ISceneListener {
 		channelCount = objApplication.dvbDatabase.getChannelCount();
 
 		if (channelCount <= 0) {
-			Intent mIntent = new Intent(ChannelList.this, DialogNotice.class);
+			/*Intent mIntent = new Intent(ChannelList.this, DialogNotice.class);
 			mIntent.putExtra(Class_Constant.DIALOG_TITLE, "无节目");
 			mIntent.putExtra(Class_Constant.DIALOG_DETAILS, "没有节目！");
 			mIntent.putExtra(Class_Constant.DIALOG_BUTTON_NUM, 1);
 			startActivity(mIntent);
-			finish();
+			finish();*/
 		}
-		curType = getIntent().getIntExtra("curType", 0);
-		getAllTVtype(curType);
-		registerBroadReceiver();
+		
 		Channel channel = objApplication.dvbDatabase.getChannel(objApplication
 				.getLastProgram());
 		channelId = channel.chanId;
+		
+		//curType = getIntent().getIntExtra("curType", 0);
+		curType = channel.favorite;
+		getAllTVtype(curType);
+		registerBroadReceiver();
+
 		// setfullscreen
 		Point size = new Point();
 		getWindowManager().getDefaultDisplay().getSize(size);
@@ -152,6 +176,11 @@ public class ChannelList extends Activity implements ISceneListener {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.changhong.action.stoptvlive");
 		registerReceiver(stopReceiver, filter);
+		
+		IntentFilter filter2 = new IntentFilter();
+		filter2.addAction("com.changhong.action.syncbanner");
+		registerReceiver(showBannerForEver, filter2);
+		
 	}
 
 	BroadcastReceiver stopReceiver = new BroadcastReceiver() {
@@ -167,7 +196,17 @@ public class ChannelList extends Activity implements ISceneListener {
 			finish();
 		}
 	};
+	BroadcastReceiver showBannerForEver = new BroadcastReceiver() {
 
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			int chanid = -1;
+			chanid = arg1.getIntExtra("chanid", -1);
+			if(chanid!=-1){
+				banner.show(chanid,999999999);	
+			}
+		}
+	};	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -208,6 +247,57 @@ public class ChannelList extends Activity implements ISceneListener {
 		return index;
 	}
 
+	private int getSortIndex2(int curType, int chanId) {
+		int index = 0;
+		List<Channel> locList;
+		switch (curType) {
+		case 1: {
+			locList = CCTVList;
+			break;
+		}
+		case 2: {
+			locList = bTvList;
+			break;
+		}
+		case 3: {
+			locList = starTvList;
+			break;
+		}
+		case 4: {
+			locList = HDTvList;
+			break;
+		}
+		case 5: {
+			locList = localTvList;
+			break;
+		}
+		case 6: {
+			locList = shopTvList;
+			break;
+		}
+		case 7: {
+			locList = testTvList;
+			break;
+		}
+		case 8: {
+			locList = audList;
+			break;
+		}
+		default: {
+			locList = allTvList;
+			break;
+		}
+		}
+
+		for (int i = 0; i < locList.size(); i++) {
+			if (locList.get(i).chanId == chanId) {
+				index = i;
+				break;
+			}
+		}
+
+		return index;
+	}
 	private boolean isThisChannelWants(Channel thisChannel) {
 		// Skip the radio and invalid channels.排除下面sevicetype的节目
 		if (thisChannel.sortId != 0x1
@@ -221,6 +311,69 @@ public class ChannelList extends Activity implements ISceneListener {
 	}
 
 	private void getAllTVtype(int index) {
+			
+		if(bChanListLoad)
+			return ;
+		
+		bChanListLoad = true;
+		
+		Channel[] Channels = objApplication.dvbDatabase.getChannelsAllSC();
+		
+		allTvList.clear();
+		CCTVList.clear();
+		bTvList.clear();
+		starTvList.clear();
+		HDTvList.clear();
+		localTvList.clear();
+		shopTvList.clear();
+		testTvList.clear();
+		audList.clear();
+		
+		for (Channel chan : Channels) {
+			allTvList.add(chan);				// all tv type;
+			switch(chan.favorite){
+				case 1: {CCTVList.add(chan);break;}
+				case 2: {bTvList.add(chan);break;}
+				case 3: {starTvList.add(chan);break;}
+				case 4: {HDTvList.add(chan);break;}
+				case 5: {localTvList.add(chan);break;}
+				case 6: {shopTvList.add(chan);break;}
+				case 7: {testTvList.add(chan);break;}
+				case 8: {audList.add(chan);break;}
+				default:break;		
+			}
+			Log.i("mmmm","dtv: channel>> id="+chan.chanId+",logicNo="+chan.logicNo+",categoryId="+chan.favorite+",name= "+chan.name);
+			/*
+			if((chan.sortId&(1<<1))!=0){
+				CCTVList.add(chan);
+			}
+			if((chan.sortId&(1<<2))!=0){
+				bTvList.add(chan);
+			}
+			if((chan.sortId&(1<<3))!=0){
+				starTvList.add(chan);
+			}
+			if((chan.sortId&(1<<4))!=0){
+				HDTvList.add(chan);
+			}
+			if((chan.sortId&(1<<5))!=0){
+				localTvList.add(chan);
+			}
+			if((chan.sortId&(1<<6))!=0){
+				shopTvList.add(chan);
+			}
+			if((chan.sortId&(1<<7))!=0){ 
+				testTvList.add(chan);
+			}
+			if((chan.sortId&(1<<8))!=0){
+				audList.add(chan);
+			}	*/		
+		}
+		Log.i(TAG,"getAllTVtype>>>>");
+		
+	}
+	
+	private void getAllTVtype_NoUsed(int index) {
 		// fill all type tv
 		
 		if(index<0||index>6)
@@ -356,33 +509,45 @@ public class ChannelList extends Activity implements ISceneListener {
 		showEpgTitle(curType);
 		
 		switch (curType) {
-		case 0:
-			curChannels = allTvList;
-			break;
 		case 1:
 			curChannels = CCTVList;
 			break;
 		case 2:
-			curChannels = starTvList;
+			curChannels = bTvList;
 			break;
 		case 3:
-			curChannels = localTvList;
+			curChannels = starTvList;
 			break;
 		case 4:
 			curChannels = HDTvList;
 			break;
 		case 5:
-			curChannels = favTvList;
+			curChannels = localTvList;
 			break;
 		case 6:
-			curChannels = otherTvList;
+			curChannels = shopTvList;
 			break;
+		case 7:
+			curChannels = testTvList;
+			break;
+		case 8:
+			curChannels = audList;
+			break;	
+		default:
+			curChannels = allTvList;
+			break;			
 		}
 		mCurChannels = curChannels;
 		if (mAdapter == null) {
 			mAdapter = new ChannelAdapter();
 			channelListView.setAdapter(mAdapter);
 		} else {
+			if(channelListView.getSelectedItemPosition()!=0) //不作如此处理，在切换频道类型时,listview有可能认为当前Selection没变化从而不会去执行onItemSelected
+			{
+				channelListView.setSelection(0);	
+			}else {
+				channelListView.setSelection(1);
+			}
 			mAdapter.notifyDataSetChanged();
 		}
 		if (mCurChannels.size() <= 0) {
@@ -428,25 +593,62 @@ public class ChannelList extends Activity implements ISceneListener {
 		epgListTitleViewRight = (TextView) findViewById(R.id.id_epglist_title_right);
 		
 		showChannelList();
-		channelListView.setSelection(getSortIndex(channelId));
+		channelListView.setSelection(getSortIndex2(curType,channelId));
 		channelListView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO show the select channel
-				curListIndex = position;
+				curListIndex = position+pageIndex*pageSize;
+				Log.i(TAA, "onItemSelected>>>view="+view+",pos="+position+",id="+id);
 				// int[] pos = { -1, -1 };
 				if (view != null) {
 					int itemCnt = channelListView.getLastVisiblePosition()-channelListView.getFirstVisiblePosition();
 					// view.getLocationOnScreen(pos);
-					dislistfocus((FrameLayout) view);
-/*
-					TextView channelIndex = (TextView) view.findViewById(R.id.chanId);
-					channelIndex.setTextColor(Color.rgb(255,0,0));					
-					TextView channelName = (TextView) view.findViewById(R.id.chanName);
-					channelName.setTextColor(Color.rgb(255,0,0));
+					dislistfocus((FrameLayout) view);  
 					
+					TextView channelIndex = (TextView) view.findViewById(R.id.chanIndex);
+					channelIndex.setTextColor(0xffffffff);					
+					TextView channelName = (TextView) view.findViewById(R.id.chanName);
+					channelName.setTextColor(0xffffffff);
+					Channel chan = mCurChannels.get(curListIndex);
+					if(chan!=null){
+						request_update_banner(chan.chanId);
+					}
+					
+					//updateBannerinfo(curListIndex);
+					
+					/*Log.i(TAG,"bNewScreen="+bNewScreen+",curPos:"+position+",lastFocuPos:"+lastFocuPos
+							+",last:"+lastLastPos+" vs "+channelListView.getLastVisiblePosition()+
+							",first:"+lastFirstPos +"vs "+channelListView.getFirstVisiblePosition());*/
+					
+					if(!bNewScreen){		
+						if(channelListView.getFirstVisiblePosition()>lastFirstPos){
+							lastFocuPos -=1;
+						}else if(channelListView.getFirstVisiblePosition()<lastFirstPos){
+							lastFocuPos +=1;
+						}
+						View pre_vi=null;
+						try {
+							pre_vi = channelListView.getChildAt(lastFocuPos); 
+						} catch (Exception e) {
+							Log.i(TAG,"can't find pre_item");
+							pre_vi = null;
+						}
+						if(pre_vi!=null/* && ((curListIndex%DEF_PAGESIZE)!=(lastFirstPos%DEF_PAGESIZE))*/){
+							//Log.i(TAG, "onItemSelected>>>>"+curListIndex%DEF_PAGESIZE + " vs "+lastFirstPos%DEF_PAGESIZE);
+							TextView channelIndex2 = (TextView) pre_vi.findViewById(R.id.chanIndex);
+							channelIndex2.setTextColor(0xffa0a2a4);					
+							TextView channelName2 = (TextView) pre_vi.findViewById(R.id.chanName);
+							channelName2.setTextColor(0xffa0a2a4);		
+						}						
+					}
+					bNewScreen = false;
+					lastFocuPos = position - channelListView.getFirstVisiblePosition();
+					lastLastPos = channelListView.getLastVisiblePosition();
+					lastFirstPos = channelListView.getFirstVisiblePosition();
+					/*					
 					Log.i("YYY","curPos:"+position+",lastFocuPos:"+lastFocuPos+",last:"+channelListView.getLastVisiblePosition()+
 							",first:"+channelListView.getFirstVisiblePosition());
 					
@@ -491,7 +693,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
-
+				Log.i(TAA, "onNothingSelected >>>view=");
 			}
 		});
 		channelListView.setOnItemClickListener(new OnItemClickListener() {
@@ -500,6 +702,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
+				Log.i(TAA, "onItemClick>>>view="+view+",pos="+position+",id="+id);
 				TextView channelIndex = (TextView) view
 						.findViewById(R.id.chanId);
 				if (lockSwap) {
@@ -551,7 +754,7 @@ public class ChannelList extends Activity implements ISceneListener {
 
 	}
 
-	private Channel toNextChannel(int curType, Channel preChannel) {
+	private Channel toNextChannel_NoUsed(int curType, Channel preChannel) {
 		List<Channel> channels = null;
 		switch (curType) {
 		case 0:
@@ -623,12 +826,13 @@ public class ChannelList extends Activity implements ISceneListener {
 		return list;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showPopWindow() {
 
-		skipView = getLayoutInflater().inflate(R.layout.skipchannels_pop, null);
-		skipListView = (ListView) skipView.findViewById(R.id.pop_listview);
+		//YBDEL skipView = getLayoutInflater().inflate(R.layout.skipchannels_pop, null);
+		//YBDEL skipListView = (ListView) skipView.findViewById(R.id.pop_listview);
 
-		adapter = new SimpleAdapter(this, getSkipData(), R.layout.channelitem,
+		adapter = new SimpleAdapter(this, getSkipData(), R.layout.channelitem_gh,
 				new String[] { "id", "name", "serviceid" }, new int[] {
 						R.id.chanId, R.id.chanName, R.id.chanIndex });
 		skipListView.setAdapter(adapter);
@@ -676,7 +880,7 @@ public class ChannelList extends Activity implements ISceneListener {
 					.updateChannel(Integer.parseInt(channelid), "skip",
 							String.valueOf(UNSKIP));
 			adapter = new SimpleAdapter(ChannelList.this, getSkipData(),
-					R.layout.channelitem, new String[] { "id", "name",
+					R.layout.channelitem_gh, new String[] { "id", "name",
 							"serviceid" }, new int[] { R.id.chanId,
 							R.id.chanName, R.id.chanIndex });
 			skipListView.setAdapter(adapter);
@@ -686,6 +890,7 @@ public class ChannelList extends Activity implements ISceneListener {
 
 		}
 	};
+	public boolean bNewScreen=true;
 
 	public int dip2px(float dipValue) {
 
@@ -707,6 +912,8 @@ public class ChannelList extends Activity implements ISceneListener {
 				.getString(R.string.str_zhn_skiptitle);
 		String dialogSkipMess = ChannelList.this
 				.getString(R.string.str_zhn_skipmessage);
+		
+		Log.i(TAG, "key>>"+keyCode); 
 		switch (keyCode) {
 		/*
 		 * case KeyEvent.KEYCODE_F4: { // 交换节目排序 chanView = (TextView)
@@ -824,46 +1031,51 @@ public class ChannelList extends Activity implements ISceneListener {
 		 */
 		case Class_Constant.KEYCODE_RIGHT_ARROW_KEY:
 
-			if (curType == 6) {
+			if (curType == tvTypeNoMax) {
 				curType = 0;
 			} else {
 				curType++;
 			}
 			getAllTVtype(curType);
+			resetPageData();
 			showChannelList();
 			break;
 		case Class_Constant.KEYCODE_LEFT_ARROW_KEY:
 
 			if (curType == 0) {
-				curType = 6;
+				curType = tvTypeNoMax;
 			} else {
 				curType--;
 			}
 			getAllTVtype(curType);
+			resetPageData();
 			showChannelList();
 			break;
 		case Class_Constant.KEYCODE_UP_ARROW_KEY:
-		case Class_Constant.KEYCODE_PAGE_UP:
+
 			/*
 			 * 歌华不允许焦点循环 if (curListIndex == 0) { getAllTVtype(curType);
 			 * showChannelList();
 			 * channelListView.setSelection(channelListView.getCount() - 1); }
 			 */
+			ToOneLineOfPrePage();
 			break;
 		case Class_Constant.KEYCODE_DOWN_ARROW_KEY:
-		case Class_Constant.KEYCODE_PAGE_DOWN:
 			/*
 			 * 歌华不允许焦点循环 if (curListIndex == (channelListView.getCount() - 1)) {
 			 * getAllTVtype(curType); showChannelList();
 			 * channelListView.setSelection(0); }
 			 */
+			ToOneLineOfNextPage();
 			break;
+
 		case Class_Constant.KEYCODE_CHANNEL_UP:
 			/*
 			 * getAllTVtype(curType); showChannelList(); if (curListIndex == 0)
 			 * { channelListView.setSelection(channelListView.getCount() - 1); }
 			 * else { channelListView.setSelection(curListIndex - 1); }
 			 */
+			nextPage();
 			break;
 		case Class_Constant.KEYCODE_CHANNEL_DOWN:
 			/*
@@ -872,6 +1084,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			 * channelListView.setSelection(0); } else {
 			 * channelListView.setSelection(curListIndex + 1); }
 			 */
+			prePage();
 			break;
 		case Class_Constant.KEYCODE_KEY_DIGIT0:
 		case Class_Constant.KEYCODE_KEY_DIGIT1:
@@ -885,7 +1098,8 @@ public class ChannelList extends Activity implements ISceneListener {
 		case Class_Constant.KEYCODE_KEY_DIGIT9: {
 			onDigitalkey(keyCode);
 			bKeyUsed = true;
-		}			
+		}	
+		break;
 		}
 
 		if (bKeyUsed) {
@@ -900,6 +1114,7 @@ public class ChannelList extends Activity implements ISceneListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		unregisterReceiver(stopReceiver);
+		unregisterReceiver(showBannerForEver);
 	}
 
 	class ChannelAdapter extends BaseAdapter {
@@ -912,10 +1127,17 @@ public class ChannelList extends Activity implements ISceneListener {
 			TextView channelName;
 			// ImageView favView;
 		}
-
+		
+		@Override
+		public void notifyDataSetChanged(){
+			bNewScreen = true;
+			super.notifyDataSetChanged();
+		}
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
+			Log.i(TAA, "getView>>>view="+convertView+",pos="+position);
+			int progIndex=position+pageIndex*pageSize;
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.channelitem_gh, null);
 				holder = new ViewHolder();
@@ -933,7 +1155,20 @@ public class ChannelList extends Activity implements ISceneListener {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			Channel Channel = mCurChannels.get(position);
+			
+			Log.i(TAG, "getView>>>>>pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);
+			
+			if(progIndex>=mCurChannels.size()){
+				Log.i(TAG, "getView>>>>>invail pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);
+				progIndex = mCurChannels.size()-1;
+				return null;
+			}else if(progIndex<0){
+				Log.i(TAG, "getView>>>>>invail pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);				
+				progIndex = 0;				
+				return null;
+			}
+			
+			Channel Channel = mCurChannels.get(progIndex); 
 
 			/*
 			 * if (Channel.favorite == 0 || curType == 5) {
@@ -950,7 +1185,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			} else {
 				holder.channelIndex.setText("" + Channel.logicNo);
 			}
-			holder.channelIndex.setTextColor(0xffffff00);
+			holder.channelIndex.setTextColor(0xffa0a2a4);
 
 			if (Channel.chanId < 10) {
 				holder.channelId.setText("00" + Channel.chanId);
@@ -959,9 +1194,10 @@ public class ChannelList extends Activity implements ISceneListener {
 			} else {
 				holder.channelId.setText("" + Channel.chanId);
 			}
-			holder.channelId.setTextColor(0xffffff00);
-
+			
+			holder.channelName.setTextColor(0xffa0a2a4);
 			holder.channelName.setText("" + Channel.name);
+			
 			return convertView;
 		}
 
@@ -978,14 +1214,39 @@ public class ChannelList extends Activity implements ISceneListener {
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			return null;
+			return position;
 		}
 
+		   /** 
+	     * ListView通过此方法获知要显示多少行内容 
+	     * 我们即在此方法下手，每次设置一页需要显示的行数 
+	     * 返回值：ListView 要显示的行数 
+	     */  
 		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return mCurChannels.size();
-		}
+	    public int getCount()  
+	    {  
+			int retValue=0,type=0;
+			if(pageSize==0){
+				type = 0;
+				retValue= mCurChannels.size();
+			}
+			else if(totalCount < pageSize)
+	        {//如果总行数小于一页显示的行数，返回总行数    
+				type=1;
+				retValue= totalCount;  
+	        }   
+	        else if(totalCount < (pageIndex+1)*pageSize)  
+	        {//即最后一页不足5行（页面行数）  
+	        	type=2;
+	        	retValue= (totalCount-pageIndex*pageSize);  
+	        }else    //其他情况返回页面尺寸   
+	        {  
+	        	type=3;
+	        	retValue= pageSize;  
+	        }  
+			Log.i(TAG, "getCount>>>type:"+type+",num:"+retValue);
+			return retValue;
+	    }  		
 	};
 
 	@Override
@@ -1038,7 +1299,7 @@ public class ChannelList extends Activity implements ISceneListener {
 		}
 	}
 
-	private Banner banner;
+	private static Banner banner;
 	private int iKeyNum;
 	private int iKey;
 	LinearLayout tvRootDigitalkey;
@@ -1058,6 +1319,8 @@ public class ChannelList extends Activity implements ISceneListener {
 	private static final int MESSAGE_VOLUME_SHOW = 901;
 	private static final int MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY = 903;
 	private static final int VOLUME_ID_YIHAN_AD = 904;
+	private static final int MESSAGE_REQ_UPBANNER = 801;
+	
 	private ImageView dtv_digital_1;
 	private ImageView dtv_digital_2;
 	private ImageView dtv_digital_3;
@@ -1074,20 +1337,20 @@ public class ChannelList extends Activity implements ISceneListener {
 	private void onDigitalkey(int ri_KeyCode) {
 
 		boolean b_Result = false;
-		Common.LOGD(" main->onVkey: " + ri_KeyCode);
+		P.d(" main->onVkey: " + ri_KeyCode);
 
 		mUiHandler.removeMessages(MESSAGE_SHOW_DIGITALKEY);
 		mUiHandler.removeMessages(MESSAGE_DISAPPEAR_DIGITAL);
 
 		iKeyNum++;
-		Common.LOGI("onVkey-key<" + iKey + ">");
+		P.i("onVkey-key<" + iKey + ">");
 
 		if (iKeyNum > 0 && iKeyNum <= 3) {
 			iKey = (ri_KeyCode - Class_Constant.KEYCODE_KEY_DIGIT0) + iKey * 10;
 		}
 
-		Common.LOGI("get digital key   =  " + ri_KeyCode);
-		Common.LOGI("iKey value   =  " + iKey);
+		P.i("get digital key   =  " + ri_KeyCode);
+		P.i("iKey value   =  " + iKey);
 
 		// tvRootDigitalKeyInvalid.setVisibility(View.GONE);
 		tvRootDigitalkey.setVisibility(View.VISIBLE);
@@ -1119,6 +1382,58 @@ public class ChannelList extends Activity implements ISceneListener {
 		dtv_digital_3.setBackgroundResource(num[pos3]);
 
 	}
+	private void request_update_banner(int postion){
+		mUiHandler.removeMessages(MESSAGE_REQ_UPBANNER);
+		Message msg = new Message();
+		msg.what = MESSAGE_REQ_UPBANNER;
+		msg.arg1 = postion;
+		mUiHandler.sendMessage(msg);		
+	}
+	/**
+	 * @param position
+	 */
+	private static void updateBannerinfo2(int chanid) {
+		banner.show(chanid,999999999);	
+	}	
+	private void updateBannerinfo3(int position) {
+		try{
+			/*String sProgId = channelIndex.getText().toString();
+			int iProgId = Integer.parseInt(sProgId);
+			Channel chan = objApplication.dvbDatabase.getChannel(iProgId);*/
+			Channel chan = mCurChannels.get(position);
+			if(chan!=null){
+				banner.show(chan.chanId,999999999);
+			}
+		}catch(Exception e){
+			
+		}
+	}	
+	private int getChanId(int position) {
+		try{
+			/*String sProgId = channelIndex.getText().toString();
+			int iProgId = Integer.parseInt(sProgId);
+			Channel chan = objApplication.dvbDatabase.getChannel(iProgId);*/
+			Channel chan = mCurChannels.get(position);
+			if(chan!=null){
+				//banner.show(chan.chanId,999999999);
+				return chan.chanId;
+			}
+		}catch(Exception e){
+			
+		}
+		return -1;
+	}
+	private void updateBannerinfo(int position) {
+		int chid = getChanId(position);
+		if (chid != -1) {
+			Intent intent = new Intent();
+			intent.setAction("com.changhong.action.syncbanner");
+			intent.putExtra("chanid", chid);
+			sendBroadcast(intent);
+		}
+	}	
+	
+		
 	public static class UI_Handler extends Handler {
 		
 		WeakReference<ChannelList> mActivity;
@@ -1264,7 +1579,9 @@ public class ChannelList extends Activity implements ISceneListener {
 			}
 				break;
 
-
+			case MESSAGE_REQ_UPBANNER:
+				updateBannerinfo2(msg.arg1);
+				break;
 			}
 		}
 
@@ -1305,12 +1622,133 @@ public class ChannelList extends Activity implements ISceneListener {
 		// TODO Auto-generated method stub
 		int t_left=curType2-1,t_center=curType2,t_right=curType2+1;
 		if(t_left<0)
-			t_left = 6;
-		if(t_right>6) 
-			t_right = 0;
-		
+			t_left = tvTypeNoMax;
+		if(t_right>tvTypeNoMax) 
+			t_right = 0;		
 		epgListTitleViewLeft.setText(TVtype[t_left]);
 		epgListTitleViewCenter.setText(TVtype[t_center]);
 		epgListTitleViewRight.setText(TVtype[t_right]);
 	}	
+	
+	//上一页
+	private void prePage() {
+		Log.i(TAG,"curPage:" + pageIndex);
+		if(opMode==0){
+			opMode=1;
+			calPageData(true);	
+			//calCurPosInPageMode();
+		}
+		else if(pageIndex>0)
+			pageIndex--;
+		else if(channelListView.getSelectedItemPosition()>0)
+			channelListView.setSelection(0);		
+		else
+			return;
+		Log.i(TAG,"prePage:" + pageIndex);		
+		mAdapter.notifyDataSetChanged();
+	}
+	//��һҳ�ķ���
+	private void nextPage() {
+		Log.i(TAG,"curPage:" + pageIndex);
+		if(opMode==0){
+			opMode=1;
+			calPageData(false);	
+			//calCurPosInPageMode();
+		}
+		else if(pageIndex<(pageCount-1))
+			pageIndex++;
+		else if(channelListView.getSelectedItemPosition()<(mAdapter.getCount()-1))
+			channelListView.setSelection(mAdapter.getCount()-1);
+		else
+			return;		
+		Log.i(TAG,"nextPage:" + pageIndex);
+		mAdapter.notifyDataSetChanged();
+	}	
+	//需要在切换成翻页键时调用
+	private void calPageData(boolean bPageUp){
+		totalCount = mCurChannels.size();  
+        pageSize = DEF_PAGESIZE;  
+        //pageIndex = 0;  
+        pageCount = totalCount/pageSize;    //   
+        if(totalCount%pageSize > 0)    //最后一页不足pagesize个   
+            pageCount++;  
+
+        pageIndex = channelListView.getSelectedItemPosition()/pageSize;
+        if(bPageUp)
+        	channelListView.setSelection(0);
+        else 
+        	channelListView.setSelection(mAdapter.getCount()-1);
+        
+		Log.i(TAG, "calPageData>>>bPageUp:"+bPageUp+",pageIndex:"+pageIndex +",lastPos:"+(mAdapter.getCount()-1)+ ",oldPos:"+channelListView.getSelectedItemPosition());        
+	}	
+	//需要在切换成非翻页键时调用
+	private void resetPageData(){
+        pageSize = 0;
+        opMode = 0;
+	}	
+	//从翻页模式按下键滚动到下一页
+	private void ToOneLineOfNextPage()
+	{
+		if(opMode!=0){
+			opMode = 0;
+			//if(channelListView.getSelectedItemPosition() < (mCurChannels.size()-1))
+			if(pageIndex<(pageCount-1))
+			{
+				int pos = calCurPosInLineMode();
+				pageSize = 0;
+				channelListView.setSelection(pos);
+				Log.i(TAG, "set new pos:"+pos+","+pageIndex+"/"+pageCount);
+				mAdapter.notifyDataSetChanged();
+			}else{
+				Log.i(TAG, "this is realy the last page>>> "+pageIndex);
+				pageSize = 0;
+			}			
+		}		
+	}
+	
+	//从翻页模式按上键滚动到上一页
+	private void ToOneLineOfPrePage()
+	{
+		if(opMode!=0){
+			opMode = 0;
+			//if(channelListView.getSelectedItemPosition() < (mCurChannels.size()-1))
+			if(pageIndex>0)
+			{
+				int pos = calCurPosInLineMode();
+				pageSize = 0;
+				channelListView.setSelection(pos);
+				Log.i(TAG, "set new pos:"+pos+","+pageIndex+"/"+pageCount);
+				mAdapter.notifyDataSetChanged();
+			}else{
+				Log.i(TAG, "this is realy the first page>>> "+pageIndex);
+				pageSize = 0;
+			}			
+		}		
+	}
+	//计算从单行模式切换到翻页模式的位置
+	private int calCurPosInPageMode(){
+		int curpos=0;
+		if(channelListView.getSelectedItemPosition()>DEF_PAGESIZE){			
+			curpos = channelListView.getSelectedItemPosition()% DEF_PAGESIZE;		
+			pageIndex = channelListView.getSelectedItemPosition()/DEF_PAGESIZE;			
+		}
+		else{
+			pageIndex = 0;
+			curpos = channelListView.getSelectedItemPosition()% DEF_PAGESIZE;	
+		}
+		channelListView.setSelection(curpos);
+		Log.i(TAG, "calCurPosInPageMode>>>curpose:"+curpos+",pageIndex:"+pageIndex + "oldPos:"+channelListView.getSelectedItemPosition());
+		return curpos;
+	}
+	//计算从翻页模式切换到单行模式的位置
+	private int calCurPosInLineMode(){
+		int pos=0;
+		if(pageIndex>0)
+			pos = (pageIndex-1)*pageSize + channelListView.getSelectedItemPosition();
+		else {
+			pos = channelListView.getSelectedItemPosition();
+		}
+		Log.i(TAG, "calCurPos>>>pos:"+pos+" <<<pageIndex:"+pageIndex+"pageSize:"+pageSize+"pos:"+channelListView.getSelectedItemPosition());
+		return pos;
+	}
 }

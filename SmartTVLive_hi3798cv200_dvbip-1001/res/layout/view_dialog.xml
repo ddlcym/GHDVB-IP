@@ -4,68 +4,66 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/ghTextEpgWarnTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dip"
+        android:layout_marginTop="10dip"
         android:singleLine="true"
-        android:text="温馨提示"
-        android:textColor="@color/white"
-        android:textSize="@dimen/FONT_SIZE_BIG" />
+        android:text="@string/str_EPGwarnTitle"/>
     
      
 
     <TextView
         android:id="@+id/zhibo_prompt_z"
+        style="@style/ghTextEpgWarnBodyStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
          android:gravity="center"
-        android:layout_marginTop="120dip"
-        android:singleLine="true"
-        android:textColor="@color/promptyellow"
-        android:textSize="@dimen/FONT_SIZE_NORMAL" />
+        android:layout_marginTop="90dip"
+        android:singleLine="true"/>
     
     
     <TextView
         android:id="@+id/zhibo_prompt_z1"
+        style="@style/ghTextEpgWarnBodyStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
          android:gravity="center"
-        android:layout_marginTop="150dip"
+        android:layout_marginTop="130dip"
         android:singleLine="true"
-        android:textColor="@color/promptyellow"
-         android:visibility="gone"
-        android:textSize="@dimen/FONT_SIZE_NORMAL" />
+         android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dip" >
+        android:layout_marginBottom="10dip" >
 
         <Button
             android:id="@+id/reset_submit"
-            android:layout_width="150dip"
-            android:layout_height="60dip"
-            android:background="@drawable/selector"
+            style="@style/ghTextEpgWarnButtonStyle"
+            android:layout_width="@dimen/ghWindow_epgwarn_button_w"
+            android:layout_height="@dimen/ghWindow_epgwarn_button_h"
+            android:background="@drawable/selector3"
+            android:textColor="@drawable/textselector3"
             android:gravity="center"
-            android:text="确    认"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+            android:focusable="true"
+            android:text="@string/str_OKButton"/>
 
         <Button  
             android:id="@+id/reset_cancel"
-            android:layout_width="150dip"
-            android:layout_height="60dip"
+            style="@style/ghTextEpgWarnButtonStyle"            
+            android:layout_width="@dimen/ghWindow_epgwarn_button_w"
+            android:layout_height="@dimen/ghWindow_epgwarn_button_h"
             android:layout_toRightOf="@+id/reset_submit"
-            android:background="@drawable/selector"
+            android:background="@drawable/selector3"
+            android:textColor="@drawable/textselector3"
             android:gravity="center"
-            android:text="取    消"
-            android:textColor="@color/white"
-            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+            android:text="@string/str_cancelButton"/>
     </RelativeLayout>
 
 </RelativeLayout>

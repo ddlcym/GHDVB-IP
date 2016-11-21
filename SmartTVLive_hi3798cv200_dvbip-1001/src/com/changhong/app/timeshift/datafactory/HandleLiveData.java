@@ -1,6 +1,7 @@
 package com.changhong.app.timeshift.datafactory;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import android.content.Context;
 import com.changhong.app.dtv.SysApplication;
 import com.changhong.app.timeshift.common.CacheData;
 import com.changhong.app.timeshift.common.L;
+import com.changhong.app.utils.SortData;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.ChannelDB;
 import com.changhong.dvb.DVB;
@@ -71,12 +73,46 @@ public class HandleLiveData {
 		for(int i=0; i<timeshiftChannel.size();i++){
 			Channel channel=timeshiftChannel.get(i);
 			ChannelDB db=DVB.getManager().getChannelDBInstance();
-			chanId=db.getChannelByLogicNo(channel.logicNo).chanId;
-			db.updateChannel(chanId, "resource_code", channel.resource_code);
-			db.updateChannel(chanId, "logo",channel.logo );
-			db.updateChannel(chanId, "is_ttv", channel.is_ttv);
-			db.updateChannel(chanId, "is_btv",channel. is_btv);
+			Channel channel2 = db.getChannelByLogicNo(channel.logicNo);
+			if(channel2!=null){
+				chanId=channel2.chanId;
+				db.updateChannel(chanId, "resource_code", channel.resource_code);
+				db.updateChannel(chanId, "logo",channel.logo );
+				db.updateChannel(chanId, "is_ttv", channel.is_ttv);
+				db.updateChannel(chanId, "is_btv",channel. is_btv);
+			}
 		}
 	}
+	
 
+	public String dealCategoryVer(JSONObject json){
+		return JsonResolve.jsonToCategoryVer(json);		
+	}
+	public List<SortData> dealCategoryName(JSONObject json){
+		//L.e("dealCategoryName:"+json.toString());
+		return JsonResolve.jsonToCategoryName(json);		
+	}
+	
+	public void dealCategoryData(JSONObject json){
+		//L.i("dealCategoryData:"+json.toString());
+		List<Channel> sortIdChannel=JsonResolve.jsonToCategoryChannel(json);
+		if(null==sortIdChannel||sortIdChannel.size()==0) 
+		{			
+			L.e("dealCategoryData: return:"+sortIdChannel.size()); 
+			return;
+		}		
+		ChannelDB db=DVB.getManager().getChannelDBInstance();	
+		Channel chanInDB,chan;
+		for(int i=0; i<sortIdChannel.size();i++){
+			chan=sortIdChannel.get(i);
+			chanInDB=db.getChannelByTsIdAndServiceId(chan.tsId, chan.serviceId);
+			if(chanInDB!=null){
+				db.updateChannel(chanInDB.chanId, "favorite", ""+chan.sortId);
+				L.e("dealCategoryData: set >> id="+chanInDB.chanId+",sortid="+chan.sortId+","+chanInDB.name);
+			}else{
+				L.e("dealCategoryData: not found >> tsid="+chan.tsId+",serid="+chan.serviceId);
+			}
+		}
+			
+	}	
 }

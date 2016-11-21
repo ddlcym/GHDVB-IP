@@ -15,6 +15,7 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.R.bool;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,7 +130,8 @@ public class SysApplication extends Application implements CAListener {
 	
 	private int[] mOsdShowTime = new int[2];//Vanlen add
 	
-	 private WindowManager.LayoutParams wmParams=new WindowManager.LayoutParams();  
+	 private WindowManager.LayoutParams wmParams=new WindowManager.LayoutParams();
+
 	   
 	   
 	 public WindowManager.LayoutParams getMywmParams(){  
@@ -189,7 +192,7 @@ public class SysApplication extends Application implements CAListener {
 		mContext	=	mcontext;
 		
 		
-		Common.LOGI("initDtvApp  bInit -> " +bInit);
+		P.i("initDtvApp  bInit -> " +bInit);
 		if(bInit)
 		{
 			return ;
@@ -203,7 +206,7 @@ public class SysApplication extends Application implements CAListener {
 		dvbManager	=	DVB.getManager();
 		if (dvbManager == null)
 		{
-			Common.LOGE("get dvbManager faied, exit.");
+			P.e("get dvbManager faied, exit.");
 			System.exit(0);
 		}
 		
@@ -211,7 +214,7 @@ public class SysApplication extends Application implements CAListener {
 		dvbPlayer 	= dvbManager.getDefaultLivePlayer();
 		if (dvbPlayer == null)
 		{
-			Common.LOGE("createLivePlayer faied, exit.");
+			P.e("createLivePlayer faied, exit.");
 			System.exit(0);
 		}
 		
@@ -261,6 +264,8 @@ public class SysApplication extends Application implements CAListener {
 			@Override
 			public void tunerCallback(DVB_CAR_EVENT arg0, int arg1, Object arg2) {
 				// TODO Auto-generated method stub
+				// if(!CheckDtvThreadOn()) return;
+				
 				switch(arg0)
 				{
 					case CAR_EVENT_BER_CHG:
@@ -315,11 +320,11 @@ public class SysApplication extends Application implements CAListener {
 		readScreenKG();
 	}
 
-
 	public void initBookDatabase(Context mContext)
 	{
 		dvbBookDataBase	=	new BookDataBase(mContext);
 	}	
+		
 	public void initCaInfoView(Context mContext)
 	{
 
@@ -328,15 +333,16 @@ public class SysApplication extends Application implements CAListener {
 							R.layout.ca, null);
 		
 	     tvinfo = (TextView)ll_newchannelmode.findViewById(R.id.id_root_ca_info);
-	     
+	    
 	     	//获取WindowManager  
 	     if(mWindowManager == null)
 	     {
 	    	 mWindowManager=(WindowManager)mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 	     }
-	        //设置LayoutParams(全局变量）相关参数  
+	     	     
+	     //设置LayoutParams(全局变量）相关参数  
 	     param = getMywmParams();  
-	     Common.LOGD(param.x +","+param.y+","+param.width+","+param.height);
+	     P.d(param.x +","+param.y+","+param.width+","+param.height);
 	     
 	     param.type=WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;     // 系统提示类型,重要  
 	     param.format=1;  
@@ -350,14 +356,18 @@ public class SysApplication extends Application implements CAListener {
 	//     param.y=220;  
 	           
 	        //设置悬浮窗口长宽数据  
-	     param.width=600;  
-	     param.height=450;  
+	     if(mWindowManager.getDefaultDisplay().getWidth()==1920){
+		     param.width=800; //600;  520 -> 800
+		     param.height=400;//450;  256 -> 400
+	     }else{
+		     param.width=520; //600;  520 -> 800
+		     param.height=256;//450;  256 -> 400	    	 
+	     }
 	           
 	        //显示myCaDialog图像  
 	     mWindowManager.addView(ll_newchannelmode, param);  
 		     
 	}
-	
 	public void initAudioPlayingView(Context mContext)
 	{
 
@@ -407,7 +417,7 @@ public class SysApplication extends Application implements CAListener {
 	     }
 	     
 	     param = getMywmParams();  
-	     Common.LOGD(param.x +","+param.y+","+param.width+","+param.height);
+	     P.d(param.x +","+param.y+","+param.width+","+param.height);
 	     
 	     param.type=WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 	     param.format=1;  
@@ -445,7 +455,7 @@ public class SysApplication extends Application implements CAListener {
 					}
 					else
 					{
-						Common.LOGE("MESSAGE_CA_SHOWNOTICE = null !");
+						P.e("MESSAGE_CA_SHOWNOTICE = null !");
 					}
 				}
 				break;
@@ -544,12 +554,12 @@ public class SysApplication extends Application implements CAListener {
 	{
 		if(mlisListener != null)
 		{
-			Common.LOGI("setCaListener !");
+			P.i("setCaListener !");
 			mo_Ca.setListener(mlisListener);
 		}
 		else
 		{
-			Common.LOGE("setCaListener err !");
+			P.e("setCaListener err !");
 		}
 	}
 	
@@ -587,7 +597,7 @@ public class SysApplication extends Application implements CAListener {
 			return -1;
 		}
 		if(channel.chanId==iCurChannelId&&isCheckPlaying){
-			Common.LOGI("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct .");
 			return iCurChannelId;
 		}
 		dvbPlayer.stop();	
@@ -617,18 +627,18 @@ public class SysApplication extends Application implements CAListener {
 	public int playChannel(int channelId,boolean isCheckPlaying)
 	{
 		
-		Common.LOGD("playChannel(int channelId)  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channelId);
+		P.d("playChannel(int channelId)  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channelId);
 
 		if(channelId == iCurChannelId  && isCheckPlaying)
 		{
-			Common.LOGI("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct .");
 			return channelId;
 		}
 
 		Channel curChannel = dvbDatabase.getChannelSC(channelId);			
 		if (curChannel == null)
 		{
-			Common.LOGE("Cann't get valid channel.");
+			P.e("Cann't get valid channel.");
 			return -1;
 		}
 		/*
@@ -666,7 +676,7 @@ public class SysApplication extends Application implements CAListener {
 	public int playChannelKeyInput(int keyInput,boolean isCheckPlaying)
 	{
 		
-		Common.LOGD("playChannelKeyInput--  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + keyInput);
+		P.d("playChannelKeyInput--  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + keyInput);
 
 		Channel[] channels = dvbDatabase.getChannelsByServiceId(keyInput, 1000);
 		if(channels == null || channels.length <= 0)
@@ -676,7 +686,7 @@ public class SysApplication extends Application implements CAListener {
 		Channel curChannel = channels[0];
 		if(curChannel.chanId == iCurChannelId  && isCheckPlaying)
 		{
-			Common.LOGI("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct .");
 			return curChannel.chanId;
 		}
 		
@@ -723,15 +733,15 @@ public class SysApplication extends Application implements CAListener {
 	{
 		if (channel == null)
 		{
-			Common.LOGE("invalid channel.");
+			P.e("invalid channel.");
 			return -1;
 		}
 		
-		Common.LOGD("playChannel(DvbChannel channel) Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channel.chanId);
+		P.d("playChannel(DvbChannel channel) Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channel.chanId);
 
 		if(channel.chanId == iCurChannelId  && isCheckPlaying)
 		{
-			Common.LOGI("playChannel the channle is playing,return direct .");
+			P.i("playChannel the channle is playing,return direct .");
 			return channel.chanId;
 		}
 
@@ -819,13 +829,13 @@ public class SysApplication extends Application implements CAListener {
 			mo_CurChannel = dvbDatabase.getChannelBySortIdAndIndex(Channel.CHAN_SORT_TV, 0);
 			if (mo_CurChannel != null)
 			{
-				Common.LOGI( "find last channel ->  " + mo_CurChannel.name);
+				P.i( "find last channel ->  " + mo_CurChannel.name);
 		    	playChannel(mo_CurChannel,false);
 		    	return true;
 			}
 			else
 			{
-				Common.LOGE( "no channel.");	
+				P.e( "no channel.");	
 				return false;
 			}
     	}
@@ -838,13 +848,13 @@ public class SysApplication extends Application implements CAListener {
 			mo_CurChannel = dvbDatabase.getChannelBySortIdAndIndex(Channel.CHAN_SORT_TV, 0);
 			if (mo_CurChannel != null)
 			{
-				Common.LOGI( "find last channel ->  " + mo_CurChannel.name);
+				P.i( "find last channel ->  " + mo_CurChannel.name);
 		    	playChannel(mo_CurChannel,false);
 		    	return true;
 			}
 			else
 			{
-				Common.LOGE( "no channel.");	
+				P.e( "no channel.");	
 				return false;
 			}
     	}
@@ -862,7 +872,7 @@ public class SysApplication extends Application implements CAListener {
 		}
 		else
 		{
-			Common.LOGE("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
+			P.e("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
 		}
 
 		return true;
@@ -870,7 +880,7 @@ public class SysApplication extends Application implements CAListener {
 
 	public boolean	playPreChannel(boolean rbSameSorted)
 	{
-		Common.LOGI("playPreChannel");
+		P.i("playPreChannel");
 		Channel mo_CurChannel =dvbDatabase.getNextChannelSC(iCurChannelId, -1, rbSameSorted);
 		if(mo_CurChannel != null)
 		{
@@ -878,19 +888,19 @@ public class SysApplication extends Application implements CAListener {
 		}
 		else
 		{
-			Common.LOGE("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
+			P.e("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
 		}
 
 		return true;
 	}
 	
 	public boolean playPrePlayingChannel(){
-		Common.LOGI("playPrePlayingChannel");
+		P.i("playPrePlayingChannel");
 		Channel mo_PrePlayingChannel = dvbDatabase.getPrePlayingChannel();
 		if(mo_PrePlayingChannel!=null){
 			playChannel(mo_PrePlayingChannel, true);
 		}else {
-			Common.LOGE("can't get previous playing program");
+			P.e("can't get previous playing program");
 			return false;
 		}
 		return true;
@@ -950,7 +960,7 @@ public class SysApplication extends Application implements CAListener {
 		
 	public boolean playPipChannel(Channel channel){
 		if(null==channel){
-			Common.LOGE("invalid channel");
+			P.e("invalid channel");
 			return false;
 		}		
 		pipCurChannelId = channel.chanId;
@@ -964,7 +974,7 @@ public class SysApplication extends Application implements CAListener {
 	}
 	
 	public boolean playNextPipChannel(boolean sameSorted){
-		Common.LOGI("playPipPreChannel");
+		P.i("playPipPreChannel");
 		Channel nextChannel =dvbDatabase.getNextChannel(pipCurChannelId, 1, sameSorted);
 		if(nextChannel != null)
 		{
@@ -972,14 +982,14 @@ public class SysApplication extends Application implements CAListener {
 		}
 		else
 		{
-			Common.LOGE("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
+			P.e("HANDLE_MSG_TYPE_NEW_CHANNEL_NEXT get null progrom ");
 			return false;
 		}
 	}
 
 
 	public boolean playPrePipChannel(boolean sameSorted){
-		Common.LOGI("playPipPreChannel");
+		P.i("playPipPreChannel");
 		Channel preChannel =dvbDatabase.getNextChannel(pipCurChannelId, -1, sameSorted);
 		if(preChannel != null)
 		{
@@ -987,7 +997,7 @@ public class SysApplication extends Application implements CAListener {
 		}
 		else
 		{
-			Common.LOGE("HANDLE_MSG_TYPE_NEW_CHANNEL_PRE get null progrom ");
+			P.e("HANDLE_MSG_TYPE_NEW_CHANNEL_PRE get null progrom ");
 			return false;
 		}
 	}
@@ -1160,17 +1170,24 @@ public class SysApplication extends Application implements CAListener {
 	
 	public  void showCainfo(String info)
 	{
-		Common.LOGE(info);
+		P.e(info);
+		
 
 		if(tvinfo != null && ll_newchannelmode != null)
-		{
+		{			
 			//blackScreen();
 		    tvinfo.setText(info);
-        ll_newchannelmode.setVisibility(View.VISIBLE); 
+		    
+			if(!Main.updateDtvStatus(5,true)){
+				return;
+			}
+			
+		    ll_newchannelmode.setVisibility(View.VISIBLE); 
 		}
 		else if(ll_newchannelmode != null)
 		{
 			ll_newchannelmode.setVisibility(View.INVISIBLE);     
+			Main.updateDtvStatus(5,false);
 		}
 		     
 	}
@@ -1180,9 +1197,14 @@ public class SysApplication extends Application implements CAListener {
 		{
 			ll_newchannelmode.setVisibility(View.INVISIBLE);     
 		}
+		
+		Main.updateDtvStatus(5,false);
 
 	}
-	
+	public RelativeLayout getCaLayout()
+	{
+		return ll_newchannelmode;
+	}
 	public void showOsdRoll(int style, String text)
 	{
 		String osdRollText = text;
@@ -1566,9 +1588,93 @@ public class SysApplication extends Application implements CAListener {
 	}
 	
 
+	public void caCallbackNovel_new(DVB_CA_NOVEL data, Object reserved)
+	{
+		P.i("caCallbackNovel");
+		switch(data.getCode())
+		{
+			case NOVEL_CODE_CB_SHOW_BUY_MSG:
+			{
+				if (!data.hasMsgcode())
+				{
+					break;
+				}				
+				Message message = new Message(); 
+				
+				if (DVB_CA_NOVEL_MSG_CODE.NOVEL_MSG_CODE_CANCEL_VALUE == data.getMsgcode().getNumber())
+				{
+					message.what = MESSAGE_CA_HIDENOTICE;  
+				}
+				else
+				{
+					message.what = MESSAGE_CA_SHOWNOTICE;  
+					message.arg1 = data.getCode().getNumber();
+					message.arg2 = 0;
+					message.obj = getNovelNoticeContent(data.getMsgcode());
+				}
+
+				mAppHandler.sendMessage(message); 
+				break;
+			}
+			
+			case NOVEL_CODE_CB_SHOW_OSD:
+			{
+				if (!data.hasData())
+				{
+					break;
+				}				
+				Message message = new Message(); 
+				message.what = MESSAGE_CA_SHOWOSDROLL;
+				
+				DVB_CA_NOVEL_Data novel_data = data.getData();
+				if(novel_data.getDataIntCount() == 0)
+				{
+					message.arg1 = 1;
+				}
+				int novel_data_int = novel_data.getDataInt(0);
+				message.arg1 = novel_data_int;
+				if(novel_data.getDataStringCount() == 0)
+				{
+					message.what = MESSAGE_CA_HIDEOSDROLL;
+				}
+				message.obj = novel_data.getDataString(0);
+				if(message.obj == null)
+				{
+					message.what = MESSAGE_CA_HIDEOSDROLL;
+				}
+
+				mAppHandler.sendMessage(message); 
+				break;
+			}
+			case NOVEL_CODE_CB_HIDE_OSD:
+			{
+				if (!data.hasData())
+				{
+					break;
+				}				
+				Message message = new Message(); 
+				message.what = MESSAGE_CA_HIDEOSDROLL;
+				DVB_CA_NOVEL_Data novel_data = data.getData();
+				if(novel_data.getDataIntCount() == 0)
+				{
+					message.arg1 = 1;
+				}
+				int novel_data_int = novel_data.getDataInt(0);
+				message.arg1 = novel_data_int;
+				mAppHandler.sendMessage(message); 
+				break;
+			}
+						
+			default:
+			{
+				return;
+			}
+		}		
+	}	
+	
 	public void caCallbackNovel(DVB_CA_NOVEL data, Object reserved)
 	{
-		Common.LOGI("caCallbackNovel");
+		P.i("caCallbackNovel");
 		switch(data.getCode())
 		{
 			case NOVEL_CODE_CB_SHOW_BUY_MSG:
@@ -1649,10 +1755,9 @@ public class SysApplication extends Application implements CAListener {
 		}		
 	}	
 	
-	
     public void caCallbackSuma(DVB_CA_SUMA data, Object reserved)
     {
-    	Common.LOGI("caCallbackSuma");
+    	P.i("caCallbackSuma");
     	switch(data.getCode())
     	{
 			case SUMA_CODE_CB_HIDE_IPPV_DLG:
@@ -1754,7 +1859,7 @@ public class SysApplication extends Application implements CAListener {
 
 
 		// TODO Auto-generated method stub
-		Common.LOGI("APP  caCallback.....ca: " + data.getType());
+		P.i("APP  caCallback.....ca: " + data.getType());
 		
 		switch(data.getType())
 		{

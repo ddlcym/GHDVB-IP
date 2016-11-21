@@ -2,6 +2,7 @@ package com.changhong.app.constant;
 
 public class Class_Constant {
 
+
 	// mainactivity handler type
 
 	public final static int PLAY_BACKFROM_SHIFT = 2007;// voice down key

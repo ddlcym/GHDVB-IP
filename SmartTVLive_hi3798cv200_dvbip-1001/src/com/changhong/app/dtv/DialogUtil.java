@@ -3,9 +3,11 @@ package com.changhong.app.dtv;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
@@ -65,10 +67,18 @@ public class DialogUtil {
 
 		LayoutParams param = dialog.getWindow().getAttributes();
 		param.gravity = Gravity.CENTER;
+		//param.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; // 不能抢占聚焦点  
 
-		param.width = 600;
-		param.height = 450;
-
+	    /* if(mWindowManager.getDefaultDisplay().getWidth()==1920){
+		     param.width=800; //600;  520 -> 800
+		     param.height=400;//450;  256 -> 400
+	     }else{
+		     param.width=520; //600;  520 -> 800
+		     param.height=256;//450;  256 -> 400	    	 
+	     }*/
+	     param.width=520; //600;  
+	     param.height=256;//450;  
+	     	     
 		bt_submit.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -90,6 +100,10 @@ public class DialogUtil {
 			}
 		});
 
+		bt_submit.setFocusable(true); 
+		bt_submit.setFocusableInTouchMode(true); 
+		bt_submit.requestFocus();
+		
 		dialog.getWindow().setAttributes(param);
 
 		try {
@@ -98,7 +112,7 @@ public class DialogUtil {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return dialog;
+		return dialog;   
 
 	}
 	

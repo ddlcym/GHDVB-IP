@@ -395,7 +395,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 		if (mediaPlayer != null) {
 			mediaPlayer.stop();
 			// mediaPlayer.reset();
-			mediaPlayer.release();
+			mediaPlayer.release();  
 			// mediaPlayer.setFreezeMode(1);
 			// try {
 			// CommonMethod.excuteCmd(CommonMethod.cmdBlack);

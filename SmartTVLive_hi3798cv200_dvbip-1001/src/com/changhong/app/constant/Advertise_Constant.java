@@ -1,6 +1,6 @@
 package com.changhong.app.constant;
 
-import com.changhong.app.dtv.Common;
+import com.changhong.app.dtv.P;
 
 /**
  * @author OscarChang

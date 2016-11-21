@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.changhong.app.dtv.MainMenu_z.homeReceiver;
 import com.changhong.app.dtv.R;
 import com.changhong.dvb.CA;
 import com.changhong.dvb.CA_Entitle;

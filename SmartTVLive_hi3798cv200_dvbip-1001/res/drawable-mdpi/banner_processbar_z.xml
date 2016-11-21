@@ -3,12 +3,12 @@
 
     <item
         android:id="@android:id/background"
-        android:drawable="@drawable/grayline_new"/>
+        android:drawable="@drawable/grayline_long"/>
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/blueline"/>
+        android:drawable="@drawable/blueline_long"/>
     <item
         android:id="@android:id/secondaryProgress"
-        android:drawable="@drawable/grayline_new"/>
+        android:drawable="@drawable/grayline_long"/>
 
 </layer-list>

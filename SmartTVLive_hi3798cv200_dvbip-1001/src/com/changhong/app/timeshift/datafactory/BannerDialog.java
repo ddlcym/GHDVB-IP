@@ -28,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.changhong.app.dtv.P;
 import com.changhong.app.dtv.R;
 import com.changhong.app.dtv.SysApplication;
 import com.changhong.app.timeshift.common.CacheData;
@@ -50,8 +51,6 @@ import com.changhong.dvb.Channel;
 import com.changhong.dvb.ChannelDB;
 import com.changhong.dvb.DVB;
 import com.changhong.dvb.PlayingInfo;
-
-
 
 /**
  * @author OscarChang 时移信息条
@@ -530,7 +529,6 @@ public class BannerDialog extends Dialog {
 			IsFocusList = false;
 			timeshiftProList.setFocusable(true);
 			timeshiftProList.requestFocus();
-
 			break;
 		case Class_Constant.KEYCODE_UP_ARROW_KEY:
 			Log.i("zyt", "dialog up key is pressed");

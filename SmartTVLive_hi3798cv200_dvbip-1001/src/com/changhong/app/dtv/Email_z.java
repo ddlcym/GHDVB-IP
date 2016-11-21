@@ -36,7 +36,7 @@ import com.changhong.dvb.ProtoMessage.DVB_CA_TYPE;
 
 public class Email_z extends Activity {
 	SimpleAdapter adapter = null;
-	EpgListview yj_conten_z;
+	//YBDEL EpgListview yj_conten_z;
 	TextView yj_prompt_z;
 	Button yj_remove_z;
 	Context context = null;
@@ -92,7 +92,7 @@ public class Email_z extends Activity {
 
 	private void InitView() {
 
-		yj_conten_z = (EpgListview) findViewById(R.id.yj_conten_z);
+		//YBDEL yj_conten_z = (EpgListview) findViewById(R.id.yj_conten_z);
 		yj_prompt_z = (TextView) findViewById(R.id.yj_prompt_z);
 		yj_remove_z = (Button) findViewById(R.id.yj_remove_z);
 
@@ -295,9 +295,9 @@ public class Email_z extends Activity {
 						R.id.item_number, R.id.item_flag, R.id.item_title,
 						R.id.item_time });
 
-		yj_conten_z.setAdapter(adapter);
-		yj_conten_z.setOnItemSelectedListener(itemSelectedListener);
-		yj_conten_z.setOnItemClickListener(itemClickListener);
+		//YBDEL yj_conten_z.setAdapter(adapter);
+		//YBDEL yj_conten_z.setOnItemSelectedListener(itemSelectedListener);
+		//YBDEL yj_conten_z.setOnItemClickListener(itemClickListener);
 
 	}
 

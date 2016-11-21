@@ -40,6 +40,8 @@ import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
 import java.io.IOException;
+
+import com.changhong.app.dtv.P;
  
 /**
  * Displays a video file.  The VideoView class

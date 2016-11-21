@@ -106,4 +106,52 @@ public class Utils {
 	    
 	    return dir;
 	}
+	public static boolean setProp(String system_Property, String value) {
+
+		try {
+			Runtime.getRuntime().exec("setprop "+ system_Property + " "+value);
+		} catch (IOException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}	
+	public static String getProp(String system_Property) {
+
+		String result;
+
+		Process process = null;
+
+		try {
+			process = Runtime.getRuntime().exec("getprop "+ system_Property);
+		} catch (IOException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+			return "false";
+		}
+
+		InputStreamReader ir = new InputStreamReader(process.getInputStream());
+
+		BufferedReader input = new BufferedReader(ir);
+
+		StringBuilder builder = new StringBuilder();
+
+		String tmpstr;
+
+		try {
+			while ((tmpstr = input.readLine()) != null) {
+
+				builder.append(tmpstr);
+			}
+		} catch (IOException e4) {
+			// TODO Auto-generated catch block
+			e4.printStackTrace();
+		}
+
+		result = builder.toString();
+
+		return result;
+	}		
 }

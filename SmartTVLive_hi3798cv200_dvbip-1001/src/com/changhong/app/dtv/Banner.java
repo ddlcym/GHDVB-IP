@@ -6,8 +6,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.changhong.app.constant.Advertise_Constant;
+import com.changhong.app.utils.CustomToast;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.DVB;
 import com.changhong.dvb.ProtoMessage.DVB_EPG_PF;
@@ -24,6 +27,7 @@ import com.xormedia.adplayer.IAdPlayerCallbackListener;
 import com.xormedia.adplayer.IAdStrategyResponseListener;
 import com.xormedia.adplayer.IAdStrategyResponseListener;
 
+import android.R.bool;
 import android.R.integer;
 import android.content.Context;
 import android.graphics.drawable.ClipDrawable;
@@ -47,8 +51,12 @@ import android.widget.Toast;
  *
  */
 public class Banner {
+	public static final String   TAG = "GHLive";
 	private static Banner banner;
 	public static Toast bannerToast = null;
+	public static CustomToast customBannerToast = null;
+	
+	private static Handler mHandlerBar = new Handler();
 	private static SysApplication sysApplication;
 	private Context mContext;
 	private View bannerView;
@@ -83,13 +91,36 @@ public class Banner {
 	private int curId = 0;
 	private Handler processADHandler;
 	private String tempStr = "";
+	private static boolean isBannerRunning=false;
 
 	public Banner() {
 		// TODO Auto-generated constructor stub
 	}
+	private static Runnable rCancelBar;
+    
+    private static void showToast(View view,int duration) {
+        
+    	mHandlerBar.removeCallbacks(rCancelBar);
+       
+        mHandlerBar.postDelayed(rCancelBar, duration);
 
+        if(customBannerToast!=null){
+        	customBannerToast.update(view);
+        	setBannerDisStatus(true);
+        	customBannerToast.show(); 
+        }
+        	
+    }
+    
+	public static void setBannerDisStatus(boolean newReq) {
+		isBannerRunning = newReq;
+	}
+	public static boolean getBannerDisStatus() {
+		return isBannerRunning;
+	}	
 	private Banner(Context context) {
 		mContext = context.getApplicationContext();
+		/*
 		new Thread(new Thread() {
 			@Override
 			public void run() {
@@ -129,11 +160,12 @@ public class Banner {
 				super.handleMessage(msg);
 			}
 		};
+		*/
 	}
 
 	public void show(int chanId) {
 		curId = chanId;
-		Log.i("banner", "chanId----->" + chanId);
+		Log.i(TAG, "chanId----->" + chanId);
 
 		if (sysApplication == null) {
 			sysApplication = SysApplication.getInstance();
@@ -142,6 +174,7 @@ public class Banner {
 		if (bannerToast == null) {
 			bannerToast = new Toast(mContext);
 			bannerToast.setGravity(Gravity.BOTTOM, 0, 0);
+			customBannerToast = new CustomToast(bannerToast);
 		}
 		if (bannerView == null) {
 			LayoutInflater mInflater = LayoutInflater.from(mContext);
@@ -161,17 +194,88 @@ public class Banner {
 		updateBanner();
 		updateChannelStatus(chanId);
 		updateDateTime();
+		/*
 		if (pFBannerYiHanRunnable != null) {
 			processADHandler.removeCallbacks(pFBannerYiHanRunnable);
 		}
 		processADHandler.post(pFBannerYiHanRunnable);
+		*/
 		bannerToast.setView(bannerView);
-		bannerToast.setDuration(Toast.LENGTH_LONG);
-		bannerToast.show();
+		//bannerToast.setDuration(Toast.LENGTH_LONG);
+		//bannerToast.show();
+		showToast(bannerView,5000);
+
 		/* add for get servcieId */
 		Channel curChannel = DVB.getManager().getChannelDBInstance().getChannel(chanId);
-		Log.i("zyt", "����bannerʱ ����ȡ����serviceId ��" + curChannel.serviceId + "");
+		Log.i(TAG, "����bannerʱ ����ȡ����serviceId ��" + curChannel.serviceId + "");
 	}
+	
+	/**
+	 * public void show(int chanId,int DurationInSecond)
+	 * @param
+	 * int chanId: 频道在数据库中的ID
+	 * int DurationInSecond: 显示时长
+	 * */
+	public void show(int chanId,int DurationInSecond) {
+		curId = chanId;
+		Log.i(TAG, "chanId----->" + chanId+","+DurationInSecond);
+
+		if (sysApplication == null) {
+			sysApplication = SysApplication.getInstance();
+			sysApplication.initBookDatabase(mContext);
+		}
+		if (bannerToast == null) {
+			bannerToast = new Toast(mContext);
+			bannerToast.setGravity(Gravity.BOTTOM, 0, 0);
+			customBannerToast = new CustomToast(bannerToast);
+		}
+		if (bannerView == null) {
+			LayoutInflater mInflater = LayoutInflater.from(mContext);
+			bannerView = mInflater.inflate(R.layout.banner, null);
+			findView();
+		}
+		if(volume_bar!=null && volume_bar.getVisibility()==View.VISIBLE){
+			volume_bar.setVisibility(View.INVISIBLE);
+		}
+		if(banner_p!=null && banner_p.getVisibility()!=View.VISIBLE)	{	
+			banner_p.setVisibility(View.VISIBLE);
+			banner_f.setVisibility(View.VISIBLE);
+		}
+		
+		channel = sysApplication.dvbDatabase.getChannel(chanId);
+		updatePFInfo();
+		updateBanner();
+		updateChannelStatus(chanId);
+		updateDateTime();
+		/*
+		if (pFBannerYiHanRunnable != null) {
+			processADHandler.removeCallbacks(pFBannerYiHanRunnable);
+		}
+		processADHandler.post(pFBannerYiHanRunnable);
+		*/
+		bannerToast.setView(bannerView);
+		//bannerToast.setDuration(Toast.LENGTH_LONG);
+		
+		showToast(bannerView,DurationInSecond);
+		/*	
+		setBannerDisStatus(true); 
+
+		 new Timer().schedule(new TimerTask(){ 
+		  
+		     @Override 
+		     public void run() { 
+		     // TODO Auto-generated method stub 
+		    	 Log.i("GHLive", "banner will appear----->");
+		         while(isBannerRunning){ 
+		        	 bannerToast.show();
+		         } 
+		         bannerToast.cancel();
+		         Log.i("GHLive", "banner will disappear----->");
+		     } 
+		                          
+		 }, 10); 	
+		 */	
+	}	
 	/**
 	 * public void show(int chanId,int style)
 	 * @param
@@ -192,6 +296,7 @@ public class Banner {
 		if (bannerToast == null) {
 			bannerToast = new Toast(mContext);
 			bannerToast.setGravity(Gravity.BOTTOM, 0, 0);
+			customBannerToast = new CustomToast(bannerToast);
 		}
 		if (bannerView == null) {
 			LayoutInflater mInflater = LayoutInflater.from(mContext);
@@ -221,14 +326,16 @@ public class Banner {
 		updateBanner();
 		updateChannelStatus(chanId);
 		updateDateTime();
+		/*
 		if (pFBannerYiHanRunnable != null) {
 			processADHandler.removeCallbacks(pFBannerYiHanRunnable);
 		}
 		processADHandler.post(pFBannerYiHanRunnable);
+		*/
 		bannerToast.setView(bannerView);
-		bannerToast.setDuration(Toast.LENGTH_LONG);
-		bannerToast.show();
-		
+		//bannerToast.setDuration(Toast.LENGTH_LONG);
+		//bannerToast.show();
+		showToast(bannerView,5000);
 		/*
 		Message delayMsg = new Message();
 		delayMsg.what=0x1234;  
@@ -237,13 +344,25 @@ public class Banner {
         
 		/* add for get servcieId */
 		Channel curChannel = DVB.getManager().getChannelDBInstance().getChannel(chanId);
-		Log.i("zyt", "����bannerʱ ����ȡ����serviceId ��" + curChannel.serviceId + "");
+		Log.i(TAG, "banner>>serviceId:" + curChannel.serviceId);
 	}
 
 	public static synchronized Banner getInstance(Context context) {
 		if (banner == null) {
 			banner = new Banner(context);
 		}
+		if(rCancelBar==null){
+		rCancelBar = new Runnable() {
+			
+	        public void run() {
+	        	Log.i("GHLive", "rCancelBar now----->");
+	        	if(customBannerToast!=null){
+	        		customBannerToast.hide();
+	        	setBannerDisStatus(false);
+	        	}
+	        }
+	    };	
+	    }
 		return banner;
 	}
 
@@ -278,8 +397,10 @@ public class Banner {
 	}
 	
 	public void cancel(){
-		if(bannerToast!=null)
-		bannerToast.cancel();
+		if(customBannerToast!=null){
+			customBannerToast.hide();
+			setBannerDisStatus(false);
+		}
 	}
 
 	private void updateChannelStatus(int chanId) {
@@ -289,8 +410,12 @@ public class Banner {
 		if(curChannel==null)
 			return;
 		
-		boolean bHD=false, b3D=false, bMulAudio=false,bSubTitle=false,bAc3=false,bNewMail=false;
-		
+		boolean bHD=false, b3D=false, bMulAudio=false,bSubTitle=false,bAc3=false,bNewMail=false,bTtv=false;
+
+		if(curChannel.is_ttv!=null && curChannel.is_ttv.equals("1")) //AC-3 audio/Dolby Digital Plus
+		{
+			bTtv = true; 
+		}
 		if(curChannel.signalType==0xe4||curChannel.signalType==0xe6||curChannel.signalType==0xe8||
 				curChannel.signalType==0xe9||curChannel.signalType==0xf9)
 		{
@@ -304,11 +429,15 @@ public class Banner {
 		{
 			bSubTitle = true;
 		}
+		
+		Main.showTimeShiftIcon(bTtv);
+		
 		if(bMulAudio)
 			channel_multAudio.setVisibility(View.VISIBLE);
 		else {
 			channel_multAudio.setVisibility(View.INVISIBLE);
 		}
+		
 		if(bSubTitle)
 			channel_subtitle.setVisibility(View.VISIBLE);
 		else {
@@ -485,7 +614,7 @@ DVB-SI
 			super.run();
 			Channel curChannel = DVB.getManager().getChannelDBInstance().getChannel(curId);
 			ads = new AdStrategy(mContext, Advertise_Constant.LIVEPLAY_ID_PFBANNER,
-					Common.getParams(curChannel.serviceId + "", Advertise_Constant.LIVEPLAY_ID_PFBANNER,
+					P.getParams(curChannel.serviceId + "", Advertise_Constant.LIVEPLAY_ID_PFBANNER,
 							Advertise_Constant.TEMP_IP_ADDRESS));
 			// ���������
 			ads.request();
@@ -575,7 +704,7 @@ DVB-SI
 	public void startAdsRequestAD(int chanId) {
 		Channel curChannel = DVB.getManager().getChannelDBInstance().getChannel(chanId);
 		ads = new AdStrategy(mContext, Advertise_Constant.LIVEPLAY_ID_PFBANNER,
-				Common.getParams(curChannel.serviceId + "", Advertise_Constant.LIVEPLAY_ID_PFBANNER,
+				P.getParams(curChannel.serviceId + "", Advertise_Constant.LIVEPLAY_ID_PFBANNER,
 						Advertise_Constant.TEMP_IP_ADDRESS));
 		ads.request();
 
@@ -810,7 +939,7 @@ DVB-SI
 			}
 
 		} else {
-			Common.LOGE("TVbanner  obj_EpgEventInfo == null");
+			P.e("TVbanner  obj_EpgEventInfo == null");
 			return;
 		}
 
@@ -835,7 +964,7 @@ DVB-SI
 		// param
 		channel = sysApplication.dvbDatabase.getChannel(SysApplication.iCurChannelId);
 		adPlayer = (AdPlayer) bannerView.findViewById(R.id.adplayer);
-		adPlayer.setDefaultAd(R.drawable.default_img, 1);
+		adPlayer.setDefaultAd(R.drawable.default_img, 1);  
 
 		channel_vid_3d = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_3d);		
 		channel_vid_hd = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_hd);	

@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- GH used begin -->
-	<string name="str_EPGwarn">预定时间到, 是否立即切换?</string>
+	<string name="str_EPGwarn">预定时间到, 是否立即切换？</string>
 	<string name="str_EPGwarnTitle">温馨提示</string>
 	<string name="str_cancelButton">取消</string>
     <string name="str_OKButton">确定</string>
     
-	<string name="str_livemailtitle">电视费用到期通知!</string>
-    
+	<string name="str_livemailtitle">电视费用到期通知！</string>
+	<string name="str_AutoSearchPrompt">当前节目为空， 请搜索！</string>
+    <string name="str_zhn_nosignal">无信号，请插入信号线！</string>
+		
 <!-- GH used over -->	
     
     <string name="str_booked">已订阅</string>
@@ -122,7 +124,6 @@
     <string name="str_zhn_usrset_seconds">秒</string>
     <string name="str_zhn_epg_cannotdel_program">无法删除正在播放的节目!</string>
     <string name="str_zhn_epg_confirm_delprogram">确定删除 ?</string>
-    <string name="str_zhn_nosignal">无信号，请插入信号线！</string>
     <string name="str_zhn_city">城市</string>
     <string name="str_zhn_city_mianyang">绵阳</string>
     <string name="str_zhn_city_changhong">长虹内网</string>

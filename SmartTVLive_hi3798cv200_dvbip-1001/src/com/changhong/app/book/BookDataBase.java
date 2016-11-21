@@ -2,13 +2,12 @@ package com.changhong.app.book;
 
 import java.util.Vector;
 
-import com.changhong.app.dtv.Common;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 
 public class BookDataBase {
 
@@ -121,7 +120,6 @@ public class BookDataBase {
 				SQL = completeBookInfoUpdateSQL(data.bookDay,
 						data.bookTimeStart, data.bookEnventName,
 						data.bookChannelName, data.bookChannelIndex);
-				Common.LOGI( "updata == " + SQL);
 				
 			} else {
 				// insert
@@ -132,8 +130,6 @@ public class BookDataBase {
 			try {
 				mSQLiteDatabase.execSQL(SQL);
 			} catch (SQLException e) {
-				Common.LOGE(e.toString());
-				Common.LOGE("ChannelUpdate>>" + SQL);
 			}
 			flag = true;
 		}
@@ -235,7 +231,7 @@ public class BookDataBase {
 						
 			+data.bookEnventName+"   "+data.bookChannelName +"  "+	data.bookTimeStart
 			
-			+"   "+data.bookDay +"   "+	data.bookDay );
+			+"   "+data.bookDay);
 				
 				mso_BookInfo.add(data);
 				if (curCarrier.isLast()) {
@@ -253,7 +249,6 @@ public class BookDataBase {
 				+ "Book_Time_Start" + "=" + "'" + StartTime + "'";
 
 		int i_Affected = mSQLiteDatabase.delete(DB_TABLE_BOOKINFO, where, null);
-		Common.LOGI("i_Affected = " + i_Affected);
 		if (i_Affected > 0) {
 			writeBookInfoToDataStruct();
 		}

@@ -7,7 +7,7 @@
  	android:layout_height="599dip"
  	android:orientation="horizontal"
  	android:background="@drawable/back" 	
- 	android:layout_gravity="center">
+ 	android:layout_gravity="center"> 
  	<LinearLayout 
  	    android:orientation="vertical"
  	    android:layout_height="fill_parent"

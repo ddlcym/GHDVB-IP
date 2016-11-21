@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/id_root_CA_info"
-    android:layout_width="400dip"
-    android:layout_height="300dip"
+    android:layout_width="520dip"
+    android:layout_height="256dip"
     android:layout_centerInParent="true"
-    android:background="@drawable/searchprompt"
+    android:background="@drawable/gh_dialog"
     android:visibility="invisible" >
 
     <TextView
+        style="@style/ghTextEpgWarnTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dip"
-        android:text="温馨提示"
-         android:textColor="@color/white"
-        android:textSize="@dimen/FONT_SIZE_BIG" />
+        android:layout_marginTop="10dip"
+        android:text="@string/str_EPGwarnTitle"/>
 
     <TextView
-        
+        style="@style/ghTextEpgWarnBodyStyle"
        android:id="@+id/ id_root_ca_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:paddingRight="10dip"
          android:paddingLeft="10dip"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:textColor="@color/promptyellow"
-        android:textSize="@dimen/FONT_SIZE_NORMAL" />
+        android:gravity="center"/>
 
 </RelativeLayout>

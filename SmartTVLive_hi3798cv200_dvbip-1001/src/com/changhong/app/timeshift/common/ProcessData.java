@@ -103,6 +103,11 @@ public class ProcessData {
 		
 	}
 	
+	public String getCategoryString() {
+		String categoryURL=serverInspurAdress+"msis/getNBAT?"+"version=V001&PramName=ChannelType&terminalType=3";
+		return strGETReturn(categoryURL);
+	}
+	
 	/* generate channel's program list ：频道下的节目列表 */
 	public String getChannelProgramList(Channel outterchanInfo) {
 		String rawPlainStr = serverAdress + chPgmListPendingStr + "version=" + chPgmListVersion + "&resolution="

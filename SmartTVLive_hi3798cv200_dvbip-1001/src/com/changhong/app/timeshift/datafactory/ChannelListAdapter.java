@@ -43,7 +43,7 @@ public class ChannelListAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.channelitem, null);
+			convertView = mInflater.inflate(R.layout.channelitem_gh, null);
 			holder = new ViewHolder();
 			holder.channelResourceOrder = (TextView) convertView.findViewById(R.id.chanId);
 			// holder.channelIndex = (TextView)

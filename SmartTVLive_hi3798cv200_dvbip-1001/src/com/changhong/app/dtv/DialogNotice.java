@@ -84,19 +84,19 @@ public class DialogNotice extends Activity{
         if(str_title==null || str_details== null || i_diabtnnum == -1/* || i_diatime == -1*/)
         {
         	/**����dialog*/
-        	Common.LOGE("str_title ="+str_title +"    str_details =" +str_details+
+        	P.e("str_title ="+str_title +"    str_details =" +str_details+
         				  "i_diabtnnum == " + i_diabtnnum);
         	finish();
         }
         if(i_diabtnnum == 2)
         {
-        	Common.LOGI("����2��button��ѡ��");
+        	P.i("����2��button��ѡ��");
         	tv_title.setText(str_title);
         	tv_details.setText(str_details);      	
         }
         else if(i_diabtnnum == 1)
         {
-        	Common.LOGI("����1��button��ѡ��"); 
+        	P.i("����1��button��ѡ��"); 
         	tv_title.setText(str_title);
         	tv_details.setText(str_details); 
         	
@@ -106,7 +106,7 @@ public class DialogNotice extends Activity{
         }
         else
         {
-        	Common.LOGI("����û��button��ѡ��"); 
+        	P.i("����û��button��ѡ��"); 
         	tv_title.setText(str_title);
         	tv_details.setText(str_details); 
         	
@@ -147,7 +147,7 @@ public class DialogNotice extends Activity{
 	OnClickListener btn_yes_clicklistener=new OnClickListener() {
 		
 		public void onClick(View v) {
-		Common.LOGI("���÷���Ϊ     RESULT_OK   ");
+		P.i("���÷���Ϊ     RESULT_OK   ");
 		setResult(RESULT_OK);
 		RemoveMsg ( HANDLE_MSG_TYPE_ClOSE_DLG );
 		finish();
@@ -159,7 +159,7 @@ public class DialogNotice extends Activity{
 		
 		public void onClick(View v) {
 			
-			Common.LOGI("���÷���Ϊ     RESULT_CANCELED");		
+			P.i("���÷���Ϊ     RESULT_CANCELED");		
 			setResult(RESULT_CANCELED);
 			RemoveMsg ( HANDLE_MSG_TYPE_ClOSE_DLG );
 			finish();
@@ -169,7 +169,7 @@ public class DialogNotice extends Activity{
 	OnClickListener btn_singleyes_clicklistener = new OnClickListener() {
 		
 		public void onClick(View v) {
-			Common.LOGI("ֻ��һ��button�����,ȷ������");
+			P.i("ֻ��һ��button�����,ȷ������");
 			/**ע������Ҫ���÷��ص�Ŀ��˵�,��������*/
 			RemoveMsg ( HANDLE_MSG_TYPE_ClOSE_DLG );
 			finish();
@@ -179,7 +179,7 @@ public class DialogNotice extends Activity{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
     	b_keydown = true;
-    	Common.LOGI("��⵽����,���ԶԻ�������ʧ����");
+    	P.i("��⵽����,���ԶԻ�������ʧ����");
 
     	RemoveMsg ( HANDLE_MSG_TYPE_ClOSE_DLG );
     	SendMsgToHandle ( HANDLE_MSG_TYPE_ClOSE_DLG, i_diatime );
@@ -209,11 +209,11 @@ public class DialogNotice extends Activity{
     	else
     	{
     		i_AimMenuID = Class_Global.GetAimMenuID();
-    		Common.LOGI("��ǰĿ��˵�Ϊ  == " + i_AimMenuID);
+    		P.i("��ǰĿ��˵�Ϊ  == " + i_AimMenuID);
     		
     		if ( -1 != i_AimMenuID && i_AimMenuID != si_MyMenuID )
     		{
-    			Common.LOGI("��ǰĿ��˵�����dialog,�˳�");
+    			P.i("��ǰĿ��˵�����dialog,�˳�");
     			finish ();
     		}
     		Class_Global.SetCurrMenuID(si_MyMenuID);
@@ -227,10 +227,10 @@ public class DialogNotice extends Activity{
 			case HANDLE_MSG_TYPE_ClOSE_DLG:
 				if (btn_yes.isFocused() == true
 						|| btn_single_yes.isFocused() == true) {
-					Common.LOGI("���÷���Ϊ     RESULT_OK   ");
+					P.i("���÷���Ϊ     RESULT_OK   ");
 					setResult(RESULT_OK);
 				} else {
-					Common.LOGI("���÷���Ϊ     RESULT_CANCELED");
+					P.i("���÷���Ϊ     RESULT_CANCELED");
 					setResult(RESULT_CANCELED);
 				}
 				finish();

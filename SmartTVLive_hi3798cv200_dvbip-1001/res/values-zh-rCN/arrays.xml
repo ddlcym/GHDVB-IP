@@ -629,13 +629,15 @@
         <item>其\t\t\t\t他</item>
     </string-array>
     <string-array name="tvtype">
-        <item>"所有频道""</item>
+        <item>"全部频道"</item>
         <item>"央视频道"</item>
+        <item>"北京频道"</item>
         <item>"卫视频道"</item>
-        <item>"地方频道"</item>
         <item>"高清频道"</item>
-        <item>"喜爱频道"</item>
-        <item>"其他频道"</item>
+        <item>"区县频道"</item>
+        <item>"购物频道"</item>        
+        <item>"体验频道"</item>
+        <item>"音频广播"</item>
     </string-array>
     <string-array name="tvtype_tianj">
         <item>"全部节目"</item>

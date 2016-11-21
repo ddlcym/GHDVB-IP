@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 import android.util.Log;
 
-import com.changhong.app.dtv.Common;
+import com.changhong.app.dtv.P;
 import com.changhong.app.dtv.SysApplication;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.ChannelDB;

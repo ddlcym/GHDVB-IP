@@ -24,6 +24,7 @@ import com.changhong.app.timeshift.common.ChannelType;
 import com.changhong.app.timeshift.common.PosterInfo;
 import com.changhong.app.timeshift.common.ProgramInfo;
 import com.changhong.app.timeshift.common.Utils;
+import com.changhong.app.utils.SortData;
 import com.changhong.dvb.Channel;
 
 public class JsonResolve {
@@ -312,6 +313,53 @@ public class JsonResolve {
 		return sortChannels(listExtra);
 	}
 
+	public String jsonToCategoryVer(JSONObject json){
+		return getJsonObjectString(json,"versionDate");
+	}	
+	public List<SortData> jsonToCategoryName(JSONObject json){
+		SortData sortName;
+		List<SortData> listExtra=new ArrayList<SortData>();		
+		JSONArray jsonArray=getJsonObjectArray(json, "groups");		
+		for(int i=0;i<jsonArray.length();i++){
+			JSONObject extraJson;
+			try { 
+				extraJson = (JSONObject) jsonArray.get(i);
+				sortName = new SortData();
+				sortName.rank = getJsonObjInt(extraJson, "groupId");
+				sortName.pramValue = getJsonObjectString(extraJson, "groupName");
+				listExtra.add(sortName);
+			} catch (JSONException e) { 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}		
+		return listExtra;
+	}	
+	public List<Channel> jsonToCategoryChannel(JSONObject json){
+		Channel channel;
+		List<Channel> listSortId = new ArrayList<Channel>();
+		
+		JSONArray jsonArray=getJsonObjectArray(json, "channels");		   
+				
+		for(int i=0;i<jsonArray.length();i++){
+			JSONObject extraJson;
+			try { 
+				extraJson = (JSONObject) jsonArray.get(i);
+				channel=new Channel();				
+				channel.serviceId=getJsonObjInt(extraJson, "serviceId");
+				channel.tsId=getJsonObjInt(extraJson, "tsId");
+				String strSortId = getJsonObjectString(extraJson, "groups");
+				SortData.setChannelType_new(channel,strSortId);
+				listSortId.add(channel);
+				Log.i("mmmm", "["+i+"]get>>> ts:" + channel.tsId+",serid:"+channel.serviceId+",sortid:"+channel.sortId+",name:"+getJsonObjectString(extraJson, "name"));
+			} catch (JSONException e) { 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}		
+		return listSortId;
+		//return sortChannels(listExtra);
+	}		
 	// =================================base function add try catch=====================================
 
 	private String getJsonObjectString(JSONObject jsonObj, String key) {

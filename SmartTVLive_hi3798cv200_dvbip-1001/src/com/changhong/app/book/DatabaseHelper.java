@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.changhong.app.dtv.Common;
+import com.changhong.app.dtv.P;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String BOOK_CHANNEL_NAME = "Book_Channel_Name";
 	public static final String BOOK_CHANNEL_INDEX = "Book_Channel_Index";
 
-	public static final String bookinfo_fileDir = "/data/data/com.SysSettings.main/databases";
+	public static final String bookinfo_fileDir = "/data/changhong/dvb";
 
 	private static DatabaseHelper mInstance;
 
@@ -37,8 +37,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public DatabaseHelper(Context context) {
 
-		super(context, DB_NAME, null, DB_VERSION);
-		//super(new CustomPathDatabaseContext(context, getDirPath()), DB_NAME, null, DB_VERSION);
+		//super(context, DB_NAME, null, DB_VERSION);
+		super(new CustomPathDatabaseContext(context, getDirPath()), DB_NAME, null, DB_VERSION);
 	}
 
 	 /**
@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		Common.LOGE("database version update,need  onUpgrade !");
+		P.e("database version update,need  onUpgrade !");
 		db.execSQL("DROP TABLE IF EXISTS DB_TABLE_BOOKINFO");
 
 		onCreate(db);

@@ -1,6 +1,5 @@
 package com.changhong.app.ca;
 
-import com.changhong.app.dtv.MainMenu_z.homeReceiver;
 import com.changhong.app.dtv.R;
 
 import android.os.Bundle;

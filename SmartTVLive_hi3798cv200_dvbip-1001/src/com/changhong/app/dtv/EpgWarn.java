@@ -31,9 +31,10 @@ public class EpgWarn extends Activity implements OnClickListener{
 	
 	private Button buttonok,buttoncancel;
 	
+	private      TextView text0View;	
 	private      com.changhong.app.dtv.TextMarquee textView;
 	private BookInfo bookInfo;
-	
+	private Button btnOK;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +60,20 @@ public class EpgWarn extends Activity implements OnClickListener{
 		
 		iSecond = 60;
 	
-		/* 暂时屏蔽	, 测试显示效果
+		/* 暂时屏蔽	, 测试显示效果*/
 		if(!objApplication.isBookedChannel(bookInfo))
 		{
-			Common.LOGE("Book channel is deleted,exit !");
+			P.e("Book channel is deleted,exit !");
 			
 		Log.i("EpgWarn","Book channel is deleted,exit");
 			finish();
 			objApplication.exit();
 			android.os.Process.killProcess(android.os.Process.myPid());
-		}
-		
+		}		
 		
 		 objApplication.delBookChannel(bookInfo.bookDay, bookInfo.bookTimeStart);
-	*/	
+		
+		String bookChannelName =new String();
 		String bookContent=new String();
 		
 		/*bookContent="你预约的：+bookInfo.bookChannelName
@@ -80,11 +81,13 @@ public class EpgWarn extends Activity implements OnClickListener{
 				bookInfo.bookTimeStart+"\n"+
 				bookInfo.bookEnventName;*/
 		
-		
+		bookChannelName = bookInfo.bookChannelName;
 		bookContent="<"+ bookInfo.bookEnventName + ">";
 		
 		initView();
+		text0View.setText(bookChannelName);
 		textView.setText(bookContent);
+		
 		
 		
 //		doFinish();
@@ -112,12 +115,12 @@ public class EpgWarn extends Activity implements OnClickListener{
 		buttonok=(Button)findViewById(R.id.guankanjiemu);
 		buttoncancel=(Button)findViewById(R.id.cancelguankanjiemu);
 		//tvSecond=(TextView)findViewById(R.id.idsecond);
-		
 		buttonok.setFocusable(true);
 		buttonok.setFocusableInTouchMode(true);
 		buttonok.requestFocus();
 		buttonok.requestFocusFromTouch();
 		
+		text0View = (TextView)findViewById(R.id.jiemuname);
 		textView=(com.changhong.app.dtv.TextMarquee)findViewById(R.id.jiemuinfo);
 		
 		
@@ -179,7 +182,7 @@ public class EpgWarn extends Activity implements OnClickListener{
 			Log.i("Epgwarn", "now second  ->  " + iSecond);
 			if(iSecond >0 )
 			{
-				//theActivity.tvSecond.setText("("+iSecond+")");
+				theActivity.buttonok.setText(theActivity.context.getString(R.string.str_OKButton).toString() +"("+iSecond+"s)");
 				theActivity.mUiHandler.sendEmptyMessageDelayed(0, 1000);
 				iSecond--;
 				if(iSecond == 0)
@@ -189,7 +192,6 @@ public class EpgWarn extends Activity implements OnClickListener{
 					theActivity.objApplication.playChannel(theActivity.bookInfo.bookChannelIndex, false);
 					Intent intent=new Intent(theActivity,Main.class);
 					theActivity.startActivity(intent);
-				
 					theActivity.finish();
 				}
 			}

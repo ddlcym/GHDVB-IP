@@ -100,12 +100,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
+            android:layout_gravity="center"
+            android:maxHeight="8dip"
+            android:minHeight="8dip"
             android:max="100"
-            android:progressDrawable="@drawable/banner_processbar_z"
-            android:thumb="@drawable/seekbar_z2"
-            android:thumbOffset="0dp"
+            android:thumb="@drawable/seekbar_z2n"
+            android:thumbOffset="0dp"            
+            android:progressDrawable="@drawable/banner_processbar_z" 
             android:visibility="visible" />
-         
+                
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
