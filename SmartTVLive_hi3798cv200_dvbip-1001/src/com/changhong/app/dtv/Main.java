@@ -1440,7 +1440,7 @@ public void getYiHanVolumeAD(int channelId) {
 					return;
 				}
 				
-				//结束直播的banner
+				//隐藏直播的banner
 				if(Banner.getBannerDisStatus()){
 					//如果banner存在,则消除banner
 					banner.cancel();
@@ -2069,7 +2069,7 @@ public void getYiHanVolumeAD(int channelId) {
 
 			if(objApplication!=null){
 				objApplication.dvbPlayer.stop();
-				objApplication.dvbPlayer.blank();	
+//				objApplication.dvbPlayer.blank();	
 				bOnDtvThread[4]=false;
 			}
 			
