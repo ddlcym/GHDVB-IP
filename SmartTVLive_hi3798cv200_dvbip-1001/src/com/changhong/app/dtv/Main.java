@@ -1432,6 +1432,19 @@ public void getYiHanVolumeAD(int channelId) {
 				break;
 			case Class_Constant.TOAST_BANNER_PROGRAM_PASS:
 				curChannelPrograms = CacheData.getCurPrograms();
+				
+				//临时针对现在频道支持时移，但是又没的时移的情况，服务器完善后取消即可
+				if(null==curChannelPrograms||curChannelPrograms.size()<=0){
+//					Toast.makeText(Main.this, "节目信息为空，不能进入时移模式", Toast.LENGTH_SHORT).show();
+					SetDtvStatus(true);
+					return;
+				}
+				
+				//结束直播的banner
+				if(Banner.getBannerDisStatus()){
+					//如果banner存在,则消除banner
+					banner.cancel();
+				}
 				showDialogBanner();
 				break;
 				
@@ -2501,16 +2514,13 @@ public void getYiHanVolumeAD(int channelId) {
 		Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId );
 		
 		
-		if(null==curChannelPrograms||curChannelPrograms.size()<=0){
-			Toast.makeText(Main.this, "节目信息为空，不能进入时移模式", Toast.LENGTH_SHORT).show();
-			SetDtvStatus(true);
-			return;
-		}
+		
 		if (programBannerDialog != null) {
 			programBannerDialog.cancel();
 		}
 		mAudioManager = (AudioManager) getApplicationContext().getSystemService(AUDIO_SERVICE);
 		programBannerDialog = new BannerDialog(Main.this, DBchan, curChannelPrograms, mUiHandler, surfaceView,mAudioManager);
+		
 		programBannerDialog.show();
 	}
 	
@@ -2534,6 +2544,12 @@ public void getYiHanVolumeAD(int channelId) {
 				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
 				// 获取当前Channel详细信息
 				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId);
+				//判断是否可以时移，如果不可以则不进入,is_ttv 0不支持，1支持
+				Log.i("mmmm", "DBchan.isttv"+DBchan.is_ttv);
+				if(DBchan.is_ttv.equals("0")){
+					break;
+				}
+				
 				// 获取节目
 				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
 			}
