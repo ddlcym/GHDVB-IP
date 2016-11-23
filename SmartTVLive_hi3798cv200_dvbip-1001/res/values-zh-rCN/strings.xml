@@ -299,7 +299,7 @@
     <string name="str_fav_add">此节目已被成功收藏</string>
     <string name="str_fav_del">此节目已被移除收藏列表</string>
     <string name="hello">Hello World, SNSTV!</string>
-    <string name="app_name">数字电视</string>
+    <string name="app_name">DVB+IP数字电视</string>
     <string name="help_info">使用帮助</string>
     <string name="SmartEPG_name">社交电视</string>
     <string name="ScheduleNotice_name">预约提示</string>

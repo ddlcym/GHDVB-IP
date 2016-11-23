@@ -52,7 +52,7 @@ public class Utils {
 	}
 	
 	public static String millToDateStr(long milliseconds ){
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		return formatter.format(milliseconds);
@@ -85,6 +85,7 @@ public class Utils {
 	 * @return
 	 */
 	public static String DateToWeek(Date date) {
+		String str=null;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		int dayIndex = calendar.get(Calendar.DAY_OF_WEEK);
@@ -92,9 +93,19 @@ public class Utils {
 			return null;
 		}
 		
-		return WEEK[dayIndex - 1];
+		str= WEEK[dayIndex - 1];
+		return str;
 	}
 	
+	public static boolean isToday(Date date){
+		int today=-1;
+		int curDay=-2;
+		Calendar calendar = Calendar.getInstance();
+		today=calendar.get(Calendar.DAY_OF_MONTH);
+		calendar.setTime(date);
+		curDay=calendar.get(Calendar.DAY_OF_MONTH);
+		return curDay==today;
+	}
 	/* truncate date string length */
 	public static String truncateDaateString(String dateStr, int start, int end) {
 

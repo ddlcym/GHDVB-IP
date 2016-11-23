@@ -2,26 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent" 
+    >
+	
     <ImageView
         android:id="@+id/timeshift_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/pf_background" />
-
+         android:background="@drawable/pf_background"
+        />
     <ImageView
         android:id="@+id/time_shift_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="10dip"
+        android:layout_marginRight="20dip"
         android:focusable="false"
         android:paddingTop="15dip"
         android:src="@drawable/timeshift_icon"
         android:visibility="visible" />
-
+	<ImageView
+        android:id="@+id/shift_volumn_background"
+        android:layout_width="300dip"
+        android:layout_height="60dip"
+        android:scaleType="fitCenter"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+       	android:layout_marginTop="90dip"
+        android:layout_marginRight="10dip"
+        android:layout_below="@id/time_shift_icon"/>
+	
     <ImageView
         android:id="@+id/mute_icon"
         android:layout_width="wrap_content"
@@ -39,7 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dip"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/pf_background"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -65,179 +75,196 @@
             android:layout_marginLeft="20dip"
             android:layout_marginRight="50dp" >
 
-            <RelativeLayout
-                android:id="@+id/timeshift_seekbar_container"
-                android:layout_width="match_parent"
-                android:layout_height="70dp" >
+	            <RelativeLayout
+	                android:id="@+id/timeshift_seekbar_container"
+	                android:layout_width="match_parent"
+	                android:layout_height="70dp" >
+	
+	              <TextView
+	                android:id="@+id/shiyicurproname"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="@string/cur_program"
+	                android:textColor="@color/white"
+	                android:layout_marginLeft="@dimen/seekbar_margin"
+	                android:textSize="30sp" />
+	
+	              <TextView
+	                android:id="@+id/shiyicurprotime"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_marginLeft="25dip"
+	                android:layout_toRightOf="@id/shiyicurproname"
+	                android:textColor="@color/white"
+	                android:textSize="30sp" />
+	
+	               <com.changhong.app.timeshift.widget.MarqueeText
+	                android:id="@+id/current_program_info"
+	                android:layout_width="270dip"
+	                android:layout_height="wrap_content"
+	                android:layout_marginLeft="25dip"
+	                android:ellipsize="marquee"
+	                android:focusableInTouchMode="true"
+	                android:singleLine="true"
+	                android:layout_toRightOf="@id/shiyicurprotime"
+	                android:textColor="@color/white"
+	                android:textSize="30sp" />    
+	
+	                <TextView
+	                    android:id="@+id/live_timelength"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentRight="true"
+	                    android:layout_alignParentTop="true"
+	                    android:layout_marginRight="100dp"
+	                    android:text="00:00:00"
+	                    android:textSize="25sp" />
+					
+	                <com.changhong.app.timeshift.widget.MySeekbar
+	                    android:id="@+id/bannernew_program_progress"
+	                    android:layout_width="1020dip"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentBottom="true"
+	                    android:focusable="false" />
+	            </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/shiyicurproname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/seekbar_margin"
-                    android:text="@string/cur_program"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
+	            <RelativeLayout
+	                android:id="@+id/timeshift_next_program_container"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_below="@id/timeshift_seekbar_container"
+	                android:layout_marginLeft="@dimen/seekbar_margin"
+	                android:layout_marginRight="@dimen/seekbar_margin">
+	
+	                <RelativeLayout
+	                    android:id="@+id/timeshift_nextpro_container"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="50dip"
+	                    android:visibility="visible"
+	                    android:layout_marginTop="5dp">
+	
+	                    <TextView
+			                android:id="@+id/shiyinextproname"
+			                android:layout_width="wrap_content"
+			                android:layout_height="wrap_content"
+			                android:text="@string/next_program"
+			                android:textColor="@color/white"
+			                android:textSize="30sp" />
+	
+			            <TextView
+			                android:id="@+id/shiyinextprotime"
+			                android:layout_width="wrap_content"
+			                android:layout_height="wrap_content"
+			                android:layout_marginLeft="25dip"
+			                android:layout_toRightOf="@id/shiyinextproname"
+			                android:textColor="@color/white"
+			                android:textSize="30sp" />
+	
+			            <com.changhong.app.timeshift.widget.MarqueeText
+			                android:id="@+id/next_program_info"
+			                android:layout_width="270dip"
+			                android:layout_height="wrap_content"
+			                android:layout_marginLeft="25dip"
+			                android:ellipsize="marquee"
+			                android:focusableInTouchMode="true"
+			                android:singleLine="true"
+			                android:layout_toRightOf="@id/shiyinextprotime"
+			                android:textColor="@color/white"
+			                android:textSize="30sp" />    
+			                        
+	
+	                    <TextView
+	                        android:id="@+id/timeshift_list_text"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="match_parent"
+	                        android:layout_alignParentRight="true"
+	                        android:layout_gravity="center_vertical"
+	                        android:singleLine="true"
+	                        android:text="时移列表"
+	                        android:textColor="@color/white"
+	                        android:textSize="30sp"
+	                        android:visibility="visible" />
+	
+	                    <ImageView
+	                        android:layout_width="35dp"
+	                        android:layout_height="35dp"
+	                        android:layout_gravity="center_vertical"
+	                        android:layout_toLeftOf="@id/timeshift_list_text"
+	                        android:focusable="false"
+	                        android:scaleType="fitCenter"
+	                        android:src="@drawable/timeshift_list_icon" />
+	                </RelativeLayout>
+	
+	                <RelativeLayout
+	                    android:id="@+id/timeshift_program_list_container"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="150dp"
+	                    android:visibility="gone" >
+	
+	                    <ImageView
+	                        android:id="@+id/timeshift_left_arrows"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_alignParentLeft="true"
+	                        android:layout_marginTop="50dip"
+	                        android:background="@drawable/timeshift_left_arrows"
+	                        android:focusable="false" />
+	
+	                    <com.changhong.app.timeshift.widget.TwoWayGridView
+	                        android:id="@+id/timeshift_program_list"
+	                        android:layout_width="match_parent"
+	                        android:layout_height="wrap_content"
+	                        android:layout_marginLeft="15dip"
+	                        android:layout_marginRight="15dip"
+	                        app:columnWidth="80dp"
+	                        app:horizontalSpacing="16dp"
+	                        app:listSelector="@android:color/transparent"
+	                        app:numColumns="auto_fit"
+	                        app:numRows="1"
+	                        app:rowHeight="80dp"
+	                        app:scrollDirectionLandscape="horizontal"
+	                        app:scrollDirectionPortrait="horizontal"
+	                        app:stretchMode="spacingWidthUniform"
+	                        app:verticalSpacing="16dp" />
+	
+	                    <ImageView
+	                        android:id="@+id/timeshift_right_arrows"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_alignParentRight="true"
+	                        android:layout_marginTop="50dip"
+	                        android:background="@drawable/timeshift_right_arrows"
+	                        android:focusable="false" />
+	
+	                   
+	
+	                    <ImageView
+	                        android:id="@+id/timeshift_exit"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:layout_alignParentBottom="true"
+	                        android:layout_alignParentRight="true"
+	                        android:layout_marginBottom="5dip"
+	                        android:focusable="false"
+	                        android:scaleType="fitCenter"
+	                        android:src="@drawable/banner_shift_back" />
+	                    
+	                    <!--  <TextView
+	                        
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                      	android:layout_alignParentBottom="true"
+	                        
+	                        android:layout_toRightOf="@id/timeshift_exit"
+	                        android:text="退出时移列表"
+	                        android:textColor="@color/white"
+	                        android:textSize="20sp"
+	                         /> -->
+	                </RelativeLayout>
+	            </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/shiyicurprotime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dip"
-                    android:layout_toRightOf="@id/shiyicurproname"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
+		</RelativeLayout>
 
-                <com.changhong.app.timeshift.widget.MarqueeText
-                    android:id="@+id/current_program_info"
-                    android:layout_width="270dip"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dip"
-                    android:layout_toRightOf="@id/shiyicurprotime"
-                    android:ellipsize="marquee"
-                    android:focusableInTouchMode="true"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-
-                <TextView
-                    android:id="@+id/live_timelength"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="100dp"
-                    android:text="00:00:00"
-                    android:textSize="25sp" />
-
-                <com.changhong.app.timeshift.widget.MySeekbar
-                    android:id="@+id/bannernew_program_progress"
-                    android:layout_width="1030dip"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:focusable="false" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/timeshift_next_program_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/timeshift_seekbar_container"
-                android:layout_marginLeft="@dimen/seekbar_margin"
-                android:layout_marginRight="@dimen/seekbar_margin" >
-
-                <RelativeLayout
-                    android:id="@+id/timeshift_nextpro_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:layout_marginTop="5dp"
-                    android:visibility="visible" >
-
-                    <TextView
-                        android:id="@+id/shiyinextproname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/next_program"
-                        android:textColor="@color/white"
-                        android:textSize="30sp" />
-
-                    <TextView
-                        android:id="@+id/shiyinextprotime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="25dip"
-                        android:layout_toRightOf="@id/shiyinextproname"
-                        android:textColor="@color/white"
-                        android:textSize="30sp" />
-
-                    <com.changhong.app.timeshift.widget.MarqueeText
-                        android:id="@+id/next_program_info"
-                        android:layout_width="270dip"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="25dip"
-                        android:layout_toRightOf="@id/shiyinextprotime"
-                        android:ellipsize="marquee"
-                        android:focusableInTouchMode="true"
-                        android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:textSize="30sp" />
-
-                    <TextView
-                        android:id="@+id/timeshift_list_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="center_vertical"
-                        android:singleLine="true"
-                        android:text="时移列表"
-                        android:textColor="@color/white"
-                        android:textSize="30sp"
-                        android:visibility="visible" />
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@id/timeshift_list_text"
-                        android:focusable="false"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/timeshift_list_icon" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/timeshift_program_list_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:visibility="gone" >
-
-                    <ImageView
-                        android:id="@+id/timeshift_left_arrows"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginTop="50dip"
-                        android:background="@drawable/timeshift_left_arrows"
-                        android:focusable="false" />
-
-                    <com.changhong.app.timeshift.widget.TwoWayGridView
-                        android:id="@+id/timeshift_program_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dip"
-                        android:layout_marginRight="15dip"
-                        app:columnWidth="80dp"
-                        app:horizontalSpacing="16dp"
-                        app:listSelector="@android:color/transparent"
-                        app:numColumns="auto_fit"
-                        app:numRows="1"
-                        app:rowHeight="80dp"
-                        app:scrollDirectionLandscape="horizontal"
-                        app:scrollDirectionPortrait="horizontal"
-                        app:stretchMode="spacingWidthUniform"
-                        app:verticalSpacing="16dp" />
-
-                    <ImageView
-                        android:id="@+id/timeshift_right_arrows"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="50dip"
-                        android:background="@drawable/timeshift_right_arrows"
-                        android:focusable="false" />
-
-                    <ImageView
-                        android:id="@+id/timeshift_exit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="5dip"
-                        android:focusable="false"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/banner_exit_icon" />
-                </RelativeLayout>
-            </RelativeLayout>
-        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

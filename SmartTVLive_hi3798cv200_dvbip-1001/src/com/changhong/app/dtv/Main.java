@@ -2509,7 +2509,8 @@ public void getYiHanVolumeAD(int channelId) {
 		if (programBannerDialog != null) {
 			programBannerDialog.cancel();
 		}
-		programBannerDialog = new BannerDialog(Main.this, DBchan, curChannelPrograms, mUiHandler, surfaceView);
+		mAudioManager = (AudioManager) getApplicationContext().getSystemService(AUDIO_SERVICE);
+		programBannerDialog = new BannerDialog(Main.this, DBchan, curChannelPrograms, mUiHandler, surfaceView,mAudioManager);
 		programBannerDialog.show();
 	}
 	

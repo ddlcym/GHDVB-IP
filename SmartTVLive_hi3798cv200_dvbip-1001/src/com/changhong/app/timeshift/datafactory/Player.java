@@ -486,15 +486,15 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		// TODO Auto-generated method stub
-		parentHandler.sendEmptyMessage(Class_Constant.RE_NEXT_PROGRAM);
+		parentHandler.sendEmptyMessage(Class_Constant.RE_NEXT_PROGRAM);//确认是否注释掉
 	}
 
 	// 播放视频准备好播放后调用此方法
 	public void onBufferingUpdate(MediaPlayer arg0, int bufferingProgress) {
 		Player.skbProgress.setSecondaryProgress(bufferingProgress);
 		playingFlag = true;
-		int currentProgress = Player.skbProgress.getMax()
-				* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration();
+//		int currentProgress = Player.skbProgress.getMax()
+//				* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration();
 		if (bufferingProgress != 0) {
 		}
 		// Log.i("mmmm", mediaPlayer.isPlaying() + "|isplaying");
@@ -644,6 +644,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			if (!liveFlag) {
 				Log.i("mmmm", "%%%%"+liveFlag);
 				if (desPositon < 0) {
+					mediaPlayer.pause();
 					if (handlerFlag) {
 						handlerFlag = false;
 						parentHandler
@@ -655,11 +656,15 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				mediaPlayer.seekTo(desPositon);
 				mediaPlayer.start();
 			} else {
-				Log.i("mmmm", "#####"+liveFlag);
-				Log.i("mmmm", "####desPositon:"+desPositon);
-				if (desPositon >= 0) {
+				
+				Log.i("mmmm", "shiyi desPositon:"+desPositon);
+				Log.i("mmmm", "shiyi skbProgress.getMax():"+skbProgress.getMax());
+				if (desPositon > 0 && desPositon < skbProgress.getMax()) {
 					delayTime = getPlayDelayTimes();
 					playLiveBack(curChannel, delayTime);
+				}
+				if (desPositon == 0 || desPositon >= skbProgress.getMax()) {
+					mediaPlayer.pause();
 				}
 			}
 
@@ -667,6 +672,12 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 		}
 	};
 	
+	public static boolean isPlayingFlag() {
+		return playingFlag;
+	}
+	public static void setPlayingFlag(boolean playingFlag) {
+		Player.playingFlag = playingFlag;
+	}
 	public void initSeekbar(){
 		skbProgress.setProgress(0);
 		desPositon=0;

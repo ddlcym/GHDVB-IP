@@ -18,7 +18,8 @@ public class ProcessData {
 
 	private MD5Encrypt MD5;
 	private static final String serverAdress = "http://ott.yun.gehua.net.cn:8080/";
-	private static final String serverInspurAdress = "http://api.ott.yun.gehua.net.cn:8080/";
+//	private static final String serverAdress = "http://api.ott.yun.gehua.net.cn:8080/";
+	private static final String serverAdressNew = "http://api.ott.yun.gehua.net.cn:8080/";
 	private String MD5Key = "aidufei";
 	private String conStr = "&authKey=";
 
@@ -38,7 +39,7 @@ public class ProcessData {
 	private String chPgmListVersion = "V001";
 	private String chPgmListResolution = "1280*768";
 	private String chPgmListChannelResourceCode = "8061"; // not known
-	private String chPgmListTerminalType = "3";
+	private String chPgmListTerminalType = "1";
 
 	/*********************************************************************************/
 	/* pgmInfo:节目信息 : param of must */
@@ -58,7 +59,7 @@ public class ProcessData {
 	private String playUrlResolution = "1280*768";
 	private String liveUrlPlayType = "2";
 	private String replayUrlPlayType = "3";
-	private String playUrlTerminalType = "4";
+	private String playUrlTerminalType = "7";
 	/*********************************************************************************/
 	/* livePgmInfo：直播节目详情 param of must */
 	private String livePgmInfoPendingStr = "msis/getPorgramInfo?";
@@ -84,7 +85,7 @@ public class ProcessData {
 	 * 获取频道分类信息
 	 */
 	public String getTypes(){
-		String catalogURL=serverAdress+"msis/getPram?version=V001&PramName=ChannelType&terminalType=3";
+		String catalogURL=serverAdress+"msis/getPram?version=V001&PramName=ChannelType&terminalType=1";
 		return strGETReturn(catalogURL);
 	}
 
@@ -94,17 +95,18 @@ public class ProcessData {
 //				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
 		
 		
-//		String rawPlainStr = "http://hd.ott.yun.gehua.net.cn/getChannels?" + "version=" + chListVersion + "&channelVersion="
-//				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
-		String rawPlainStr = serverAdress+"msis/getChannels?" + "version=" + chListVersion + "&channelVersion="
+		String rawPlainStr = "http://hd.ott.yun.gehua.net.cn/getChannels?" + "version=" + chListVersion + "&channelVersion="
 				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
+//		String rawPlainStr = serverAdress+"msis/getChannels?" + "version=" + chListVersion + "&channelVersion="
+//				+ chListChannelVersion + "&resolution=" + chListResolution + "&terminalType=" + chListTerminalType;
 		
+
 		return strGETReturn(rawPlainStr);
 		
 	}
 	
 	public String getCategoryString() {
-		String categoryURL=serverInspurAdress+"msis/getNBAT?"+"version=V001&PramName=ChannelType&terminalType=3";
+		String categoryURL=serverAdressNew+"msis/getNBAT?"+"version=V001&PramName=ChannelType&terminalType=1";
 		return strGETReturn(categoryURL);
 	}
 	
