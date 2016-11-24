@@ -215,7 +215,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				keyFlag = true;
 				desPositon = Player.skbProgress.getProgress() + 30000;
 
-				if (desPositon >= duration) {
+				/*if (desPositon >= duration) {
 					if (handlerFlag) {
 						handlerFlag = false;
 						// parentHandler
@@ -223,7 +223,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 
 					}
 					desPositon = duration;
-				}
+				}*/
 				Player.skbProgress.setProgress(desPositon);
 				break;
 			case Class_Constant.RE_FAST_REVERSE_DOWN:
@@ -486,13 +486,13 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
 		// TODO Auto-generated method stub
-		parentHandler.sendEmptyMessage(Class_Constant.RE_NEXT_PROGRAM);//确认是否注释掉
+//		parentHandler.sendEmptyMessage(Class_Constant.RE_NEXT_PROGRAM);//确认是否注释掉
 	}
 
 	// 播放视频准备好播放后调用此方法
 	public void onBufferingUpdate(MediaPlayer arg0, int bufferingProgress) {
 		Player.skbProgress.setSecondaryProgress(bufferingProgress);
-		playingFlag = true;
+//		playingFlag = true;
 //		int currentProgress = Player.skbProgress.getMax()
 //				* mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration();
 		if (bufferingProgress != 0) {
@@ -652,9 +652,10 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 						Log.i("xb", "Player*********");
 					}
 					desPositon = 0;
-				}
+				}else {
 				mediaPlayer.seekTo(desPositon);
 				mediaPlayer.start();
+				}
 			} else {
 				
 				Log.i("mmmm", "shiyi desPositon:"+desPositon);

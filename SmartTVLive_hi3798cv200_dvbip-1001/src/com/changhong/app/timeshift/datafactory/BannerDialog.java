@@ -236,6 +236,7 @@ public class BannerDialog extends Dialog {
 				
 			 case Class_Constant.SHIFT_NEXT_PROGRAM:
 				 {
+					player.pause();//处理时移自动播放完一个节目，暂停节目，弹出对话框
 					int len = list.size();
 					ShiftDialog.Builder builder = new ShiftDialog.Builder(mContext);
 					curshiftpro = CacheData.getCurProgram();
@@ -260,11 +261,17 @@ public class BannerDialog extends Dialog {
 								if(shiftcurindex != list.size()-2){
 									programListInfo.remove(2);
 									programListInfo.add(2, list.get(shiftcurindex+2));
+								}else{
+									programListInfo.remove(2);
+									if(programListInfo_back!=null&&programListInfo_back.size()>2){
+										programListInfo.add(2, programListInfo_back.get(2));
+									}
 								}
 								
 								initData();
-								nextProgramContainer.setVisibility(View.VISIBLE);
-								programListContainer.setVisibility(View.GONE);
+								showViewVisibility(NEXT_PROGRAM);
+								//nextProgramContainer.setVisibility(View.VISIBLE);
+								//programListContainer.setVisibility(View.GONE);
 						}
 					});
 
@@ -277,8 +284,9 @@ public class BannerDialog extends Dialog {
 								programListInfo.add(1,list.get(shiftcurindex));
 								programListInfo.add(2, list.get(shiftcurindex+1));
 								initData();
-								nextProgramContainer.setVisibility(View.VISIBLE);
-								programListContainer.setVisibility(View.GONE);
+								showViewVisibility(NEXT_PROGRAM);
+								//nextProgramContainer.setVisibility(View.VISIBLE);
+								//programListContainer.setVisibility(View.GONE);
 								
 						}
 					});

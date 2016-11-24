@@ -22,6 +22,7 @@
         android:layout_below="@id/textLayout"
         android:layout_marginLeft="@dimen/seekbar_margin"
         android:layout_marginRight="@dimen/seekbar_margin"
+        android:thumbOffset="0dp"     
         android:max="100"
         android:maxHeight="13dip"
         android:minHeight="13dip"
