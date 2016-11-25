@@ -29,6 +29,6 @@
         android:focusable="false"
         android:clickable="false"
         android:progressDrawable="@drawable/bg_seekbar"
-        android:thumb="@drawable/thumb_bar" />
+        android:thumb="@drawable/seekbar_z2n" />
 
 </RelativeLayout>

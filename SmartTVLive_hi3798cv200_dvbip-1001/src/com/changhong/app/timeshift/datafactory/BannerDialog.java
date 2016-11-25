@@ -698,6 +698,7 @@ public class BannerDialog extends Dialog {
 			break;*/
 		case Class_Constant.KEYCODE_MENU_KEY:
 			// Log.i("zyt", "onkeydown menukey is pressed " + keyCode);
+			dismiss();
 			CommonMethod.startSettingPage(MyApp.getContext());
 			break;
 		case KeyEvent.KEYCODE_F1://信息按键
