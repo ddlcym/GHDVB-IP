@@ -139,7 +139,7 @@ public class BannerDialog extends Dialog {
 				break;	
 
 			case Class_Constant.SHIFT_LAST_PROGRAM:
-				//时移回退到最开始
+				//时移回退到最开始 
 				{
 					int len = list.size();
 					ShiftDialog.Builder builder = new ShiftDialog.Builder(mContext);

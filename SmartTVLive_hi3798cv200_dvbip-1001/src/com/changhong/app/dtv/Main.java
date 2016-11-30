@@ -1252,6 +1252,11 @@ public void getYiHanVolumeAD(int channelId) {
 					theActivity.iKey = 0;
 
 				} else */
+				if (!NetworkUtils.isConnectInternet(Main.this)) {
+					Toast.makeText(Main.this, "网络不可用，请检查!", Toast.LENGTH_SHORT)
+							.show();
+					return;
+				}
 				
 				
 				if (theActivity.iKey < 0) {
