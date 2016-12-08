@@ -2444,8 +2444,8 @@ public void getYiHanVolumeAD(int channelId) {
 			DBchan = db.getChannel(thisPlayingInfo.mChannelId );
 		}
 		P.i("mmmm", "Main=initTimeshiftData_DBchan:"+DBchan+"thisPlayingInfo:"+thisPlayingInfo);
-		if(null==DBchan||TextUtils.isEmpty(DBchan.is_ttv))
-		{
+//		if(null==DBchan||TextUtils.isEmpty(DBchan.is_ttv))
+//		{
 			String URL = processData.getChannelsInfo();
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
 					new Response.Listener<org.json.JSONObject>() {
@@ -2460,7 +2460,7 @@ public void getYiHanVolumeAD(int channelId) {
 					}, errorListener);
 			jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
 			mReQueue.add(jsonObjectRequest); 
-		}
+//		}
 	}
 	
 	private void initCategoryData(){

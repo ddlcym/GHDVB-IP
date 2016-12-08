@@ -208,7 +208,7 @@ public class ProcessData {
 	//获取用户频道信息，是否支持时移
 	public String getChannelsInfo(){
 		String requestURL=null;
-		requestURL=serverAdress+getChannelsInfo+"version="+version1+"&userCode="+userCode+"&terminalType="+3;
+		requestURL=serverAdress+getChannelsInfo+"version="+version1+"&userCode="+userCode+"&terminalType="+1;
 		return strGETReturn(requestURL);
 	}
 	
