@@ -70,7 +70,12 @@ public class JsonResolve {
 //		// channel.setSymbolRate(getJsonObjectString(jsonObject, "symbolRate"));
 //		// channel.setModulation(getJsonObjectString(jsonObject, "modulation"));
 //		channel.setPlatform(getJsonObjInt(jsonObject, "platform"));
-
+		
+		//解析时移相信息
+		channel.logicNo=Integer.parseInt(getJsonObjectString(jsonObject, "channelNO"));
+		channel.chanId=Integer.parseInt(getJsonObjectString(jsonObject, "channelID"));
+		channel.is_ttv="1";
+		channel.name=getJsonObjectString(jsonObject, "channelName");
 		return channel;
 	}
 
