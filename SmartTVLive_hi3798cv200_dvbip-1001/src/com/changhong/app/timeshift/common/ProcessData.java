@@ -26,8 +26,8 @@ public class ProcessData {
 	/* chnList:频道列表 param of must */
 	private String chListPendingStr = "msis/getChannels?";
 	private String chListVersion = "V001";
-	private String chListChannelVersion = "0";
-	private String chListResolution = "1280*768";
+	private String chListChannelVersion = "1";
+	private String chListResolution = "1280*720";
 	private String chListTerminalType = "1";
 	/* for test */
 	// private String chListpgSize = "&pageSize=20";

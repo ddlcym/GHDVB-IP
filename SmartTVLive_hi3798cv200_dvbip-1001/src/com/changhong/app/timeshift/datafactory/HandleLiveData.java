@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.changhong.app.dtv.SysApplication;
 import com.changhong.app.timeshift.common.CacheData;
@@ -64,22 +65,25 @@ public class HandleLiveData {
 	
 	public void dealChannelIsTTV(JSONObject json){
 		int chanId=0;
+		int a=1;//test
 		List<Channel> channels = JsonResolve.jsonToChannels(json);
 		CacheData.setAllChannelExtraInfo(channels);
 		if(null==channels||channels.size()==0) 
 		{
 			return;
 		}
+		ChannelDB db=DVB.getManager().getChannelDBInstance();
 		
 		for(int i=0; i<channels.size();i++){
 			Channel channel=channels.get(i);
-			ChannelDB db=DVB.getManager().getChannelDBInstance();
 			Channel channel2 = db.getChannelByLogicNo(channel.logicNo);
 			if(channel2!=null){
 				chanId=channel2.chanId;
 				db.updateChannel(chanId, "is_ttv", "1");
+				a=a+1;//test
 			}
 		}
+		Log.i("mmmm","dealChannelIsTTV"+ a+"|channels:"+channels.size());//test
 	}
 	
 	public void dealChannelExtra(JSONObject json){

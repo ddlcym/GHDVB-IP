@@ -72,8 +72,7 @@ public class JsonResolve {
 //		channel.setPlatform(getJsonObjInt(jsonObject, "platform"));
 		
 		//解析时移相信息
-		channel.logicNo=Integer.parseInt(getJsonObjectString(jsonObject, "channelNO"));
-		channel.chanId=Integer.parseInt(getJsonObjectString(jsonObject, "channelID"));
+		channel.logicNo=Integer.parseInt(getJsonObjectString(jsonObject, "channelNumber"));
 		channel.is_ttv="1";
 		channel.name=getJsonObjectString(jsonObject, "channelName");
 		return channel;
