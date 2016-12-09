@@ -62,6 +62,26 @@ public class HandleLiveData {
 		return channels;
 	}
 	
+	public void dealChannelIsTTV(JSONObject json){
+		int chanId=0;
+		List<Channel> channels = JsonResolve.jsonToChannels(json);
+		CacheData.setAllChannelExtraInfo(channels);
+		if(null==channels||channels.size()==0) 
+		{
+			return;
+		}
+		
+		for(int i=0; i<channels.size();i++){
+			Channel channel=channels.get(i);
+			ChannelDB db=DVB.getManager().getChannelDBInstance();
+			Channel channel2 = db.getChannelByLogicNo(channel.logicNo);
+			if(channel2!=null){
+				chanId=channel2.chanId;
+				db.updateChannel(chanId, "is_ttv", "1");
+			}
+		}
+	}
+	
 	public void dealChannelExtra(JSONObject json){
 		int chanId=0;
 //		L.i("handlelivedata-dealChannelExtra:"+json.toString());

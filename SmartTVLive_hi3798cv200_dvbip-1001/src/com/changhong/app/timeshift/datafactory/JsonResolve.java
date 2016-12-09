@@ -429,7 +429,7 @@ public class JsonResolve {
 
 			public int compare(Channel o1, Channel o2) {
 				int result = o1.logicNo - o2.logicNo;
-				if (result == 0) {
+				if (result == 0&&o1.name!=null&&o2.name!=null) {
 					result = o1.name.compareTo(o2.name);
 				}
 				return result;

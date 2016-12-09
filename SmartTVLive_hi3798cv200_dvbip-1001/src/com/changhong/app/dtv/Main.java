@@ -2446,21 +2446,43 @@ public void getYiHanVolumeAD(int channelId) {
 		P.i("mmmm", "Main=initTimeshiftData_DBchan:"+DBchan+"thisPlayingInfo:"+thisPlayingInfo);
 //		if(null==DBchan||TextUtils.isEmpty(DBchan.is_ttv))
 //		{
-			String URL = processData.getChannelsInfo();
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
-					new Response.Listener<org.json.JSONObject>() {
-
-						@Override
-						public void onResponse(org.json.JSONObject arg0) {
-							// TODO Auto-generated method stub
-							P.i("mmmm", "Main=getUserChannel:" + arg0);
-
-							HandleLiveData.getInstance().dealChannelExtra(arg0);
-						}
-					}, errorListener);
-			jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
-			mReQueue.add(jsonObjectRequest); 
+			getIsTTVData();
 //		}
+		
+		
+	}
+	
+	private void getIsTTVData(){
+		//这个IPTV定义的接口，2016年12月9日付岩确认弃用，以后可能会重新启用
+//		String URL = processData.getChannelsInfo();
+//		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+//				new Response.Listener<org.json.JSONObject>() {
+//
+//					@Override
+//					public void onResponse(org.json.JSONObject arg0) {
+//						// TODO Auto-generated method stub
+//						P.i("mmmm", "Main=getUserChannel:" + arg0);
+//
+//						HandleLiveData.getInstance().dealChannelExtra(arg0);
+//					}
+//				}, errorListener);
+//		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+//		mReQueue.add(jsonObjectRequest); 
+		
+		String URL = processData.getChannelList();
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
+				new Response.Listener<org.json.JSONObject>() {
+
+					@Override
+					public void onResponse(org.json.JSONObject arg0) {
+						// TODO Auto-generated method stub
+						P.i("mmmm", "Main=getUserChannel:" + arg0);
+
+						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
+					}
+				}, errorListener);
+		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+		mReQueue.add(jsonObjectRequest); 
 	}
 	
 	private void initCategoryData(){
