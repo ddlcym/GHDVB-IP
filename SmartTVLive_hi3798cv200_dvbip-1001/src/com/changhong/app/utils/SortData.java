@@ -49,13 +49,31 @@ public class SortData {
 		int val,res=0;
 		String[]  result=type.split(",");
 		for(String element:result){
-			Log.i("mmmm","<<"+element.trim()+">>");
+			//Log.i("mmmm","<<"+element.trim()+">>");
 			 if((val=covernt(element.trim()))!=0){
 				 res |= 1<<val;
 			 }			
 		}		
 		chan.sortId = res;
 	}
+	public static void setChannelType2(Channel chan, String type){
+		
+		int rev=0,bit=0;
+		Pattern p = Pattern.compile("[0-9\\.]+");
+		Matcher m = p.matcher(type); 		
+		while(m.find()){
+			try {
+				bit = Integer.parseInt(m.group());	
+				if(bit!=0){
+					rev |= 1<<bit;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	    
+		}					
+		//Log.i("mmmm","setChannelType2>>"+chan.chanId+",type:"+type+",val="+rev);		
+		chan.sortId = rev;
+	}	
 	public static void setChannelType_new(Channel chan, String type){
 		Log.i("mmmm","setChannelType_new>>"+chan.chanId+",type:"+type);
 		

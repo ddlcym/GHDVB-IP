@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.changhong.app.dtv"
+    android:sharedUserId="android.uid.system"
     android:versionCode="2"
     android:versionName="2.0" >
 
     <!--
+        android:sharedUserId="android.uid.system"
+
 	Version history:
 	### Version 2.0 modifier:Vanlen ####
 	1.Add CA OSD text rolling dealing(update the chdvb.jar to v1.2).
-	2.When entering EPG, add to show a dialog to replace black screen.
+	2.When entering EPG, add to show a dialog to replace black screen.    
+
     -->
 
     <uses-sdk
@@ -114,8 +118,8 @@
             android:name="com.changhong.app.dtv.BootCastReceiver"
             android:process=":remote" >
             <intent-filter>
-                <action android:name="android.intent.action.DATE_CHANGED" />
-            </intent-filter>
+                <action android:name="com.changhong.action.chkEpgTimer" />
+            </intent-filter>            
         </receiver>
         <receiver android:name="com.changhong.app.dtv.thirdPartyBroadcastReceiver" >
             <intent-filter>

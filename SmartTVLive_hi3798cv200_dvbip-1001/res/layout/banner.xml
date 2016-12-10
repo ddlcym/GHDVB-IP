@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/id_dtv_banner"
-    android:layout_width="490dip"
+	android:layout_width="490dip"
+    android:layout_height="90dip"
+    android:background="@drawable/banner_z4"    
+    android:orientation="horizontal" >
+<!-- 
+   android:layout_width="490dip"
     android:layout_height="90dip"
     android:background="@drawable/banner_z4"
-    android:orientation="horizontal" >
-
+ -->
     <LinearLayout
-        android:layout_width="880dip"
+        android:layout_width="830dip"
         android:layout_height="170dip"
-        android:layout_marginLeft="100dip"
+        android:layout_marginLeft="80dip"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -19,17 +23,17 @@
 
             <TextView
                 android:id="@+id/banner_service_id"
-                style="@style/ghTextViewStyleA"
+                style="@style/ghBarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dip" />
 
             <com.changhong.app.dtv.TextMarquee
                 android:id="@+id/banner_channel_name_id"
-                style="@style/ghTextViewStyleA"
+                style="@style/ghBarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="80dip"
+                android:layout_marginLeft="60dip"
                 android:singleLine="true" />
 
             <ImageView
@@ -37,7 +41,7 @@
                 android:layout_width="50dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="430dip"
+                android:layout_marginLeft="410dip"
                 android:background="@drawable/icon_hd"
                 android:visibility="gone" />
 
@@ -46,7 +50,7 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="480dip"
+                android:layout_marginLeft="460dip"
                 android:background="@drawable/icon_3d"
                 android:visibility="invisible" />
 
@@ -55,7 +59,7 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="530dip"
+                android:layout_marginLeft="510dip"
                 android:background="@drawable/icon_aud"
                 android:visibility="invisible" />
 
@@ -64,16 +68,16 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="580dip"
+                android:layout_marginLeft="560dip"
                 android:background="@drawable/icon_subtitle"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/banner_channel_Dolby"
-                android:layout_width="30dip"
-                android:layout_height="30dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="630dip"
+                android:layout_marginLeft="610dip"
                 android:background="@drawable/icon_db"
                 android:visibility="invisible" />
 
@@ -82,16 +86,16 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="680dip"
+                android:layout_marginLeft="660dip"
                 android:background="@drawable/icon_mail"
                 android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/banner_DTW_id"
-                style="@style/ghTextViewStyleB"
+                style="@style/ghBarTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="770dip"
+                android:layout_marginLeft="730dip"
                 android:gravity="center" />
         </RelativeLayout>
 
@@ -100,6 +104,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
+            android:layout_marginLeft="-10dip"
             android:layout_gravity="center"
             android:maxHeight="8dip"
             android:minHeight="8dip"
@@ -121,7 +126,7 @@
                 android:visibility="visible" >
 
                 <TextView
-                    style="@style/ghTextViewStyleC"
+                    style="@style/ghBarEpgP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="0dip"
@@ -130,18 +135,18 @@
 
                 <TextView
                     android:id="@+id/banner_PF_P_time"
-                    style="@style/ghTextViewStyleC"
+                    style="@style/ghBarEpgP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="160dip"
+                    android:layout_marginLeft="140dip"
                     android:layout_marginTop="0dip" />
 
                 <TextView
                     android:id="@+id/banner_PF_P_id"
-                    style="@style/ghTextViewStyleC"
+                    style="@style/ghBarEpgP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="400dip"
+                    android:layout_marginLeft="300dip"
                     android:layout_marginTop="0dip"
                     android:ellipsize="marquee"
                     android:focusable="true"
@@ -153,16 +158,16 @@
                     android:layout_width="24dip"
                     android:layout_height="24dip"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="730dip"
+                    android:layout_marginLeft="690dip"
                     android:background="@drawable/icon_play"
                     android:visibility="visible" />
 
                 <TextView
-                    style="@style/ghTextViewStyleD"
+                    style="@style/ghBarEpgF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="760dip"
+                    android:layout_centerVertical="true" 
+                    android:layout_marginLeft="720dip"
                     android:text="@string/banner_prompt_z3" />
             </RelativeLayout>
 
@@ -170,7 +175,7 @@
 
             <RelativeLayout
                 android:id="@+id/volume_bar"
-                android:layout_width="fill_parent"
+                android:layout_width="810dip"
                 android:layout_height="100dip"
                 android:layout_marginTop="5dip"
                 android:visibility="invisible" >
@@ -189,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="85dip"
-                    android:background="@drawable/v_bg2"/>
+                    android:background="@drawable/v_bg"/>
                 <ImageView
                     android:id="@+id/v_vol_id"
                     android:layout_width="wrap_content"
@@ -210,7 +215,7 @@
 
                 <TextView
                     android:id="@+id/banner_prompt_z2"
-                    style="@style/ghTextViewStyleD"
+                    style="@style/ghBarEpgF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="0dip"
@@ -219,18 +224,18 @@
 
                 <TextView
                     android:id="@+id/banner_PF_F_time"
-                    style="@style/ghTextViewStyleD"
+                    style="@style/ghBarEpgF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="160dip"
+                    android:layout_marginLeft="140dip"
                     android:layout_marginTop="0dip" />
 
                 <TextView
                     android:id="@+id/banner_PF_F_id"
-                    style="@style/ghTextViewStyleD"
+                    style="@style/ghBarEpgF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="400dip"
+                    android:layout_marginLeft="300dip"
                     android:layout_marginTop="0dip"
                     android:ellipsize="marquee"
                     android:focusable="true"
@@ -243,16 +248,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="750dip"
+                    android:layout_marginLeft="710dip"
                     android:background="@drawable/icon_exit"
                     android:visibility="visible" />
 
                 <TextView
-                    style="@style/ghTextViewStyleD"
+                    style="@style/ghBarEpgF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="810dip"
+                    android:layout_marginLeft="770dip"
                     android:text="@string/banner_prompt_z4" />
             </RelativeLayout>
         </RelativeLayout>
@@ -261,9 +266,9 @@
     <com.xormedia.adplayer.AdPlayer
         android:id="@+id/adplayer"
         android:layout_width="wrap_content"
-        android:layout_height="170dip"
+        android:layout_height="150dip"
         android:layout_gravity="center"
-        android:layout_marginRight="10dip"
+        android:layout_marginRight="60dip"
         android:visibility="visible" >
     </com.xormedia.adplayer.AdPlayer>
 

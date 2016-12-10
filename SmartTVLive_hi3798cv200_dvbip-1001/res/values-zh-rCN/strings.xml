@@ -891,6 +891,7 @@
     <string name="MESSAGE_BADCARD_TYPE">无法识别卡</string>
     <string name="MESSAGE_EXPICARD_TYPE">智能卡过期，请更换新卡</string>
     <string name="MESSAGE_INSERTCARD_TYPE">加扰节目，请插入智能卡</string>
+     <string name="MESSAGE_CARD_DIRECTION">（金属面朝上）</string>
     <string name="MESSAGE_NOOPER_TYPE">卡中不存在节目运营商</string>
     <string name="MESSAGE_BLACKOUT_TYPE">条件禁播</string>
     <string name="MESSAGE_OUTWORKTIME_TYPE">当前时段被设定为不能观看</string>

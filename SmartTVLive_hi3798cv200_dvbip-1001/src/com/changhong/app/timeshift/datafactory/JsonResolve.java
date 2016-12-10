@@ -353,9 +353,10 @@ public class JsonResolve {
 				channel.serviceId=getJsonObjInt(extraJson, "serviceId");
 				channel.tsId=getJsonObjInt(extraJson, "tsId");
 				String strSortId = getJsonObjectString(extraJson, "groups");
-				SortData.setChannelType_new(channel,strSortId);
+				//SortData.setChannelType_new(channel,strSortId);
+				SortData.setChannelType2(channel,strSortId);
 				listSortId.add(channel);
-				Log.i("mmmm", "["+i+"]get>>> ts:" + channel.tsId+",serid:"+channel.serviceId+",sortid:"+channel.sortId+",name:"+getJsonObjectString(extraJson, "name"));
+				//Log.i("mmmm", "["+i+"]get>>> ts:" + channel.tsId+",serid:"+channel.serviceId+",sortid:"+channel.sortId+",name:"+getJsonObjectString(extraJson, "name"));
 			} catch (JSONException e) { 
 				// TODO Auto-generated catch block
 				e.printStackTrace();

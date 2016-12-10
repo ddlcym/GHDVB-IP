@@ -17,12 +17,25 @@
 
     <TextView
         style="@style/ghTextEpgWarnBodyStyle"
-       android:id="@+id/ id_root_ca_info"
+       android:id="@+id/id_root_ca_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:paddingRight="10dip"
          android:paddingLeft="10dip"
         android:layout_centerInParent="true"
         android:gravity="center"/>
+    
+    <TextView
+        style="@style/ghTextEpgWarnTitleStyle"
+       android:id="@+id/id_ca_exter_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:paddingRight="10dip"
+         android:paddingLeft="10dip"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/id_root_ca_info"
+        android:text="@string/MESSAGE_CARD_DIRECTION"
+        android:gravity="center"
+        android:visibility="invisible"/>    
 
 </RelativeLayout>

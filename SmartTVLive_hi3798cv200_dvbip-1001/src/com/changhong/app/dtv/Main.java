@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.json.JSONObject;
+
 import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -53,6 +55,7 @@ import com.changhong.app.constant.Class_Constant;
 import com.changhong.app.constant.Class_Global;
 import com.changhong.app.dtv.DialogUtil.DialogBtnOnClickListener;
 import com.changhong.app.dtv.DialogUtil.DialogMessage;
+import com.changhong.app.dtv.R.string;
 import com.changhong.app.timeshift.common.CacheData;
 import com.changhong.app.timeshift.common.MyApp;
 import com.changhong.app.timeshift.common.NetworkUtils;
@@ -62,6 +65,7 @@ import com.changhong.app.timeshift.common.ProgramInfo;
 import com.changhong.app.timeshift.common.VolleyTool;
 import com.changhong.app.timeshift.datafactory.BannerDialog;
 import com.changhong.app.timeshift.datafactory.HandleLiveData;
+import com.changhong.app.utils.OpJsonFile;
 import com.changhong.app.utils.SortData;
 import com.changhong.app.utils.TestFunc;
 import com.changhong.dvb.Channel;
@@ -83,6 +87,8 @@ public class Main extends Activity implements ISceneListener {
 	public SysApplication objApplication;
 	public Context mContext;
     public static final String   TAG = "GHLive";
+    public static final String   DBG = "DBG";
+    
 	LinearLayout id_dtv_digital_root;
 	TextView id_dtv_channel_name;
 	ImageView dtv_digital_1;
@@ -117,7 +123,14 @@ public class Main extends Activity implements ISceneListener {
 	private static final int MESSAGE_VOLUME_SHOW = 901;
 	private static final int MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY = 903;
 	private static final int VOLUME_ID_YIHAN_AD = 904;
+	private static final int MESSAGE_CHANLIST_SHOW = 905;
 
+	/**
+	 * intent message
+	 */
+	public static final String sGetcateinfo="com.changhong.action.getCateinfo";
+	public static final String sChkEpgTimer="com.changhong.action.chkEpgTimer";
+	
 	/**
 	 * the time delayed when change program
 	 */
@@ -189,6 +202,14 @@ public class Main extends Activity implements ISceneListener {
 
 	private homeReceiver mHomeReceiver;
 
+	//获取分类信息
+	private CateinfoReceiver cateinfoReceiver;
+	private void sendBroadcastInfo(String strInfo) {
+			Intent intent = new Intent();
+			intent.setAction(strInfo);
+			sendBroadcast(intent);		
+			P.i("YBYB","send intent:"+strInfo);
+	}
 	/**
 	 * Pip Play
 	 */
@@ -232,8 +253,6 @@ public class Main extends Activity implements ISceneListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main);
-		
-	
 
 		mContext = Main.this;
 		context = Main.this;
@@ -263,7 +282,7 @@ public class Main extends Activity implements ISceneListener {
 		
 	    checkChannel();
 		registerBroadReceiver();
-		SetDtvStatus(true);		
+		SetDtvStatus(true,false);		
 		
 		//下面是测试函数
 		//testEnv(); 
@@ -286,7 +305,7 @@ public class Main extends Activity implements ISceneListener {
 			e.printStackTrace();
 		}
 	}
-
+	BootCastReceiver epgTime=new BootCastReceiver();
 	private void registerBroadReceiver() {
 		
 		
@@ -304,6 +323,9 @@ public class Main extends Activity implements ISceneListener {
 		filter3.addAction("showBanneForYuYueDialog");
 		registerReceiver(showBanneForYuYueDialog, filter3);
 		
+		IntentFilter filter4 = new IntentFilter();
+		filter3.addAction(sChkEpgTimer);
+		registerReceiver(epgTime, filter4);		
 		
 //		IntentFilter myIntentFilter = new IntentFilter();
 //	   myIntentFilter.addAction("FINISH");
@@ -347,11 +369,11 @@ public class Main extends Activity implements ISceneListener {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			
-			
-			Message msg = new Message();
-			msg.what = MESSAGE_SHOW_DIGITALKEY;
-			msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-	    	mUiHandler.sendMessage(msg);
+			//GH UI-1.3 换台不显示右上角频道号
+			//Message msg = new Message();
+			//msg.what = MESSAGE_SHOW_DIGITALKEY;
+			//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+	    	//mUiHandler.sendMessage(msg);
 	    
 			
 			banner.show(SysApplication.iCurChannelId);
@@ -368,6 +390,7 @@ public class Main extends Activity implements ISceneListener {
 			
 		P.i("receive  showBanneForYuYueDialog  broadcast" );
 		//	onVkey(Class_Constant.KEYCODE_INFO_KEY);
+		banner.show(arg1.getIntExtra("chanid", SysApplication.iCurChannelId));
 	
 		}
 	};
@@ -393,23 +416,31 @@ public class Main extends Activity implements ISceneListener {
 		int iTsId = getIntent().getIntExtra("tsId", -1);
 		
 		P.d("getIntent().getStringExtra(num3~6)=" + iBouqtID+","+iFreq+","+iSerId+","+iTsId);	
-		
+
 		if ( iSerId!= -1 && iTsId!=-1)// Live
 		{
 			Channel toPlayChannel = objApplication.dvbDatabase
 					.getChannelByTsIdAndServiceId(iTsId, iSerId);
 			if (toPlayChannel != null) {
 				objApplication.playChannel(toPlayChannel.chanId, false);
+				banner.show(toPlayChannel.chanId);	
 				P.d("GOT and play channel pointed by Intent params ts&serId");
-				banner.show(toPlayChannel.chanId);				
-				Message msg = new Message();
-				msg.what = MESSAGE_SHOW_DIGITALKEY;
-				msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-				mUiHandler.sendMessage(msg);				
+				/*
+				if(iBouqtID==-1){
+					banner.show(toPlayChannel.chanId);	
+				}else{				
+					Message msg = new Message();				
+					//msg.what = MESSAGE_SHOW_DIGITALKEY;
+					//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+					msg.what = MESSAGE_CHANLIST_SHOW;
+					msg.arg1 = objApplication.getCurPlayingChannel().chanId;
+					msg.arg2 = 999999999;
+					mUiHandler.sendMessage(msg);	
+				}*/
+				return;
 			}else {
 				P.d("DONT get channel pointed by Intent from Launcher ");	
-			}
-			return;
+			}			
 		} else if (iBouqtID != -1 || iFreq != -1) {
 			Channel[] allChannels = objApplication.dvbDatabase.getChannelsAll();
 			
@@ -418,11 +449,14 @@ public class Main extends Activity implements ISceneListener {
 					if (ch.favorite == iBouqtID) {
 						objApplication.playChannel(ch.chanId, false);
 						P.d("GOT and play channel pointed by Intent params iBouqtID ");
-						banner.show(ch.chanId);
-						Message msg = new Message();
-						msg.what = MESSAGE_SHOW_DIGITALKEY;
-						msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-						mUiHandler.sendMessage(msg);
+						Message msg = new Message();				
+						//banner.show(toPlayChannel.chanId);				
+						//msg.what = MESSAGE_SHOW_DIGITALKEY;
+						//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+						msg.what = MESSAGE_CHANLIST_SHOW;
+						msg.arg1 = objApplication.getCurPlayingChannel().chanId;
+						msg.arg2 = 999999999;
+						mUiHandler.sendMessage(msg);	
 						return;
 					}
 				}
@@ -433,11 +467,14 @@ public class Main extends Activity implements ISceneListener {
 					if (ch1.frequencyKhz == iFreq) {
 						objApplication.playChannel(ch1.chanId, false);
 						P.d("GOT and play channel pointed by Intent params iFreq ");
-						banner.show(ch1.chanId);
-						Message msg = new Message();
-						msg.what = MESSAGE_SHOW_DIGITALKEY;
-						msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-						mUiHandler.sendMessage(msg);
+						Message msg = new Message();				
+						//banner.show(toPlayChannel.chanId);				
+						//msg.what = MESSAGE_SHOW_DIGITALKEY;
+						//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+						msg.what = MESSAGE_CHANLIST_SHOW;
+						msg.arg1 = objApplication.getCurPlayingChannel().chanId;
+						msg.arg2 = 999999999;
+						mUiHandler.sendMessage(msg);	
 						return;
 					}
 				}
@@ -457,8 +494,6 @@ public class Main extends Activity implements ISceneListener {
 					.getChannelByTsIdAndServiceId(tsId, serviceId);
 			if (toPlayChannel != null) {
 				objApplication.playChannel(toPlayChannel.chanId, false);
-				
-			
 			}
 			return;
 		}
@@ -548,8 +583,10 @@ public class Main extends Activity implements ISceneListener {
 		
 		
 		P.d("Main onResume  start!" );
+
+		SetDtvStatus(true,false);
 		
-		SetDtvStatus(true);
+		//objApplication.reqNotifySignalChanged(objApplication.mo_Tunner.isLock(0));
 		
 		int curChanCount = objApplication.dvbDatabase.getChannelCountSC();
 
@@ -568,8 +605,13 @@ public class Main extends Activity implements ISceneListener {
 			}
 		
 		}
-
 		
+		sendBroadcastInfo(sChkEpgTimer);
+		P.i("YBYB","mdf cateversion="+Utils.getProp("persist.sys.live.cateversion"));
+		//if(Utils.getProp("persist.sys.live.cateversion").equals("0"))
+		{
+			sendBroadcastInfo(sGetcateinfo);
+		}		
 		P.i("SysApplication.bNeedFirstBootIn="+SysApplication.bNeedFirstBootIn);
 		if (SysApplication.bNeedFirstBootIn) {
 			
@@ -594,7 +636,9 @@ public class Main extends Activity implements ISceneListener {
 			SysApplication.bNeedFirstBootIn = false;
 			
 			
-		} else {
+		}
+/*		
+		else {
 			// get the virtual key
 			iRootMenuVkey = Class_Global.GetRootMenuVKey();
 			Class_Global.SetRootMenuVKey(-1);
@@ -606,8 +650,8 @@ public class Main extends Activity implements ISceneListener {
 			
 		}
 		
-		P.i("curChanCount =   -----" + curChanCount);
-
+		P.i("curChanCount =   -----" + curChanCount); 
+*/
 
 	}
 	
@@ -622,10 +666,11 @@ public class Main extends Activity implements ISceneListener {
 			banner.show(SysApplication.iCurChannelId);
 			
 			// surfaceView1.setVisibility(View.VISIBLE);
-			Message msg = new Message();
-			msg.what = MESSAGE_SHOW_DIGITALKEY;
-			msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-			mUiHandler.sendMessage(msg);
+			//GH UI-1.3 换台不显示右上角频道号
+			//Message msg = new Message();
+			//msg.what = MESSAGE_SHOW_DIGITALKEY;
+			//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+			//mUiHandler.sendMessage(msg);
 					
 		}
 		
@@ -651,6 +696,8 @@ public class Main extends Activity implements ISceneListener {
 			// DVBManager.getInstance().destroyPlayer(objApplication.dvbPlayer);
 			// objApplication.dvbPlayer = null;
 		}
+		if(banner!=null)
+			banner.cancel();
 
 		objApplication.stopPipPlay();
 
@@ -658,6 +705,9 @@ public class Main extends Activity implements ISceneListener {
 		unregisterReceiver(msignalRecever);
 		unregisterReceiver(mHomeReceiver);
 		unregisterReceiver(stopReceiver);
+		unregisterReceiver(cateinfoReceiver);
+		unregisterReceiver(epgTime);
+		
 		objApplication.exit();
 		android.os.Process.killProcess(android.os.Process.myPid());
 		super.onDestroy();
@@ -773,8 +823,9 @@ private ImageView vol_mult_icon;
 			if ((SysApplication.iCurChannelId != -1)
 					&& (objApplication.dvbDatabase.getChannelCount() >= 0)) {
 
-				Message msg = new Message();
-				msg.what = MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY;
+				//GH UI-1.3 换台不显示右上角频道号
+				//Message msg = new Message();
+				//msg.what = MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY;
 
 				Channel channel = objApplication.getPreChannel(tempChannelID);
 				if (channel == null || channel.chanId == -1) {// if pre channel
@@ -792,7 +843,7 @@ private ImageView vol_mult_icon;
 				    banner.show(channel.chanId);
 					tempChannelID= channel.chanId;
 	
-					msg.arg1 = channel.logicNo;
+					//msg.arg1 = channel.logicNo;
 				} else {
 					P.e("yangtong", "channel is null");
 					bKeyUsed = true;
@@ -803,7 +854,7 @@ private ImageView vol_mult_icon;
 				mUiHandler.removeMessages(MESSAGE_PLAY_NEXT);
 				mUiHandler.sendEmptyMessageDelayed(MESSAGE_PLAY_PRE,
 						TIME_CHANGE_DELAY);
-				mUiHandler.sendMessage(msg);
+				//mUiHandler.sendMessage(msg);
 			}
 		}
 			break;
@@ -812,8 +863,10 @@ private ImageView vol_mult_icon;
 		case KeyEvent.KEYCODE_PAGE_UP: {
 			if ((SysApplication.iCurChannelId != -1)
 					&& (objApplication.dvbDatabase.getChannelCount() >= 0)) {
-				Message msg = new Message();
-				msg.what = MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY;
+				
+				//GH UI-1.3 换台不显示右上角频道号
+				//Message msg = new Message();
+				//msg.what = MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY;
 
 				Channel channel = objApplication.getNextChannel(tempChannelID);
 				if (channel == null || channel.chanId == -1) {// if next channel
@@ -829,7 +882,7 @@ private ImageView vol_mult_icon;
 					banner.show(channel.chanId);
 					tempChannelID= channel.chanId;
 			
-					msg.arg1 = channel.logicNo;
+					//msg.arg1 = channel.logicNo;
 				} else {
 					P.e("yangtong", "channel is null");
 					bKeyUsed = true;
@@ -840,7 +893,7 @@ private ImageView vol_mult_icon;
 				mUiHandler.removeMessages(MESSAGE_PLAY_NEXT);
 				mUiHandler.sendEmptyMessageDelayed(MESSAGE_PLAY_NEXT,
 						TIME_CHANGE_DELAY);
-				mUiHandler.sendMessage(msg);
+				//mUiHandler.sendMessage(msg);
 			}
 		}
 			break;
@@ -880,6 +933,7 @@ private ImageView vol_mult_icon;
 				//如果banner存在,则消除banner
 				P.i("exit:" + 4 );
 				banner.cancel();
+				showTimeShiftIcon(false);
 				bKeyUsed = true;
 				
 			}
@@ -890,10 +944,11 @@ private ImageView vol_mult_icon;
 				objApplication.playPrePlayingChannel();
 				banner.show(SysApplication.iCurChannelId);
 
-				Message msg = new Message();
-				msg.what = MESSAGE_SHOW_DIGITALKEY;
-				msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-				mUiHandler.sendMessage(msg);
+				//GH UI-1.3 换台不显示右上角频道号
+				//Message msg = new Message();
+				//msg.what = MESSAGE_SHOW_DIGITALKEY;
+				//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+				//mUiHandler.sendMessage(msg);
 				bKeyUsed = true;
 			}
 			return true;
@@ -952,7 +1007,7 @@ private ImageView vol_mult_icon;
 					"com.SysSettings.main.MainActivity"));
 			try { 
 				startActivity(mIntent);
-				SetDtvStatus(false);
+				SetDtvStatus(false,true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1104,7 +1159,14 @@ public void getYiHanVolumeAD(int channelId) {
 			final Main theActivity = mActivity.get();
 
 			switch (msg.what) {
-			
+
+			case MESSAGE_CHANLIST_SHOW:
+				banner.show(msg.arg1,msg.arg2);
+				Intent toChanList = new Intent(Main.this,
+						ChannelList.class);			
+				startActivity(toChanList);				
+				break;
+				
 			case MESSAGE_VOLUME_SHOW:
 				
 				P.i(TAG, "UI_Handler---->MESSAGE_VOLUME_SHOW");
@@ -1182,7 +1244,7 @@ public void getYiHanVolumeAD(int channelId) {
 								mIntent.putExtra("StartId", 1); //autoscan without scan_enter_menu
 								try { 
 									theActivity.startActivity(mIntent);
-									SetDtvStatus(false);
+									SetDtvStatus(false,true);
 								} catch (Exception e) {
 									e.printStackTrace();
 									//objApplication.SetDtvThreadOn(true);
@@ -1264,7 +1326,7 @@ public void getYiHanVolumeAD(int channelId) {
 					theActivity.mUiHandler
 							.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
 					theActivity.mUiHandler.sendEmptyMessageDelayed(
-							MESSAGE_DISAPPEAR_DIGITAL, 1000);
+							MESSAGE_DISAPPEAR_DIGITAL, 5000);
 
 					theActivity.iKeyNum = 0;
 					theActivity.iKey = 0;
@@ -1282,6 +1344,8 @@ public void getYiHanVolumeAD(int channelId) {
 						theActivity.tvRootDigitalKeyInvalid
 								.setVisibility(View.VISIBLE);
 						theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
+						theActivity.mUiHandler.sendEmptyMessageDelayed(
+								MESSAGE_DISAPPEAR_DIGITAL, 5000);
 					} else {
 
 						
@@ -1289,21 +1353,23 @@ public void getYiHanVolumeAD(int channelId) {
 							theActivity.volume_layout.setVisibility(View.INVISIBLE);
 
 						theActivity.banner.show(SysApplication.iCurChannelId);
-	
+						
+						theActivity.tvRootDigitalkey.setVisibility(View.INVISIBLE);
+						/*
 						Message msg2 = new Message();
 						msg2.what = MESSAGE_SHOW_DIGITALKEY;
 						msg2.arg1 = theActivity.iKey;
 						sendMessage(msg2);
-						
-						
-						
+						*/
 					}
 					theActivity.iKeyNum = 0;
 					theActivity.iKey = 0;
 					theActivity.mUiHandler
 							.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
+					/*
 					theActivity.mUiHandler.sendEmptyMessageDelayed(
 							MESSAGE_DISAPPEAR_DIGITAL, 2000);
+					*/
 				}
 
 			}
@@ -1320,17 +1386,7 @@ public void getYiHanVolumeAD(int channelId) {
 						"MESSAGE_SHOW_DIGITALKEY   -----channelId-------theActivity.UpOrDownIsPressed " + channelId+"   "+theActivity.tvRootDigitalkey.getVisibility());
 				theActivity.tvRootDigitalKeyInvalid.setVisibility(View.GONE);
 
-				theActivity.Display_Program_Num(channelId);
-
-				/*
-				Channel tempChannel_z3;
-
-				 tempChannel_z3 = theActivity.objApplication.dvbDatabase
-						.getChannelSC(SysApplication.iCurChannelId);
-				theActivity.id_dtv_channel_name.setText(tempChannel_z3.name);
-				theActivity.id_dtv_channel_name.setVisibility(View.VISIBLE);
-				*/
-				
+				theActivity.Display_Program_Num(channelId);				
 		
 				theActivity.mUiHandler
 						.removeMessages(MESSAGE_DISAPPEAR_DIGITAL);
@@ -1352,17 +1408,6 @@ public void getYiHanVolumeAD(int channelId) {
 						theActivity.tvRootDigitalkey.setVisibility(View.VISIBLE);
 
 				theActivity.Display_Program_Num(channelId2);
-
-
-				
-				/* 
-				 	Channel tempChannel_z4;
-	
-					 tempChannel_z4 = theActivity.objApplication.dvbDatabase
-							.getChannelSC(theActivity.tempChannelID);
-					theActivity.id_dtv_channel_name.setText(tempChannel_z4.name);
-					theActivity.id_dtv_channel_name.setVisibility(View.VISIBLE);
-					 */
 
 				theActivity.mUiHandler
 						.removeMessages(MESSAGE_DISAPPEAR_DIGITAL);
@@ -1422,11 +1467,12 @@ public void getYiHanVolumeAD(int channelId) {
 						objApplication.playChannel(
 								objApplication.getCurPlayingChannel(), false);
 						DisplayBanner();
-						SetDtvStatus(true);
+						SetDtvStatus(true,false);
+						/*
 						Message msg2 = new Message();
 						msg2.what = MESSAGE_SHOW_DIGITALKEY;
 						msg2.arg1 = objApplication.getCurPlayingChannel().logicNo;
-						mUiHandler.sendMessage(msg2);
+						mUiHandler.sendMessage(msg2);*/
 					}
 				}
 				break;
@@ -1436,7 +1482,7 @@ public void getYiHanVolumeAD(int channelId) {
 				//临时针对现在频道支持时移，但是又没的时移的情况，服务器完善后取消即可
 				if(null==curChannelPrograms||curChannelPrograms.size()<=0){
 //					Toast.makeText(Main.this, "节目信息为空，不能进入时移模式", Toast.LENGTH_SHORT).show();
-					SetDtvStatus(true);
+					SetDtvStatus(true,false);
 					return;
 				}
 				
@@ -1789,11 +1835,11 @@ public void getYiHanVolumeAD(int channelId) {
 			objApplication.playLastChannel();
 			banner.show(SysApplication.iCurChannelId);
 			
-
-			Message msg = new Message();
-			msg.what = MESSAGE_SHOW_DIGITALKEY;
-			msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-	    	mUiHandler.sendMessage(msg);
+			//GH UI-1.3 换台不显示右上角频道号
+			//Message msg = new Message();
+			//msg.what = MESSAGE_SHOW_DIGITALKEY;
+			//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+	    	//mUiHandler.sendMessage(msg);
 		}
 
 			break;
@@ -1863,8 +1909,7 @@ public void getYiHanVolumeAD(int channelId) {
 			
 
 				if (iKey >= 100) {
-					mUiHandler.sendEmptyMessageDelayed(
-							MESSAGE_HANDLER_DIGITALKEY, 2000);
+					mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 10/*2000*/);//输入3位数字立即切台
 				} else {
 					mUiHandler.sendEmptyMessageDelayed(
 							MESSAGE_HANDLER_DIGITALKEY, 4000);
@@ -2018,6 +2063,11 @@ public void getYiHanVolumeAD(int channelId) {
 		mHomeReceiver = new homeReceiver();
 		registerReceiver(mHomeReceiver, new IntentFilter("HOME_PRESSED"));
 
+		cateinfoReceiver = new CateinfoReceiver();
+		registerReceiver(cateinfoReceiver, new IntentFilter(sGetcateinfo));
+
+		
+		
 		// string array
 		str_title = getResources().getString(R.string.str_zhn_information);
 		str_details_exitdtv = getResources().getString(
@@ -2037,44 +2087,56 @@ public void getYiHanVolumeAD(int channelId) {
 		}
 
 		initTimeshiftData();
-		checkAndUpdateCateinfo();
+		//checkAndUpdateCateinfo();		
 	}
 
 	/**
 	 * 
 	 */
+	private Thread cateThread = null;
+
 	private void checkAndUpdateCateinfo() {
-		P.d("begin>>> request timeshift and category data!");
-		new Thread() {
-			public void run() {				
-				initCategoryData();
-			}
-		}.start();
+		if (cateThread == null) {
+			P.d("begin>>> request timeshift and category data!");
+			cateThread = new Thread() {
+				public void run() {
+					initCategoryData();
+				}
+			};
+			cateThread.start();
+		}
 		P.d("end>>> request timeshift and category data!");
 	}
 
 	//用于同步直播和时移切换时的状态同步	
 	private static boolean []bOnDtvThread=new boolean[10];  
 	//int index: 0:dtv status,1:signal status;2 sc status: 3 mult status 4 avplay status 5 ca status
-	public void SetDtvStatus(boolean status) {
-
+	public void SetDtvStatus(boolean status,boolean blank) {
+		
+		if(bOnDtvThread[0]==status){
+			P.d("SetDtvStatus >>> the same status, return!");			
+			return;
+		}
+		
 		bOnDtvThread[0] = status;
 
 		if (status == false)// 隐藏显示
 		{
-			if(banner!=null)
+			if (banner != null)
 				banner.cancel();
-			
-			showTimeShiftIcon(false);	
 
-			if(objApplication!=null){
+			showTimeShiftIcon(false);
+
+			if (objApplication != null) {
 				objApplication.dvbPlayer.stop();
-//				objApplication.dvbPlayer.blank();	
-				bOnDtvThread[4]=false;
+				if (blank)
+					objApplication.dvbPlayer.blank();
+				bOnDtvThread[4] = false;
 			}
-			
+
 			if (bOnDtvThread[1] && flNoSignal.getVisibility() == View.VISIBLE) {
 				flNoSignal.setVisibility(View.INVISIBLE);
+				Log.i(DBG, "隐藏nosignal");
 			}
 			if (bOnDtvThread[2] && flCaInfo.getVisibility() == View.VISIBLE) {
 				flCaInfo.setVisibility(View.INVISIBLE);
@@ -2083,35 +2145,38 @@ public void getYiHanVolumeAD(int channelId) {
 					&& vol_mult_icon.getVisibility() == View.VISIBLE) {
 				vol_mult_icon.setVisibility(View.INVISIBLE);
 			}
-			if (bOnDtvThread[5] && objApplication.getCaLayout().getVisibility() == View.VISIBLE) {
+			if (bOnDtvThread[5]
+					&& objApplication.getCaLayout().getVisibility() == View.VISIBLE) {
 				objApplication.getCaLayout().setVisibility(View.INVISIBLE);
-			}			
-			
-			
+			}
+
 		} else // 恢复显示
 		{
-			//恢复播放
-			if(!bOnDtvThread[4]){
+			// 恢复播放
+			if (!bOnDtvThread[4]) {
 				bOnDtvThread[4] = true;
-				//onVkey(Class_Constant.KEYCODE_INFO_KEY);
-				if(objApplication!=null)
-				objApplication.playLastChannel();
-			}			
-			
+				// onVkey(Class_Constant.KEYCODE_INFO_KEY);
+				if (objApplication != null)
+					objApplication.playLastChannel();
+			}
+
 			if (bOnDtvThread[1] && flNoSignal.getVisibility() == View.INVISIBLE) {
 				flNoSignal.setVisibility(View.VISIBLE);
 			}
-			
+
 			if (bOnDtvThread[2] && flCaInfo.getVisibility() == View.INVISIBLE) {
 				flCaInfo.setVisibility(View.VISIBLE);
 			}
-			
-			Log.d("INFO",""+bOnDtvThread[5] + objApplication.getCaLayout().getVisibility());
-			if (bOnDtvThread[5] && objApplication.getCaLayout().getVisibility() == View.INVISIBLE) {
+
+			Log.d("INFO", "" + bOnDtvThread[5]
+					+ objApplication.getCaLayout().getVisibility());
+			if (bOnDtvThread[5]
+					&& objApplication.getCaLayout().getVisibility() == View.INVISIBLE) {
 				objApplication.getCaLayout().setVisibility(View.VISIBLE);
 			}
-			
-			AudioManager am1 = (AudioManager)mContext.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+
+			AudioManager am1 = (AudioManager) mContext.getApplicationContext()
+					.getSystemService(Context.AUDIO_SERVICE);
 			boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
 			bOnDtvThread[3] = isMute1;
 			if (bOnDtvThread[3]
@@ -2123,6 +2188,7 @@ public void getYiHanVolumeAD(int channelId) {
 	}
 	//返回false则忽略调用该函数所在函数的后续处理
 	public static boolean updateDtvStatus(int index, boolean status) {
+		Log.i(DBG, "updateDtvStatus：inx="+index+",val="+ status+",ret="+bOnDtvThread[0]);	
 		if(index<=0||index>=9)
 			return false;		
 		bOnDtvThread[index]=status;
@@ -2140,11 +2206,11 @@ public void getYiHanVolumeAD(int channelId) {
 				if (chNum <= objApplication.dvbDatabase.getChannelCount()) {
 					objApplication.playChannel(chNum, false);
 					banner.show(SysApplication.iCurChannelId);
-					Message msg = new Message();
-					
-					msg.what = MESSAGE_SHOW_DIGITALKEY;
-					msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-					mUiHandler.sendMessage(msg);
+					//GH UI-1.3 换台不显示右上角频道号
+					//Message msg = new Message();					
+					//msg.what = MESSAGE_SHOW_DIGITALKEY;
+					//msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+					//mUiHandler.sendMessage(msg);
 				} else {
 
 				}
@@ -2154,14 +2220,15 @@ public void getYiHanVolumeAD(int channelId) {
 
 	private class signalRecever extends BroadcastReceiver {
 
-		String TunerInfo_Locked = "Z_SignalLocked";
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
 			Bundle myBundle = intent.getExtras();
-			boolean bIsLocked = myBundle.getBoolean(TunerInfo_Locked);
-			if(!updateDtvStatus(1,!bIsLocked)) return;
+			boolean bIsLocked = myBundle.getBoolean(TunerInfo.TunerInfo_Locked);
+			if(!updateDtvStatus(1,(!bIsLocked))){ 
+				Log.i(TAG, "signalRecever>>forbid");
+				return;
+			}
 			
 			if (!bIsLocked) {				
 				flNoSignal.setVisibility(View.VISIBLE);
@@ -2188,6 +2255,22 @@ public void getYiHanVolumeAD(int channelId) {
 
 	}
 
+	private class CateinfoReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+
+			String strAction = arg1.getAction();
+
+			if (strAction.equals(sGetcateinfo)) {
+				P.i("YBYB","get intent:" + sGetcateinfo);
+				checkAndUpdateCateinfo();
+			}
+
+		}
+
+	}
+	
 	Runnable digital_runable = new Runnable() {
 
 		public void run() {
@@ -2503,7 +2586,9 @@ public void getYiHanVolumeAD(int channelId) {
 								HandleLiveData.getInstance().dealCategoryData(arg0); 
 								Utils.setProp("persist.sys.live.cateversion",newVer);
 								P.i("save new cateversion:" + newVer);
+								OpJsonFile.writeJSONObj("/data/changhong/dvb/catedata.json", arg0);
 							}
+							cateThread = null;
 						}
 					}, errorListener_sort);
 			jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
@@ -2514,8 +2599,20 @@ public void getYiHanVolumeAD(int channelId) {
 		@Override
 		public void onErrorResponse(VolleyError arg0) {
 			// TODO Auto-generated method stub
-			P.i("mmmm", "sortOP_error：" + arg0);
+			P.i("YBYB", "sortOP_error：" + arg0);
 			//从本地获取文件进行分析
+			JSONObject obj;
+			obj = OpJsonFile.readJSONObj("/data/changhong/dvb/catedata.json");
+			if(obj!=null){
+				String newVer = HandleLiveData.getInstance().dealCategoryVer(obj);
+				SortData.saveSortNameList(HandleLiveData.getInstance().dealCategoryName(obj));		
+				HandleLiveData.getInstance().dealCategoryData(obj); 
+				Utils.setProp("persist.sys.live.cateversion",newVer);
+				P.i("YBYB","save cateversion:" + newVer + " from local file");				
+			}else{
+				P.i("YBYB","NOT FOUND LOCAL catedata.json");
+			}
+			cateThread = null;
 		}
 	};
 	private Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -2559,8 +2656,6 @@ public void getYiHanVolumeAD(int channelId) {
 						.show();
 			} else {
 
-				SetDtvStatus(false);
-
 				// 获取当前道信息
 				ChannelDB db = DVB.getManager().getChannelDBInstance();
 				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
@@ -2571,7 +2666,9 @@ public void getYiHanVolumeAD(int channelId) {
 				if(DBchan.is_ttv.equals("0")){
 					break;
 				}
-				
+
+				SetDtvStatus(false,false);
+
 				// 获取节目
 				PlayVideo.getInstance().getProgramInfo(mUiHandler, DBchan);
 			}
@@ -2586,9 +2683,15 @@ public void getYiHanVolumeAD(int channelId) {
 		if (flTimeShift != null) {
 			if (bDisplay && flTimeShift.getVisibility() != View.VISIBLE) {
 				flTimeShift.setVisibility(View.VISIBLE);
+				Log.i("BBY", "flTimeShift enable");
 			} else if (!bDisplay && flTimeShift.getVisibility() == View.VISIBLE) {
 				flTimeShift.setVisibility(View.INVISIBLE);
+				Log.i("BBY", "flTimeShift disable");
+			}else{
+				Log.i("BBY", "flTimeShift is other>>"+bDisplay+",?"+flTimeShift.getVisibility());
 			}
+		}else{
+			Log.i("BBY", "flTimeShift is null");
 		}
 	}	
 }

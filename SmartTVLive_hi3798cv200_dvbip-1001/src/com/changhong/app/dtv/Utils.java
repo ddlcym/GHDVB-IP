@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Utils {
 	private Utils(){
@@ -153,5 +155,29 @@ public class Utils {
 		result = builder.toString();
 
 		return result;
-	}		
+	}	
+	
+	// 将时间字符串 (格式为 yyyy-MM-dd HH:mm:ss )转为时间戳  
+	public static String coventTimeStringtoTimeStamp(String DateFormat,String timeString) {
+		String re_time = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
+		Date d;
+		try {
+			d = sdf.parse(timeString);
+			long l = d.getTime();
+			String str = String.valueOf(l);
+			re_time = str.substring(0, 10);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return re_time;
+	}    
+	 // 将时间戳转为时间字符串  (格式为 yyyy-MM-dd HH:mm:ss )
+	public static String coventTimeStamptoTimeString(String DateFormat,String timeStamp) {
+		String re_StrTime = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
+		long lcc_time = Long.valueOf(timeStamp);
+		re_StrTime = sdf.format(new Date(lcc_time * 1000L));
+		return re_StrTime;
+	}  
 }

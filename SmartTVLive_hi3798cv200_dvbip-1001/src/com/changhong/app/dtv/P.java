@@ -20,7 +20,7 @@ public class P {
 	}
 	public static void i(String subTAG,String mMessage) {
 		if (b_NomalInfo) {
-			Log.i(TAG, subTAG+">>"+mMessage);
+			Log.i(subTAG, mMessage);
 		}
 	}
 	public static void d(String mMessage) {
@@ -30,7 +30,7 @@ public class P {
 	}
 	public static void d(String subTAG,String mMessage) {
 		if (b_DebugInfo) {
-			Log.d(TAG, subTAG+">>"+mMessage);
+			Log.d(subTAG, mMessage);
 		}
 	}
 	public static void e(String mMessage) {
@@ -40,7 +40,7 @@ public class P {
 	}
 	public static void e(String subTAG,String mMessage) {
 		if (b_ERRInfo) {
-			Log.e(TAG, subTAG+">>"+mMessage);
+			Log.e(subTAG, mMessage);
 		}
 	}
 	/**

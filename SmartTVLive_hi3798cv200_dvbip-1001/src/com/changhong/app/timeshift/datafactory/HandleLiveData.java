@@ -115,7 +115,7 @@ public class HandleLiveData {
 		return JsonResolve.jsonToCategoryVer(json);		
 	}
 	public List<SortData> dealCategoryName(JSONObject json){
-		//L.e("dealCategoryName:"+json.toString());
+		//L.i("dealCategoryName:"+json.toString());
 		return JsonResolve.jsonToCategoryName(json);		
 	}
 	
@@ -134,7 +134,7 @@ public class HandleLiveData {
 			chanInDB=db.getChannelByTsIdAndServiceId(chan.tsId, chan.serviceId);
 			if(chanInDB!=null){
 				db.updateChannel(chanInDB.chanId, "favorite", ""+chan.sortId);
-				L.e("dealCategoryData: set >> id="+chanInDB.chanId+",sortid="+chan.sortId+","+chanInDB.name);
+				//L.e("dealCategoryData: set >> id="+chanInDB.chanId+",sortid="+chan.sortId+","+chanInDB.name);
 			}else{
 				L.e("dealCategoryData: not found >> tsid="+chan.tsId+",serid="+chan.serviceId);
 			}

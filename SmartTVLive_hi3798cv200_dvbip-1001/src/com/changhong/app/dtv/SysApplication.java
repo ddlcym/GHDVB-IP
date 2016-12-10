@@ -113,7 +113,7 @@ public class SysApplication extends Application implements CAListener {
 	private WindowManager mWindowManager;  
 	private WindowManager.LayoutParams param;  
 	private	RelativeLayout ll_newchannelmode;
-	private	TextView	tvinfo;
+	private	TextView	tvinfo,ca_exter_info;
 	
 	private	FrameLayout ll_audioplaying = null;
 	private	TextView	text_audioplaying = null;
@@ -231,7 +231,7 @@ public class SysApplication extends Application implements CAListener {
 		ArrayList<DVB_CA_TYPE> caType = new ArrayList<DVB_CA_TYPE>();
 		
 		//Vanlen change this order
-		caType.add(DVB_CA_TYPE.CA_SUMA);
+		//caType.add(DVB_CA_TYPE.CA_SUMA);
 		caType.add(DVB_CA_TYPE.CA_NOVEL);
 		
 		mo_Ca.setType(caType);
@@ -271,27 +271,8 @@ public class SysApplication extends Application implements CAListener {
 					case CAR_EVENT_BER_CHG:
 						break;
 					case CAR_EVENT_LOCK_CHG:
-					{
-						
-						if (arg1 == 0)
-						{
-							Intent mTunerInfo = new Intent(TunerInfo.TunerInfo_Intent_FilterName);
-							Bundle bundle = new Bundle();
-							bundle.putBoolean(TunerInfo.TunerInfo_Locked, false);
-							mTunerInfo.putExtras(bundle);
-							mContext.sendBroadcast(mTunerInfo);
-							Log.i("DVB", ">>>>tuner changed 0");
-						}
-						else
-						{
-							Intent mTunerInfo = new Intent(TunerInfo.TunerInfo_Intent_FilterName);
-							Bundle bundle = new Bundle();
-							bundle.putBoolean(TunerInfo.TunerInfo_Locked, true);
-							mTunerInfo.putExtras(bundle);
-							mContext.sendBroadcast(mTunerInfo);
-							Log.i("DVB", ">>>>tuner changed 1");
-						}
-
+					{	
+						reqNotifySignalChanged(arg1 == 0?false:true);
 						break;
 					}
 					case CAR_EVENT_SIG_QUALITY_CHG:
@@ -320,6 +301,18 @@ public class SysApplication extends Application implements CAListener {
 		readScreenKG();
 	}
 
+	/**
+	 * 
+	 */
+	public void reqNotifySignalChanged(boolean locked) {
+		Intent mTunerInfo = new Intent(TunerInfo.TunerInfo_Intent_FilterName);
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(TunerInfo.TunerInfo_Locked, locked);
+		mTunerInfo.putExtras(bundle);
+		mContext.sendBroadcast(mTunerInfo);
+		Log.i("DBG", ">>>>tuner locked: "+locked);
+	}
+	
 	public void initBookDatabase(Context mContext)
 	{
 		dvbBookDataBase	=	new BookDataBase(mContext);
@@ -333,6 +326,7 @@ public class SysApplication extends Application implements CAListener {
 							R.layout.ca, null);
 		
 	     tvinfo = (TextView)ll_newchannelmode.findViewById(R.id.id_root_ca_info);
+	     ca_exter_info = (TextView)ll_newchannelmode.findViewById(R.id.id_ca_exter_info);	     
 	    
 	     	//获取WindowManager  
 	     if(mWindowManager == null)
@@ -1178,6 +1172,19 @@ public class SysApplication extends Application implements CAListener {
 			//blackScreen();
 		    tvinfo.setText(info);
 		    
+		    try
+			{
+				 if(info!=null&&info.equals(mContext.getResources().getString(R.string.MESSAGE_INSERTCARD_TYPE))){
+				    	ca_exter_info.setVisibility(View.VISIBLE);
+				    }else{
+				    	ca_exter_info.setVisibility(View.INVISIBLE);
+				    }				
+			}
+			catch(NotFoundException e)
+			{
+				ca_exter_info.setVisibility(View.INVISIBLE);
+			}
+					    
 			if(!Main.updateDtvStatus(5,true)){
 				return;
 			}

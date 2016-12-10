@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.changhong.app.constant.Advertise_Constant;
+import com.changhong.app.timeshift.common.NetworkUtils;
 import com.changhong.app.utils.CustomToast;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.DVB;
@@ -358,6 +359,7 @@ public class Banner {
 	        	Log.i("GHLive", "rCancelBar now----->");
 	        	if(customBannerToast!=null){
 	        		customBannerToast.hide();
+	        		Main.showTimeShiftIcon(false);
 	        	setBannerDisStatus(false);
 	        	}
 	        }
@@ -412,7 +414,7 @@ public class Banner {
 		
 		boolean bHD=false, b3D=false, bMulAudio=false,bSubTitle=false,bAc3=false,bNewMail=false,bTtv=false;
 
-		if(curChannel.is_ttv!=null && curChannel.is_ttv.equals("1")) //AC-3 audio/Dolby Digital Plus
+		if(curChannel.is_ttv!=null && curChannel.is_ttv.equals("1")&& NetworkUtils.isConnectInternet(mContext))//支持时移且网络连接
 		{
 			bTtv = true; 
 		}
@@ -430,6 +432,8 @@ public class Banner {
 			bSubTitle = true;
 		}
 		
+		Log.i("BBY", "SWITCH>>>chid="+curChannel.chanId+","+curChannel.name+",ttv="+curChannel.is_ttv+",net="+NetworkUtils.isConnectInternet(mContext));
+	
 		Main.showTimeShiftIcon(bTtv);
 		
 		if(bMulAudio)

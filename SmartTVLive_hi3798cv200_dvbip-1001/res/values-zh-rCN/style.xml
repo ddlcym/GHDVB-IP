@@ -155,42 +155,54 @@
         <item name="android:textSize">@dimen/ghFONT_SIZE_BIG</item>
         <item name="android:textColor">#dfdfdf</item>
     </style>
-
+    <style name="ghBarTitle">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#dfdfdf</item>
+    </style>
     <style name="ghTextViewStyleB">
         <item name="android:textSize">@dimen/ghFONT_SIZE_BIG</item>
         <item name="android:textColor">#888888</item>
     </style>
-
+    <style name="ghBarTime">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#888888</item>
+    </style>
     <style name="ghTextViewStyleC">
         <item name="android:textSize">@dimen/ghFONT_SIZE_NORMAL</item>
         <item name="android:textColor">#dfdfdf</item>
     </style>
-
+    <style name="ghBarEpgP">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#dfdfdf</item>
+    </style>
     <style name="ghTextViewStyleD">
         <item name="android:textSize">@dimen/ghFONT_SIZE_NORMAL</item>
         <item name="android:textColor">#888888</item>
     </style>
-
+    <style name="ghBarEpgF">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#888888</item>
+    </style>
     <style name="ghTextViewStyleE">
         <item name="android:textSize">@dimen/ghFONT_SIZE_NORMAL</item>
         <item name="android:textColor">#e7ecef</item>
     </style>
 
     <style name="ghTextEpgWarnTitleStyle">
-        <item name="android:textSize">@dimen/ghFONT_SIZE_28</item>
+        <item name="android:textSize">@dimen/ghFONT_SIZE_24</item>
         <item name="android:textColor">@color/ghColor_7dffffff</item>
     </style>
     <style name="ghTextEpgWarnBodyStyle">
-        <item name="android:textSize">@dimen/ghFONT_SIZE_32</item>
+        <item name="android:textSize">@dimen/ghFONT_SIZE_28</item>
         <item name="android:textColor">@color/ghColor_b3b3b3</item>
     </style>       
     <style name="ghTextEpgWarnButtonStyle">
-        <item name="android:textSize">@dimen/ghFONT_SIZE_26</item>
+        <item name="android:textSize">@dimen/ghFONT_SIZE_24</item>
         <item name="android:textColor">@color/ghColor_535353</item>
         
     </style>  
     <style name="ghTextEpgWarnButtonStyle_F">
-        <item name="android:textSize">@dimen/ghFONT_SIZE_26</item>
+        <item name="android:textSize">@dimen/ghFONT_SIZE_24</item>
         <item name="android:textColor">@color/ghColor_8aacca</item>
     </style>  
     <!-- 
