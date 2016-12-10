@@ -2553,6 +2553,7 @@ public void getYiHanVolumeAD(int channelId) {
 //		mReQueue.add(jsonObjectRequest); 
 		
 		String URL = processData.getChannelList();
+		Log.i("mmmm", "getIsTTVData_url:"+URL);
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
 				new Response.Listener<org.json.JSONObject>() {
 

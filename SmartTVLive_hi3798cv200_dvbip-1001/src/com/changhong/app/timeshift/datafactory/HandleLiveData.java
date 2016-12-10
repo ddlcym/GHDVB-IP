@@ -65,7 +65,7 @@ public class HandleLiveData {
 	
 	public void dealChannelIsTTV(JSONObject json){
 		int chanId=0;
-		int a=1;//test
+//		int a=1;//test
 		List<Channel> channels = JsonResolve.jsonToChannels(json);
 		CacheData.setAllChannelExtraInfo(channels);
 		if(null==channels||channels.size()==0) 
@@ -79,11 +79,13 @@ public class HandleLiveData {
 			Channel channel2 = db.getChannelByLogicNo(channel.logicNo);
 			if(channel2!=null){
 				chanId=channel2.chanId;
-				db.updateChannel(chanId, "is_ttv", "1");
-				a=a+1;//test
+				int flag=db.updateChannel(chanId, "is_ttv", "1");
+				db.updateChannel(chanId, "resource_code", channel.resource_code);
+//				a=a+1;//test
+//				Log.i("mmmm","dealChannelIsTTV_updateChannel_"+"=channel.logicNo:"+flag);
 			}
 		}
-		Log.i("mmmm","dealChannelIsTTV"+ a+"|channels:"+channels.size());//test
+//		Log.i("mmmm","dealChannelIsTTV"+ a+"|channels:"+channels.size());//test
 	}
 	
 	public void dealChannelExtra(JSONObject json){

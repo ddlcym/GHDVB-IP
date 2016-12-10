@@ -74,6 +74,7 @@ public class JsonResolve {
 		//解析时移相信息
 		channel.logicNo=Integer.parseInt(getJsonObjectString(jsonObject, "channelNumber"));
 		channel.is_ttv="1";
+		channel.resource_code=""+getJsonObjInt(jsonObject, "ResourceCode");
 		channel.name=getJsonObjectString(jsonObject, "channelName");
 		return channel;
 	}
