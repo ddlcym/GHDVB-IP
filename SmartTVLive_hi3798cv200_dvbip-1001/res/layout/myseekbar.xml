@@ -24,11 +24,11 @@
         android:layout_marginRight="@dimen/seekbar_margin"
         android:thumbOffset="0dp"     
         android:max="100"
-        android:maxHeight="13dip"
-        android:minHeight="13dip"
+        android:maxHeight="8dip"
+        android:minHeight="8dip"
         android:focusable="false"
         android:clickable="false"
-        android:progressDrawable="@drawable/bg_seekbar"
+        android:progressDrawable="@drawable/banner_processbar_z"
         android:thumb="@drawable/seekbar_z2n" />
 
 </RelativeLayout>

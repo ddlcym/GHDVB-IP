@@ -17,9 +17,10 @@ import com.changhong.dvb.Channel;
 public class ProcessData {
 
 	private MD5Encrypt MD5;
-//	private static final String serverAdress = "http://ott.yun.gehua.net.cn:8080/";
-	private static final String serverAdress = "http://api.ott.yun.gehua.net.cn:8080/";
-	private String chListTerminalType = "101";
+	private static final String serverAdress = "http://ott.yun.gehua.net.cn:8080/";
+	private String chListTerminalType = "1";
+//	private static final String serverAdress = "http://api.ott.yun.gehua.net.cn:8080/";
+//	private String chListTerminalType = "101";
 	
 	
 	private String MD5Key = "aidufei";
@@ -168,7 +169,7 @@ public class ProcessData {
 	}
 	
 	public String getLiveBackPlayUrl(Channel channel,int delay){
-		String rawPlainStr="http://ott.yun.gehua.net.cn:8080/msis/getPlayURL?version=V001&userCode="+userCode+"&userName="+userCode+"&resourceCode="+channel.resource_code+"&resolution=1280*720&terminalType=4&playType=4&delay="+delay;
+		String rawPlainStr=serverAdress + "msis/getPlayURL?version=V001&userCode="+userCode+"&userName="+userCode+"&resourceCode="+channel.resource_code+"&resolution=1280*720&terminalType=4&playType=4&delay="+delay;
 				
 		return strPOSTReturn(rawPlainStr, "msis/getPlayURL");
 	}
