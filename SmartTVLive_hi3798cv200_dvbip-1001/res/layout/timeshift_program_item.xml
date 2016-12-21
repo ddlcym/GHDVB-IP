@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="280dp"
+    android:layout_width="265dp"
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:descendantFocusability="blocksDescendants"
@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/timeshift_program_time"
-        android:layout_width="280dp"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:textColor="@color/timeshift_program_list"
         android:singleLine="true"
@@ -21,7 +21,7 @@
     
     <TextView
         android:id="@+id/timeshift_program_name"
-        android:layout_width="280dp"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:textColor="@color/timeshift_program_list"
         android:singleLine="true"
