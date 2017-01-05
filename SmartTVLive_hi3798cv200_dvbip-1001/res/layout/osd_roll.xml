@@ -14,24 +14,34 @@
 		android:singleLine="true"
 		android:marqueeRepeatLimit="marquee_forever"
 		android:layout_gravity="left"
-		android:layout_marginTop="650dip"
+		android:layout_marginTop="660dip"
 		android:id="@+id/id_osd_roll_buttom"
 		android:textSize="35sp"
-		android:background="@drawable/epg_week_unselect" 
+		android:background="@color/black_65p_alpha"
 		android:visibility="gone"/>
 	
+	 <TextView android:id="@+id/id_osd_center"
+            android:layout_width="520dip"
+            android:layout_height="wrap_content"
+            android:background="@color/activity_transparent"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="35sp" 
+            android:visibility="gone"/>
+		
 	<com.changhong.app.dtv.CAMarquee
 		android:textColor="@color/gray_white"
 		android:layout_width="1900dip"
 		android:layout_height="50dip"
+	    android:layout_marginTop="10dip"		
 		android:ellipsize="marquee"
 		android:singleLine="true"
 		android:marqueeRepeatLimit="marquee_forever"
 		android:layout_gravity="left"
 		android:id="@+id/id_osd_roll_top"
 		android:textSize="35sp"
-		android:layout_marginTop="20dip"
-		android:background="@drawable/epg_week_unselect" 
+		android:background="@color/black_65p_alpha"
 		android:visibility="gone"/>
 
 </FrameLayout>

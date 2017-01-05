@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="800dp"
+    android:layout_height="150dp"
+    android:layout_gravity="center"
+    android:background="@drawable/msgbox_bg">
+
+    <!-- 进度条 -->
+    <ProgressBar
+        android:id="@+id/ca_cardupgrate_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="600dp"
+        android:layout_height="25dip"
+        android:layout_alignParentBottom="true"  
+        android:layout_centerHorizontal="true"
+        
+        android:layout_marginBottom="30dp"   
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:progressDrawable="@drawable/barbgimg" />
+    
+    <TextView       
+        android:layout_width="100dp"
+        android:layout_height="50dip"
+        android:layout_toLeftOf="@id/ca_cardupgrate_progressBar"
+        android:layout_alignParentBottom="true"  
+        android:layout_marginBottom="20dp"
+        android:focusable="false"
+        android:gravity="right|center"
+        android:text="0"
+        android:textColor="@color/cb3b3b3"
+        android:textSize="@dimen/txt_font_38" /> 
+      
+    <TextView       
+        android:layout_width="100dp"
+        android:layout_height="50dip"
+        android:layout_toRightOf="@id/ca_cardupgrate_progressBar"
+        android:layout_alignParentBottom="true"  
+        android:layout_marginBottom="20dp"
+        android:focusable="false"
+        android:gravity="left|center"
+        android:text="100%"
+        android:textColor="@color/cb3b3b3"
+        android:textSize="@dimen/txt_font_38" />
+    
+    
+  
+    
+
+    <TextView android:id="@+id/ca_cardupgrate_notice"        
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_above="@id/ca_cardupgrate_progressBar"
+        android:layout_centerHorizontal="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="CA卡正在升级，请稍后"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_font_45" />
+
+</RelativeLayout>

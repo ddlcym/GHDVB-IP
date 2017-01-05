@@ -72,8 +72,6 @@ public class ChannelList extends Activity implements ISceneListener {
 	private ImageView focusView; // foucus image
 	private LinearLayout channelListLinear;// channellist layout
 
-	private static final int SKIP = 1;
-	private static final int UNSKIP = 0;
 	private int channelCount;
 	private Channel curChannel;
 	private View curView;
@@ -120,13 +118,9 @@ public class ChannelList extends Activity implements ISceneListener {
 	// application
 	SysApplication objApplication;
 
-	private static final int HANDLE_MSG_CLOSE_CHANNELLIST = 1002;
 	Class_Global obj_Global = new Class_Global();
 	//private PF_Handler UI_Handler = new PF_Handler(this);
 
-	private boolean lockSwap = false;
-	private int old_chanId;
-	private int new_ChanId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,23 +130,13 @@ public class ChannelList extends Activity implements ISceneListener {
 		banner = Banner.getInstance(this);
 		scene = new Scene(this);
 		feedback = new Feedback(this);
-		channelCount = objApplication.dvbDatabase.getChannelCount();
-
-		if (channelCount <= 0) {
-			/*Intent mIntent = new Intent(ChannelList.this, DialogNotice.class);
-			mIntent.putExtra(Class_Constant.DIALOG_TITLE, "无节目");
-			mIntent.putExtra(Class_Constant.DIALOG_DETAILS, "没有节目！");
-			mIntent.putExtra(Class_Constant.DIALOG_BUTTON_NUM, 1);
-			startActivity(mIntent);
-			finish();*/
-		}
-		
+		channelCount = objApplication.dvbDatabase.getChannelCount();		
 		Channel channel = objApplication.dvbDatabase.getChannel(objApplication
 				.getLastProgram());
 		channelId = channel.chanId;
 		
-		//curType = getIntent().getIntExtra("curType", 0);
-		curType = 0 /*channel.favorite*/;
+		curType = getIntent().getIntExtra("curType", 0);
+		//curType = 0 /*force to 0 means ALL channels*/;
 		getAllTVtype(curType);
 		registerBroadReceiver();
 
@@ -170,7 +154,15 @@ public class ChannelList extends Activity implements ISceneListener {
 		super.onStart();
 		scene.init(this);
 	}
-
+	private void otaStatusChanged(int status) {
+		{
+			Intent intent = new Intent();
+			intent.setAction("com.changhong.ota.launch");
+			intent.putExtra("ota_status",status);
+			sendBroadcast(intent);
+			Log.i("TableMonitor", "-- ota-status changed="+status);			
+		}
+	}
 	private void registerBroadReceiver() {
 		// TODO Auto-generated method stub
 		IntentFilter filter = new IntentFilter();
@@ -385,135 +377,6 @@ public class ChannelList extends Activity implements ISceneListener {
 		}
 	}
 
-	private void getAllTVtype_NoUsed(int index) {
-		// fill all type tv
-		
-		if(index<0||index>6)
-			return;
-		
-		if(bChanListAdded[index])
-			return ;
-		
-		bChanListAdded[index] = true;
-		
-		Channel[] Channels = objApplication.dvbDatabase.getChannelsAllSC();// Only
-																			// get
-																			// channels
-																			// type=1(TV)
-		// clear all tv type;
-		switch (index) {
-		case 0:
-			allTvList.clear();
-			for (Channel Channel : Channels) {
-				allTvList.add(Channel);
-			}
-			break;
-
-		case 1:
-			CCTVList.clear();
-			String regExCCTV;
-			regExCCTV = getResources().getString(R.string.zhongyang);
-			java.util.regex.Pattern pattern = java.util.regex.Pattern
-					.compile("CCTV|" + regExCCTV);
-			for (Channel Channel : Channels) {
-				java.util.regex.Matcher matcher = pattern.matcher(Channel.name);
-				boolean classBytype = matcher.find();
-				if (classBytype) {
-					CCTVList.add(Channel);
-				}
-			}
-			break;
-		case 2:
-			starTvList.clear();
-			String regExStar;
-			regExStar = getResources().getString(R.string.weishi);
-			java.util.regex.Pattern patternStar = java.util.regex.Pattern
-					.compile(".*" + regExStar + "$");
-			for (Channel Channel : Channels) {
-				java.util.regex.Matcher matcherStar = patternStar
-						.matcher(Channel.name);
-				boolean classBytypeStar = matcherStar.matches();
-				if (classBytypeStar) {
-					starTvList.add(Channel);
-				}
-			}
-			break;
-		case 3:
-			localTvList.clear();
-			String regExLocal = "CDTV|SCTV|"
-					+ getResources().getString(R.string.rongcheng) + "|"
-					+ getResources().getString(R.string.jingniu) + "|"
-					+ getResources().getString(R.string.qingyang) + "|"
-					+ getResources().getString(R.string.wuhou) + "|"
-					+ getResources().getString(R.string.chenghua) + "|"
-					+ getResources().getString(R.string.jinjiang) + "|"
-					+ getResources().getString(R.string.chengdu) + "|"
-					+ getResources().getString(R.string.sichuan);
-			java.util.regex.Pattern patternLocal = java.util.regex.Pattern
-					.compile(regExLocal);
-			for (Channel Channel : Channels) {
-				java.util.regex.Matcher matcherLocal = patternLocal
-						.matcher(Channel.name);
-				boolean classBytypeLocal = matcherLocal.find();
-				if (classBytypeLocal) {
-					localTvList.add(Channel);
-				}
-			}
-			break;
-		case 4:
-			HDTvList.clear();
-			String regExHD = getResources().getString(R.string.hd_dtv) + "|"
-					+ getResources().getString(R.string.xinyuan_hdtv1) + "|"
-					+ getResources().getString(R.string.xinyuan_hdtv2) + "|"
-					+ getResources().getString(R.string.xinyuan_hdtv3) + "|"
-					+ getResources().getString(R.string.xinyuan_hdtv4);
-			java.util.regex.Pattern patternHD = java.util.regex.Pattern
-					.compile("3D|" + regExHD + "|.*HD$");
-			for (Channel Channel : Channels) {
-				java.util.regex.Matcher matcherHD = patternHD
-						.matcher(Channel.name);
-				boolean classBytypeHD = matcherHD.find();
-				if (classBytypeHD) {
-					HDTvList.add(Channel);
-				}
-			}
-			break;
-		case 5:
-			favTvList.clear();
-			for (Channel Channel : Channels) {
-				if (Channel.favorite == 1) {
-					favTvList.add(Channel);
-				}
-
-			}
-			break;
-		case 6:
-			otherTvList.clear();
-			String regExOther = "CDTV|SCTV|CCTV|"
-					+ getResources().getString(R.string.weishi) + "|"
-					+ getResources().getString(R.string.rongcheng) + "|"
-					+ getResources().getString(R.string.jingniu) + "|"
-					+ getResources().getString(R.string.qingyang) + "|"
-					+ getResources().getString(R.string.wuhou) + "|"
-					+ getResources().getString(R.string.chenghua) + "|"
-					+ getResources().getString(R.string.jinjiang) + "|"
-					+ getResources().getString(R.string.chengdu) + "|"
-					+ getResources().getString(R.string.sichuan);
-			java.util.regex.Pattern patternOther = java.util.regex.Pattern
-					.compile(regExOther);
-			for (Channel Channel : Channels) {
-				java.util.regex.Matcher matcherOther = patternOther
-						.matcher(Channel.name);
-				boolean classBytypeOther = matcherOther.find();
-				if (!classBytypeOther) {
-					otherTvList.add(Channel);
-				}
-			}
-			break;
-		}
-
-	}
-
 	private void showChannelList() {
 		// TODO show channellist
 		List<Channel> curChannels = null;
@@ -625,17 +488,7 @@ public class ChannelList extends Activity implements ISceneListener {
 					channelIndex.setTextColor(0xffffffff);					
 					TextView channelName = (TextView) view.findViewById(R.id.chanName);
 					channelName.setTextColor(0xffffffff);
-					/*
-					Channel chan = mCurChannels.get(curListIndex);
-					if(chan!=null){
-						request_update_banner(chan.chanId);
-					}*/
-					
-					//updateBannerinfo(curListIndex);
-					
-					/*Log.i(TAG,"bNewScreen="+bNewScreen+",curPos:"+position+",lastFocuPos:"+lastFocuPos
-							+",last:"+lastLastPos+" vs "+channelListView.getLastVisiblePosition()+
-							",first:"+lastFirstPos +"vs "+channelListView.getFirstVisiblePosition());*/
+		
 					
 					if(!bNewScreen){		
 						if(channelListView.getFirstVisiblePosition()>lastFirstPos){
@@ -664,42 +517,7 @@ public class ChannelList extends Activity implements ISceneListener {
 					lastFirstPos = channelListView.getFirstVisiblePosition();
 					/*					
 					Log.i("YYY","curPos:"+position+",lastFocuPos:"+lastFocuPos+",last:"+channelListView.getLastVisiblePosition()+
-							",first:"+channelListView.getFirstVisiblePosition());
-					
-					
-					//恢复上一条为本色
-					if(lastViewPos == position)
-						lastFocuPos = itemCnt-2;
-					
-					if(firstViewPos==position)
-						lastFocuPos = 1;
-					
-					if(lastFocuPos>=0 && lastFocuPos<(itemCnt-1)){
-						View pre_vi=null;
-						try {
-							pre_vi = channelListView.getChildAt(lastFocuPos); 
-						} catch (Exception e) {
-							Log.i(TAG,"can't find pre_item");
-							pre_vi = null;
-							// TODO: handle exception
-						}
-						if(pre_vi!=null){
-							TextView channelIndex2 = (TextView) pre_vi.findViewById(R.id.chanId);
-							channelIndex2.setTextColor(Color.rgb(160,162,164));					
-							TextView channelName2 = (TextView) pre_vi.findViewById(R.id.chanName);
-							channelName2.setTextColor(Color.rgb(160,162,164));		
-						}			
-					}
-					
-					lastFocuPos = position - channelListView.getFirstVisiblePosition();
-					
-					lastViewPos = channelListView.getLastVisiblePosition();
-					firstViewPos = channelListView.getFirstVisiblePosition();
-					*/
-					/*int index = Integer.parseInt(channelIndex.getText()
-							.toString());
-					curChannelIndex = index;
-					*/
+							",first:"+channelListView.getFirstVisiblePosition());*/
 					curView = view;
 				}
 			}
@@ -715,113 +533,17 @@ public class ChannelList extends Activity implements ISceneListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-				//Log.i(TAA, "onItemClick>>>view="+view+",pos="+position+",id="+id);
 				TextView channelIndex = (TextView) view
 						.findViewById(R.id.chanId);
-				if (lockSwap) {
-					new_ChanId = Integer.parseInt(channelIndex.getText()
-							.toString());
 
-					if (new_ChanId == old_chanId) {
-						Toast.makeText(ChannelList.this, "不能与本身位置交换",
-								Toast.LENGTH_SHORT).show();
-						lockSwap = false;
-						return;
-					}
-					objApplication.dvbDatabase.swapChannels(old_chanId,
-							new_ChanId);
-					getAllTVtype(curType);
-					showChannelList();
-					lockSwap = false;
-					Toast.makeText(ChannelList.this, "交换成功", Toast.LENGTH_SHORT)
-							.show();
-
-					return;
-
-				}
 				int index = Integer.parseInt(channelIndex.getText().toString());
-				Log.i("xbtest", String.valueOf(index));
 				objApplication.playChannel(index, true);
 				request_update_banner(index);
 				finish();//退出列表
 			}
 		});
 	}
-/*
-	static class PF_Handler extends Handler {
-		WeakReference<ChannelList> mActivity;
 
-		PF_Handler(ChannelList activity) {
-			mActivity = new WeakReference<ChannelList>(activity);
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			super.handleMessage(msg);
-			final ChannelList theActivity = mActivity.get();
-			switch (msg.what) {
-			case HANDLE_MSG_CLOSE_CHANNELLIST:
-				theActivity.finish();
-				break;
-			}
-		}
-
-	}
-*/
-	private Channel toNextChannel_NoUsed(int curType, Channel preChannel) {
-		List<Channel> channels = null;
-		switch (curType) {
-		case 0:
-			channels = allTvList;
-			break;
-
-		case 1:
-			channels = CCTVList;
-			break;
-		case 2:
-			channels = starTvList;
-			break;
-		case 3:
-			channels = localTvList;
-			break;
-		case 4:
-			channels = HDTvList;
-			break;
-		case 5:
-			channels = favTvList;
-			break;
-		case 6:
-			channels = otherTvList;
-			break;
-		default:
-			break;
-		}
-		Channel curChannel = null;
-		if (channels != null && channels.size() > 0) {
-			if (channels.size() == 1) {
-				return curChannel;
-			}
-			for (int i = 0; i < channels.size(); i++) {
-
-				if (channels.get(i).chanId == preChannel.chanId) {
-
-					if (i == channels.size() - 1) {
-						curChannel = channels.get(i - 1);
-					} else {
-						curChannel = channels.get(i + 1);
-					}
-					break;
-
-				}
-			}
-		}
-		return curChannel;
-	}
-
-	private PopupWindow skipWindow;
-	private View skipView;
 
 	private ListView skipListView;
 	SimpleAdapter adapter = null;
@@ -842,36 +564,6 @@ public class ChannelList extends Activity implements ISceneListener {
 		return list;
 	}
 
-	@SuppressWarnings("deprecation")
-	private void showPopWindow() {
-
-		//YBDEL skipView = getLayoutInflater().inflate(R.layout.skipchannels_pop, null);
-		//YBDEL skipListView = (ListView) skipView.findViewById(R.id.pop_listview);
-
-		adapter = new SimpleAdapter(this, getSkipData(), R.layout.channelitem_gh,
-				new String[] { "id", "name", "serviceid" }, new int[] {
-						R.id.chanId, R.id.chanName, R.id.chanIndex });
-		skipListView.setAdapter(adapter);
-		skipListView.setOnItemClickListener(skipItemClickListener);
-		skipWindow = new PopupWindow(skipView, dip2px(280), 720);
-		skipWindow.setFocusable(true);
-		skipWindow.setOutsideTouchable(true);
-		skipWindow.setBackgroundDrawable(new BitmapDrawable());
-
-		skipWindow.setAnimationStyle(R.style.pop_anim);
-
-		skipWindow.showAtLocation(getWindow().getDecorView(), Gravity.LEFT,
-				dip2px(280), 0);
-		setAlpha(0.7f);
-		skipWindow.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss() {
-				// TODO Auto-generated method stub
-				setAlpha(1.0f);
-			}
-		});
-	}
 
 	private void setAlpha(float f) {
 
@@ -881,31 +573,6 @@ public class ChannelList extends Activity implements ISceneListener {
 		getWindow().setAttributes(params);
 	}
 
-	OnItemClickListener skipItemClickListener = new OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			// TODO Auto-generated method stub
-			Toast.makeText(ChannelList.this,
-					"添加" + list.get(position).get("name") + "到频道列表中",
-					Toast.LENGTH_SHORT).show();
-			String channelid = list.get(position).get("id");
-			Log.i("xm", channelid);
-			objApplication.dvbDatabase
-					.updateChannel(Integer.parseInt(channelid), "skip",
-							String.valueOf(UNSKIP));
-			adapter = new SimpleAdapter(ChannelList.this, getSkipData(),
-					R.layout.channelitem_gh, new String[] { "id", "name",
-							"serviceid" }, new int[] { R.id.chanId,
-							R.id.chanName, R.id.chanIndex });
-			skipListView.setAdapter(adapter);
-			// adapter.notifyDataSetChanged();
-			getAllTVtype(curType);
-			showChannelList();
-
-		}
-	};
 	public boolean bNewScreen=true;
 
 	public int dip2px(float dipValue) {
@@ -921,120 +588,6 @@ public class ChannelList extends Activity implements ISceneListener {
 			
 		Log.i(TAG, "key>>"+keyCode); 
 		switch (keyCode) {
-		/*
-		 * case KeyEvent.KEYCODE_F4: { // 交换节目排序 chanView = (TextView)
-		 * curView.findViewById(R.id.chanId); Toast.makeText(ChannelList.this,
-		 * ChannelList.this.getString(R.string.str_swap),
-		 * Toast.LENGTH_LONG).show(); lockSwap = true; old_chanId =
-		 * Integer.parseInt(chanView.getText().toString()); break; } case
-		 * KeyEvent.KEYCODE_F3: { // f3键将显示出跳过的节目，可以在列表中取消节目跳过功能
-		 * 
-		 * showPopWindow(); break; } case KeyEvent.KEYCODE_F2: { //
-		 * F2键跳过显示节目,在这里每次取chanview为了避免发生偶尔取不到值的情况 chanView = (TextView)
-		 * curView.findViewById(R.id.chanId); final int skipId =
-		 * Integer.parseInt(chanView.getText().toString()); AlertDialog.Builder
-		 * builder = new AlertDialog.Builder( ChannelList.this);
-		 * builder.setTitle(dialogSkipTitle);
-		 * builder.setMessage(dialogSkipMess);
-		 * builder.setPositiveButton(dialogButtonTextOk, new
-		 * DialogInterface.OnClickListener() {
-		 * 
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * TODO Auto-generated method stub
-		 * 
-		 * objApplication.dvbDatabase.updateChannel(skipId, "skip",
-		 * String.valueOf(SKIP)); // 刷新界面，notifydatasetchanged Channel channel =
-		 * objApplication.dvbDatabase .getChannel(skipId);
-		 * 
-		 * Channel nextChannel = toNextChannel(curType, channel);
-		 * getAllTVtype(curType); showChannelList(); if (nextChannel == null) {
-		 * 
-		 * Intent mIntent = new Intent(ChannelList.this, DialogNotice.class);
-		 * mIntent.putExtra(Class_Constant.DIALOG_TITLE, "无节目");
-		 * mIntent.putExtra(Class_Constant.DIALOG_DETAILS, "没有节目！");
-		 * mIntent.putExtra( Class_Constant.DIALOG_BUTTON_NUM, 1);
-		 * startActivity(mIntent); } else {
-		 * objApplication.playChannel(nextChannel, false); } } });
-		 * builder.setNegativeButton(dialogButtonTextCancel, new
-		 * DialogInterface.OnClickListener() {
-		 * 
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * TODO Auto-generated method stub dialog.dismiss(); } });
-		 * builder.create().show(); break; } case KeyEvent.KEYCODE_F1: { //
-		 * 绿色的按键删除节目 TextView chanIdView = (TextView)
-		 * curView.findViewById(R.id.chanId); Channel curChannel =
-		 * objApplication.dvbDatabase.getChannel(Integer
-		 * .parseInt(chanIdView.getText().toString())); String dialogTitle =
-		 * ChannelList.this .getString(R.string.str_remove_title); String
-		 * dialogContent = ChannelList.this
-		 * .getString(R.string.str_remove_content1); dialogContent += "\"" +
-		 * curChannel.name + "\"\n"; dialogContent += ChannelList.this
-		 * .getString(R.string.str_remove_content2); String
-		 * dialogButtonTextRemove = ChannelList.this
-		 * .getString(R.string.str_edit_del); String dialogButtonTextRmain =
-		 * ChannelList.this .getString(R.string.str_zhn_no);
-		 * 
-		 * AlertDialog.Builder removeDialog = new AlertDialog.Builder(
-		 * ChannelList.this); removeDialog.setTitle(dialogTitle);
-		 * removeDialog.setMessage(dialogContent);
-		 * 
-		 * removeDialog .setPositiveButton(dialogButtonTextRemove, new
-		 * DialogInterface.OnClickListener() {
-		 * 
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * TODO Auto-generated method stub lockSwap = false; TextView chanView =
-		 * (TextView) curView .findViewById(R.id.chanId); int channelIdToDelete
-		 * = Integer .parseInt(chanView.getText() .toString()); Channel channel
-		 * = objApplication.dvbDatabase .getChannel(channelIdToDelete); Channel
-		 * nextChannel = toNextChannel( curType, channel); channelIdToDelete =
-		 * channel.chanId; objApplication.dvbDatabase
-		 * .removeChannel(channel.chanId); getAllTVtype(curType);
-		 * showChannelList();
-		 * 
-		 * if (nextChannel == null) {
-		 * 
-		 * Intent mIntent = new Intent( ChannelList.this, DialogNotice.class);
-		 * mIntent.putExtra( Class_Constant.DIALOG_TITLE, "无节目");
-		 * mIntent.putExtra( Class_Constant.DIALOG_DETAILS, "没有节目！");
-		 * mIntent.putExtra( Class_Constant.DIALOG_BUTTON_NUM, 1);
-		 * startActivity(mIntent); } else {
-		 * objApplication.playChannel(nextChannel, false); } } })
-		 * .setNegativeButton(dialogButtonTextRmain, new
-		 * DialogInterface.OnClickListener() {
-		 * 
-		 * @Override public void onClick(DialogInterface dialog, int which) { //
-		 * TODO Auto-generated method stub dialog.dismiss(); }
-		 * }).create().show();
-		 * 
-		 * break; } case Class_Constant.KEYCODE_MENU_KEY: { // add favourite
-		 * channel chanView = (TextView) curView.findViewById(R.id.chanId);
-		 * Common.LOGI("the key is menu key"); channel =
-		 * objApplication.dvbDatabase.getChannel(Integer
-		 * .parseInt(chanView.getText().toString())); // if (curType == 6) { if
-		 * (curType == 5) {
-		 * 
-		 * channel = objApplication.dvbDatabase.getChannel(Integer
-		 * .parseInt(chanView.getText().toString())); // favorite channel,click
-		 * menu key is remove the channel
-		 * objApplication.dvbDatabase.updateChannel(channel.chanId, "favorite",
-		 * "0"); getAllTVtype(curType); showChannelList(); } else { // other
-		 * type channel,click menu key is add to fav channel
-		 * 
-		 * ImageView favView = (ImageView) curView
-		 * .findViewById(R.id.chan_image); if (channel.favorite == 0) { //
-		 * channel.mi_Favorite=1;
-		 * favView.setBackgroundResource(R.drawable.listfav);
-		 * favView.setVisibility(View.VISIBLE);
-		 * objApplication.dvbDatabase.updateChannel(channel.chanId, "favorite",
-		 * "1"); } else { // channel.mi_Favorite=0;
-		 * favView.setVisibility(View.INVISIBLE);
-		 * objApplication.dvbDatabase.updateChannel(channel.chanId, "favorite",
-		 * "0"); }
-		 * 
-		 * }
-		 * 
-		 * // showChannelList(); break; }
-		 */
 		case Class_Constant.KEYCODE_RIGHT_ARROW_KEY:
 
 			if (curType == tvTypeNoMax) {
@@ -1119,7 +672,26 @@ public class ChannelList extends Activity implements ISceneListener {
 		break;
 		case Class_Constant.KEYCODE_BACK_KEY:
 			banner.cancel(); 
+			Main.showTimeShiftIcon(false); 
 			break;
+		case KeyEvent.KEYCODE_MENU: {
+
+			Intent mIntent = new Intent();
+			mIntent.setComponent(new ComponentName("com.SysSettings.main",
+					"com.SysSettings.main.MainActivity"));
+			try {
+				startActivity(mIntent);
+				otaStatusChanged(1);
+				if(banner!=null)
+					banner.cancel();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			bKeyUsed = true;
+			finish();
+
+		}
+			break;			
 		default:
 			break;
 		}
@@ -1178,7 +750,7 @@ public class ChannelList extends Activity implements ISceneListener {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			
-			Log.i(TAG, "getView>>>>>pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);
+			//Log.i(TAG, "getView>>>>>pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);
 			
 			if(progIndex>=mCurChannels.size()){
 				Log.i(TAG, "getView>>>>>invail pos:"+ progIndex+","+position+"/"+pageIndex+"/"+pageSize);
@@ -1191,14 +763,6 @@ public class ChannelList extends Activity implements ISceneListener {
 			}
 			
 			Channel Channel = mCurChannels.get(progIndex); 
-
-			/*
-			 * if (Channel.favorite == 0 || curType == 5) {
-			 * holder.favView.setVisibility(View.INVISIBLE); } else { // show
-			 * imageview for favourite channel
-			 * holder.favView.setBackgroundResource(R.drawable.listfav);
-			 * holder.favView.setVisibility(View.VISIBLE); }
-			 */
 
 			if (Channel.logicNo < 10) {
 				holder.channelIndex.setText("00" + Channel.logicNo);
@@ -1271,55 +835,6 @@ public class ChannelList extends Activity implements ISceneListener {
 	    }  		
 	};
 
-	@Override
-	public void onExecute(Intent intent) {
-		// TODO Auto-generated method stub
-
-		// TODO Auto-generated method stub
-
-		// TODO Auto-generated method stub
-		feedback.begin(intent);
-		if (intent.hasExtra("_scene")
-				&& intent.getStringExtra("_scene").equals(
-						"com.changhong.app.dtv:ChannelList")) {
-			if (intent.hasExtra("_command")) {
-				String command = intent.getStringExtra("_command");
-				if ("key1".equals(command)) {
-					feedback.feedback("下一个频道", Feedback.SILENCE);
-					// 频道切换处理
-					changenextchannel();
-				}
-				if ("key2".equals(command)) {
-					feedback.feedback("上一个频道", Feedback.SILENCE);
-					// 频道切换处理
-					changeprechannel();
-				}
-			}
-		}
-
-	}
-
-	@Override
-	public String onQuery() {
-		// TODO Auto-generated method stub
-		sceneJson = "{" + "\"_scene\": \"com.changhong.app.dtv:ChannelList\","
-				+ "\"_commands\": {" + "\"key1\": [ \"下一个频道\", \"频道加\" ],"
-				+ "\"key2\": [ \"上一个频道\", \"频道减\" ]" + "}" + "}";
-		return sceneJson;
-	}
-
-	private String INTENT_CHANNEL_NEXT = "channelnext";
-	private String INTENT_CHANNEL_PRE = "channelpre";
-	private String INTENT_CHANNEL_ONLYINFO = "channelonlyinfo";
-
-	private void changenextchannel() {
-		if ((SysApplication.iCurChannelId != -1)
-				&& (objApplication.dvbDatabase.getChannelCount() >= 0)) {
-			objApplication.playNextChannel(true);
-			banner.show(SysApplication.iCurChannelId);
-			finish();
-		}
-	}
 
 	private static Banner banner;
 	private int iKeyNum;
@@ -1327,39 +842,17 @@ public class ChannelList extends Activity implements ISceneListener {
 	LinearLayout tvRootDigitalkey;
 	private RelativeLayout tvRootDigitalKeyInvalid;
 	private final UI_Handler mUiHandler = new UI_Handler(this);
-	private static final int MESSAGE_SHOW_AUTOSEARCH = 201;
 	private static final int MESSAGE_HANDLER_DIGITALKEY = 202;
 	private static final int MESSAGE_DISAPPEAR_DIGITAL = 203;
-	private static final int MESSAGE_CA_SHOWNOTICE = 204;
-	private static final int MESSAGE_CA_HIDENOTICE = 205;
 	private static final int MESSAGE_SHOW_DIGITALKEY = 206;
-	private static final int MESSAGE_START_RECORD = 207;
-	private static final int MESSAGE_STOP_RECORD = 208;
-	private static final int MESSAGE_PLAY_PRE = 301;
-	private static final int MESSAGE_PLAY_NEXT = 302;
-	private static final int MESSAGE_VOLUME_DISAPPEAR = 902;
-	private static final int MESSAGE_VOLUME_SHOW = 901;
 	private static final int MESSAGE_SHOW_DIGITALKEY_FOR_PRE_OR_NEXT_KEY = 903;
-	private static final int VOLUME_ID_YIHAN_AD = 904;
 	private static final int MESSAGE_REQ_UPBANNER = 801;
 	
 	private ImageView dtv_digital_1;
 	private ImageView dtv_digital_2;
 	private ImageView dtv_digital_3;
-	
-	private void changeprechannel() {
-		if ((SysApplication.iCurChannelId != -1)
-				&& (objApplication.dvbDatabase.getChannelCount() >= 0)) {
-			objApplication.playPreChannel(true);
-			banner.show(SysApplication.iCurChannelId);
-			finish();
-		}
-	}
 
 	private void onDigitalkey(int ri_KeyCode) {
-
-		boolean b_Result = false;
-		P.d(" main->onVkey: " + ri_KeyCode);
 
 		mUiHandler.removeMessages(MESSAGE_SHOW_DIGITALKEY);
 		mUiHandler.removeMessages(MESSAGE_DISAPPEAR_DIGITAL);
@@ -1379,16 +872,15 @@ public class ChannelList extends Activity implements ISceneListener {
 
 		Display_Program_Num(iKey);
 		
-		mUiHandler
-		.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 1500);//要求1.5秒无操作则执行		
-		/*
+		//mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 1500);//要求1.5秒无操作则执行		
+		
 		if (iKey >= 100) {
 			mUiHandler
-					.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 2000);
+					.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY);
 		} else {
 			mUiHandler
 					.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 2000);
-		}*/
+		}
 
 	}
 
@@ -1420,19 +912,7 @@ public class ChannelList extends Activity implements ISceneListener {
 	private static void updateBannerinfo2(int chanid) {
 		banner.show(chanid,999999999);	
 	}	
-	private void updateBannerinfo3(int position) {
-		try{
-			/*String sProgId = channelIndex.getText().toString();
-			int iProgId = Integer.parseInt(sProgId);
-			Channel chan = objApplication.dvbDatabase.getChannel(iProgId);*/
-			Channel chan = mCurChannels.get(position);
-			if(chan!=null){
-				banner.show(chan.chanId,999999999);
-			}
-		}catch(Exception e){
-			
-		}
-	}	
+
 	private int getChanId(int position) {
 		try{
 			/*String sProgId = channelIndex.getText().toString();
@@ -1630,11 +1110,13 @@ public class ChannelList extends Activity implements ISceneListener {
 			
 			//从全部频道分类中查找输入频道
 			/*if(theActivity.curType!=0)*/{
-				theActivity.getAllTVtype(0);
+				theActivity.getAllTVtype(0);				
 				for (int i=0;i<theActivity.allTvList.size();i++) {
 					if(theActivity.allTvList.get(i).logicNo == iKey)
 					{
 						theActivity.curType = 0;
+						theActivity.pageSize = 0;
+						theActivity.opMode = 0;						
 						theActivity.showChannelList();
 						theActivity.channelListView.setSelection(i);
 						theActivity.mAdapter.notifyDataSetChanged();
@@ -1675,7 +1157,7 @@ public class ChannelList extends Activity implements ISceneListener {
 		Log.i(TAG,"prePage:" + pageIndex);		
 		mAdapter.notifyDataSetChanged();
 	}
-	//��һҳ�ķ���
+	//下一页
 	private void nextPage() {
 		Log.i(TAG,"curPage:" + pageIndex);
 		if(opMode==0){
@@ -1765,7 +1247,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			curpos = channelListView.getSelectedItemPosition()% DEF_PAGESIZE;	
 		}
 		channelListView.setSelection(curpos);
-		Log.i(TAG, "calCurPosInPageMode>>>curpose:"+curpos+",pageIndex:"+pageIndex + "oldPos:"+channelListView.getSelectedItemPosition());
+		//Log.i(TAG, "calCurPosInPageMode>>>curpose:"+curpos+",pageIndex:"+pageIndex + "oldPos:"+channelListView.getSelectedItemPosition());
 		return curpos;
 	}
 	//计算从翻页模式切换到单行模式的位置
@@ -1776,7 +1258,19 @@ public class ChannelList extends Activity implements ISceneListener {
 		else {
 			pos = channelListView.getSelectedItemPosition();
 		}
-		Log.i(TAG, "calCurPos>>>pos:"+pos+" <<<pageIndex:"+pageIndex+"pageSize:"+pageSize+"pos:"+channelListView.getSelectedItemPosition());
+		//Log.i(TAG, "calCurPos>>>pos:"+pos+" <<<pageIndex:"+pageIndex+"pageSize:"+pageSize+"pos:"+channelListView.getSelectedItemPosition());
 		return pos;
+	}
+
+	@Override
+	public void onExecute(Intent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String onQuery() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

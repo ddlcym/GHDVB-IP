@@ -158,4 +158,10 @@
 	<color name="navy">#000080</color><!--海军色 -->  
 	<!-- 透明  -->
 	<color name="touming">#00000000</color>
+	
+	<!-- 新增 -->
+    <color name="c44abe5">#44abe5</color>
+	<color name="c52778e">#52778e</color>
+ 	<color name="cb3b3b3">#b3b3b3</color>
+	
 </resources>  

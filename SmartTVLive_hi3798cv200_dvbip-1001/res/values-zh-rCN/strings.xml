@@ -8,6 +8,7 @@
     
 	<string name="str_livemailtitle">电视费用到期通知！</string>
 	<string name="str_AutoSearchPrompt">当前节目为空， 请搜索！</string>
+	<string name="str_ChannelUpdatePrompt">频道发生更新， 是否重新搜索！</string>
     <string name="str_zhn_nosignal">无信号，请插入信号线！</string>
 		
 <!-- GH used over -->	
@@ -909,7 +910,7 @@
     <string name="MESSAGE_MAXRESTART_TYPE">智能卡暂时休眠，请5分钟后重新开机</string>
     <string name="MESSAGE_FREEZE_TYPE">智能卡已冻结，请联系运营商</string>
     <string name="MESSAGE_CALLBACK_TYPE">智能卡已暂停，请回传收视记录给运营商</string>
-    <string name="MESSAGE_CURTAIN_TYPE">窗帘节目，不可预览阶段</string>
+    <string name="MESSAGE_CURTAIN_TYPE">高级预览节目,该阶段不能免费观看</string>
     <string name="MESSAGE_CARDTESTSTART_TYPE">升级测试卡测试中</string>
     <string name="MESSAGE_CARDTESTFAILD_TYPE">升级测试卡测试失败，请检查机卡通讯模块</string>
     <string name="MESSAGE_CARDTESTSUCC_TYPE">升级测试卡测试成功</string>
@@ -1006,6 +1007,46 @@
 
     <string name="cur_program">当前节目</string>
     <string name="next_program">下一节目</string>
-   	<string name="replay_dialog_title">温馨提示</string>
-   	<string name="back_shiftlist">退出时移列表</string>
+    <string name="replay_dialog_title">温馨提示</string>
+    <string name="back_shiftlist">退出时移列表</string>
+
+    <!-- CA extra  ipp节目 购买 -->
+   <!-- CA buy IPPProgram  title -->
+    <string name="CA_BUY_IPPV_TITLE_FREE">IPPV免费预览阶段</string>
+    <string name="CA_BUY_IPPV_TITLE_PAYVIEWED">IPPV收费阶段</string>
+    <string name="CA_BUY_IPPT_TITLE_PAYVIEWED">IPPT收费阶段</string>
+    <string name="IPPT_BUY_PRICE">不录像价格：</string>
+    <string name="IPPT_BUY_PRICE_TAPE">录像价格：</string>
+    
+    <string name="IPPT_BUY_EXPIRYDATE">过期时间：</string>
+    <string name="IPPT_BUY_OPERATOR_ID">营运商ID：</string>
+    <string name="IPPT_BUY_PRODUCT_ID">产品ID：</string>
+    <string name="IPPT_BUY_TOTEN_ID">钱包ID：</string>
+    <string name="ca_pin_input">请输入PIN码</string>
+    <string name="IPPT_BUY_INFOR">自动购买IPPT节目，扣费间隔*分钟，扣费点数@，扣费钱包%</string>
+    <string name="IPPT_BUY_SUCCESS">购买成功</string>
+    <string name="IPPT_BUY_FAILED">购买失败</string>
+  
+
+    <!-- PIN码 -->
+    <string name="ca_pin_invalid">PIN码无效</string>
+    <string name="ca_pin_modify_success">PIN码修改成功</string>
+    <string name="ca_pin_modify_failed">PIN码修改失败</string>
+    <string name="ca_pin_twopin_argument">新PIN两次输入不一致</string>
+    <!-- 高级预览 -->
+    <string name="CA_CURTAIN_NOTICE">高级预览节目\n该阶段不能免费观看</string>
+    <!-- 黑名单 -->
+    <string name="CA_CONTINUE_BLACK_LIST">账户被锁定，请联系运营商</string>
+    <!-- 连续观看 -->
+    <string name="CA_CONTINUE_WATCH_LIMIT">节目观看超时，请联系运营商</string>
+    <!-- 进度条 -->
+    <string name="ca_progressstrip_dataloadown">升级数据接收中，请稍后！</string>
+    <string name="ca_progressstrip_upgrate_progress">智能卡升级中，请不要拔卡或关机！</string>
+    <string name="ca_progressstrip_upgrate_success">智能卡升级成功！</string>
+    <string name="ca_progressstrip_upgrate_failed">智能卡升级成功！</string>
+
+    <string name="ca_worktime_hint_threeline"> 【#】删除，【返回】返回</string>   
+    <string name="title_pin_ipp_">输入PIN码:</string>
+    
+    
 </resources>

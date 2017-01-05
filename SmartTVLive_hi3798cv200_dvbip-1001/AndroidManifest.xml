@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.changhong.app.dtv"
-    android:sharedUserId="android.uid.system"
+	android:sharedUserId="android.uid.system"    
     android:versionCode="2"
     android:versionName="2.0" >
 
@@ -11,8 +11,7 @@
 	Version history:
 	### Version 2.0 modifier:Vanlen ####
 	1.Add CA OSD text rolling dealing(update the chdvb.jar to v1.2).
-	2.When entering EPG, add to show a dialog to replace black screen.    
-
+	2.When entering EPG, add to show a dialog to replace black screen.    
     -->
 
     <uses-sdk
@@ -26,8 +25,9 @@
     <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
     <uses-permission android:name="android.permission.READ_OWNER_DATA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REBOOT" />
+    android.permission.REBOOT
     <application
         android:name="com.changhong.app.timeshift.common.MyApp"
         android:allowBackup="true"
@@ -43,6 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
         <activity android:name="com.changhong.app.dtv.DialogNotice" >
         </activity>
         <activity android:name="com.changhong.app.dtv.Banner" >
@@ -60,9 +61,11 @@
         <activity android:name="com.changhong.app.dtv.Channel_message_z" >
         </activity>
         <activity android:name="com.changhong.app.dtv.FastChangeChannel_z" >
-        </activity>
+        </activity>
+        -->
         <activity android:name="com.changhong.app.dtv.ChannelList" >
-        </activity>        
+        </activity>
+        <!--
         <activity android:name="com.changhong.app.dtv.ProgramManager_z" >
         </activity>
         <activity android:name="com.changhong.app.dtv.Factory" >
@@ -71,12 +74,13 @@
         </activity>
         <activity android:name="com.changhong.app.dtv.Email_z" >
         </activity>
-        
+
             
             
         <activity
             android:name="com.changhong.app.ca.CAMotherChildCopy"
-            android:theme="@style/CA_Popup" />
+            android:theme="@style/CA_Popup" />
+        -->
         <activity
             android:name="com.changhong.app.dtv.EpgWarn"
             android:exported="true"
@@ -84,11 +88,32 @@
             android:theme="@style/CA_Popup" >
         </activity>
         <activity
-            android:name="com.changhong.app.dtv.EmailContent_z"
+            android:name="com.changhong.app.dtv.LiveMail"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/CA_Popup" >
         </activity>
+        <activity android:name="com.changhong.app.ca.CACardUpgrade" />
+        <activity
+            android:name="com.changhong.app.ca.CaMainActivity"
+            android:theme="@style/CA_Popup"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.changhong.app.ca.CABuyIPPDialog"
+            android:theme="@style/CA_Popup" />
+        <activity
+            android:name="com.changhong.app.ca.CaLockService"
+            android:theme="@style/CA_Popup" />
+
+      
+        <activity
+            android:name="com.changhong.app.ca.EmailContent"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/CA_Popup" >
+        </activity>
+    
+        <!--
         <activity
             android:name="com.changhong.app.ca.TVca"
             android:theme="@style/CA_Popup" >
@@ -110,16 +135,19 @@
             android:theme="@style/CA_Popup" />
         <activity
             android:name="com.changhong.app.ca.CAoperatorInfo"
-            android:theme="@style/CA_Popup" />
-            
-
-
+            android:theme="@style/CA_Popup" />
+        -->
+          <!-- 测试用 -->
+        <activity android:name="com.changhong.app.dtv.testCA"
+              android:theme="@style/CA_Popup" />
+         <!-- CA service --> 
+         <service android:name="com.changhong.app.ca.CaService"/> 
         <receiver
             android:name="com.changhong.app.dtv.BootCastReceiver"
             android:process=":remote" >
             <intent-filter>
                 <action android:name="com.changhong.action.chkEpgTimer" />
-            </intent-filter>            
+            </intent-filter>
         </receiver>
         <receiver android:name="com.changhong.app.dtv.thirdPartyBroadcastReceiver" >
             <intent-filter>
@@ -127,6 +155,15 @@
                 <action android:name="com.chots.action.record_history" />
             </intent-filter>
         </receiver>
+        
+          <receiver android:name="com.changhong.app.ca.mailEventReceiver">
+			<intent-filter>
+			<action android:name="android.intent.action.BOOT_COMPLETED" />
+			<action android:name="chots.action.mailEvent" />
+			<action android:name="chots.action.CaCard" />
+			</intent-filter>
+		</receiver>
+        
     </application>
 
 </manifest>

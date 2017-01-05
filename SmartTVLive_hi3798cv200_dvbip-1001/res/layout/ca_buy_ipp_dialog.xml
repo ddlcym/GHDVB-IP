@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="1060dip"
+    android:layout_height="599dip"
+    android:layout_gravity="center"
+    android:background="@drawable/back"
+    android:orientation="horizontal">
+
+    <LinearLayout android:id="@+id/ipp_buy_dialog"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TextView  android:id="@+id/ipp_buy_title"
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginTop="30dip"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:text="订购IPP节目"
+            android:textColor="@color/white"
+            android:textSize="28sp" />
+
+        <ImageView
+            android:layout_width="1010dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/divider01" />
+
+        <!-- 节目信息 1 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="@string/IPPT_BUY_OPERATOR_ID"              
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/operator_id"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+        
+          <!-- 节目信息 2 -->
+          <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="@string/IPPT_BUY_TOTEN_ID"                
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/wallet_id"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+        <!-- 节目信息 3 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="@string/IPPT_BUY_PRODUCT_ID"                
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/progarm_id"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/progarm_name"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+
+         <!-- 节目信息 4 -->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="可否录像:"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/progarm_istaping"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+            
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+        
+        
+        <!-- 节目信息 5 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView  android:id="@+id/buy_price_type"               
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="@string/IPPT_BUY_PRICE"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/buy_price"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+         <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" 
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/buy_price_taping"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+        </LinearLayout>
+        <!-- 节目信息 4 -->
+
+        <LinearLayout  android:id="@+id/ippv_duringtime"           
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+             <TextView
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="right|center_vertical"
+                android:text="@string/IPPT_BUY_EXPIRYDATE"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/progarm_during_time"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                 android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/progarm_status"
+                 android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+        
+        <TextView  android:id="@+id/ippt_notice"           
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/IPPT_BUY_INFOR"
+            android:textSize="22sp" 
+            android:visibility="gone" />
+           
+        
+      <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="2" >
+            <TextView          
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/grey"
+            android:text="【确认】购买， 【返回】取消 ，【红键】切换价格"
+            android:textSize="@dimen/FONT_SIZE_NORMAL" />
+        </RelativeLayout>
+        
+    </LinearLayout>
+    
+    <!-- 购买结果 -->
+    <LinearLayout android:id="@+id/ipp_buy_result"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView  
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:layout_marginTop="30dip"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:text="订购IPP节目"
+            android:textColor="@color/white"
+            android:textSize="28sp" />
+
+        <ImageView
+            android:layout_width="1010dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/divider01" />
+
+        <!-- 节目信息 1 -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="50dip"           
+                android:gravity="center"
+                android:text="@string/IPPT_BUY_SUCCESS"
+                android:textColor="@color/white"
+                android:textSize="@dimen/FONT_SIZE_BIG" />
+
+        <Button
+            android:id="@+id/btn_buy_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_sure_selector" />
+    </LinearLayout>  
+ </LinearLayout>
+</FrameLayout>

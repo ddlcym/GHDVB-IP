@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">    
+    
+    <TextView android:id="@+id/ca_msg_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dip"            
+            android:background="@color/black"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="32sp" 
+            android:visibility="gone"/>
+   
+   <ImageView android:id="@+id/ca_msg_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logonanfangweishi"
+        android:scaleType="centerInside"
+        android:visibility="gone"/> 
+        
+   
+   <TextView android:id="@+id/ca_msg_supertxt"
+            android:layout_width="400dp"
+            android:layout_height="260dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="100dp" 
+            android:lineSpacingExtra="10dp"           
+            android:background="@drawable/msgbox_bg"
+            android:gravity="center"
+            android:textColor="@color/c44abe5"
+            android:textSize="@dimen/txt_font_50" 
+            android:visibility="gone"/>
+   
+   <RelativeLayout 
+    android:id="@+id/ca_msg_notice"
+    android:layout_width="560dip"
+    android:layout_height="260dip"
+    android:background="@drawable/gh_dialog"
+    android:visibility="gone">
+
+    <TextView
+        style="@style/ghTextEpgWarnTitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dip"
+        android:gravity="center"
+        android:text="@string/str_EPGwarnTitle"/>
+
+    <TextView
+        style="@style/ghTextEpgWarnBodyStyle"
+        android:id="@+id/ca_msg_notice_txt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingRight="10dip"
+        android:paddingLeft="10dip"
+        android:layout_centerHorizontal="true"        
+        android:gravity="center"/>
+
+</RelativeLayout>
+                 
+</FrameLayout>

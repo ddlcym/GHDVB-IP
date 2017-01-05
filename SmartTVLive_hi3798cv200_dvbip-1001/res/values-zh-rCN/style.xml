@@ -142,13 +142,7 @@
         <!-- 蒙版- 模糊 -->
     </style>
 
-    <style name="pop_anim">
-        <item name="android:windowEnterAnimation">@anim/skippop_up</item>
-        <!-- 指定显示的动画xml -->
 
-        <item name="android:windowExitAnimation">@anim/skippop_down</item>
-        <!-- 指定消失的动画xml -->
-    </style>
 
     <!-- defined for GHprj -->
     <style name="ghTextViewStyleA">

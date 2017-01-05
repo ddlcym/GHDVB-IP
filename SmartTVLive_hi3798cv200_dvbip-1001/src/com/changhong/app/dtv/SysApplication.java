@@ -1,13 +1,5 @@
 package com.changhong.app.dtv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,19 +7,15 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.R.bool;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +26,11 @@ import android.widget.TextView;
 
 import com.changhong.app.book.BookDataBase;
 import com.changhong.app.book.BookInfo;
+import com.changhong.app.ca.CaConfig;
+import com.changhong.app.ca.CaLockService;
+import com.changhong.app.timeshift.common.MyApp;
 import com.changhong.app.utils.Utils;
+import com.changhong.dvb.CA;
 import com.changhong.dvb.CAListener;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.ChannelDB;
@@ -47,7 +39,6 @@ import com.changhong.dvb.DVBManager;
 import com.changhong.dvb.LivePlayer;
 import com.changhong.dvb.PVR;
 import com.changhong.dvb.PlayingInfo;
-import com.changhong.dvb.TunerListener;
 import com.changhong.dvb.ProtoCaNovel.DVB_CA_NOVEL;
 import com.changhong.dvb.ProtoCaNovel.DVB_CA_NOVEL_Data;
 import com.changhong.dvb.ProtoCaNovel.DVB_CA_NOVEL_MSG_CODE;
@@ -62,9 +53,8 @@ import com.changhong.dvb.ProtoMessage.DVB_PVR_RecAttr;
 import com.changhong.dvb.ProtoMessage.DVB_RectSize;
 import com.changhong.dvb.Scan;
 import com.changhong.dvb.Table;
-import com.changhong.dvb.CA;
 import com.changhong.dvb.Tuner;
-import com.changhong.dvb.TunerStatus;
+import com.changhong.dvb.TunerListener;
 /**
  * 
  * @author Administrator
@@ -140,7 +130,7 @@ public class SysApplication extends Application implements CAListener {
 
 	 
 	private SysApplication() {
-
+		mContext=MyApp.getContext();
 	}
 
 	@Override
@@ -612,8 +602,9 @@ public class SysApplication extends Application implements CAListener {
 		
 		iCurChannelId = channel.chanId;
 		
-		SetUserInfo(keyLastChanId, iCurChannelId);
-		
+		//SetUserInfo(keyLastChanId, iCurChannelId);
+		SetUserInfo(channel);
+		updateCaStatusBroadcast();
 		return 0;
 	}
 	
@@ -621,11 +612,9 @@ public class SysApplication extends Application implements CAListener {
 	public int playChannel(int channelId,boolean isCheckPlaying)
 	{
 		
-		P.d("playChannel(int channelId)  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channelId);
-
 		if(channelId == iCurChannelId  && isCheckPlaying)
 		{
-			P.i("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct .#1");
 			return channelId;
 		}
 
@@ -643,6 +632,8 @@ public class SysApplication extends Application implements CAListener {
 			return -1;
 		}
 		*/
+		
+		P.i("playChannel#1>> chid="+channelId+",logicNo=" + curChannel.logicNo);
 		
 		dvbPlayer.stop();	
 		/* If it is audio channel, blank the screen */
@@ -662,16 +653,61 @@ public class SysApplication extends Application implements CAListener {
 		
 		iCurChannelId = channelId;
 		
+		//SetUserInfo(keyLastChanId, iCurChannelId);
+    	SetUserInfo(curChannel);
+		updateCaStatusBroadcast();
+
+		return 0;
+	}
+	
+	
+	
+	public int playChannelCa(int channelId, boolean isCheckPlaying) {
+
+		P.d("playChannel(int channelId)  Now channel ->  " + iCurChannelId
+				+ " ,  try to play ->  " + channelId);
+
+		if (channelId == iCurChannelId && isCheckPlaying) {
+			P.i("playChannel the channel is playing,return direct .");
+			return channelId;
+		}
+
+		Channel curChannel = dvbDatabase.getChannelSC(channelId);
+		if (curChannel == null) {
+			P.e("Cann't get valid channel.");
+			return -1;
+		}
+		/*
+		 * if(curChannel.sortId != 0x1 && curChannel.sortId != 0x11 &&
+		 * curChannel.sortId != 0x16 && curChannel.sortId != 0x19 &&
+		 * (curChannel.videoPid == 0x0 || curChannel.videoPid == 0x1fff)) {
+		 * return -1; }
+		 */
+
+		dvbPlayer.stop();
+		/* If it is audio channel, blank the screen */
+		if (curChannel.sortId == 2 || curChannel.videoPid == 0x0
+				|| curChannel.videoPid == 0x1fff) {
+			dvbPlayer.blank();
+			showAudioPlaying(true);
+		} else {
+			showAudioPlaying(false);
+		}
+
+		dvbPlayer.play(curChannel);
+
+		// mo_Ca.channelNotify(curChannel);
+
+		iCurChannelId = channelId;
+
 		SetUserInfo(keyLastChanId, iCurChannelId);
-		
+
 		return 0;
 	}
 	
 	public int playChannelKeyInput(int keyInput,boolean isCheckPlaying)
 	{
 		
-		P.d("playChannelKeyInput--  Now channel ->  " + iCurChannelId +" ,  try to play ->  " + keyInput);
-
 		Channel[] channels = dvbDatabase.getChannelsByServiceId(keyInput, 1000);
 		if(channels == null || channels.length <= 0)
 		{
@@ -680,7 +716,7 @@ public class SysApplication extends Application implements CAListener {
 		Channel curChannel = channels[0];
 		if(curChannel.chanId == iCurChannelId  && isCheckPlaying)
 		{
-			P.i("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct .#2");
 			return curChannel.chanId;
 		}
 		
@@ -698,6 +734,7 @@ public class SysApplication extends Application implements CAListener {
 			return -1;
 		}
 		*/
+		P.i("playChannel#2>> chid="+curChannel.chanId+",logicNo=" + curChannel.logicNo);
 		
 		dvbPlayer.stop();		
 		
@@ -718,8 +755,10 @@ public class SysApplication extends Application implements CAListener {
 		
 		iCurChannelId = curChannel.chanId;
 		
-		SetUserInfo(keyLastChanId, iCurChannelId);
-		
+		//SetUserInfo(keyLastChanId, iCurChannelId);
+		SetUserInfo(curChannel);
+		updateCaStatusBroadcast();
+
 		return 0;
 	}
 	
@@ -731,13 +770,13 @@ public class SysApplication extends Application implements CAListener {
 			return -1;
 		}
 		
-		P.d("playChannel(DvbChannel channel) Now channel ->  " + iCurChannelId +" ,  try to play ->  " + channel.chanId);
-
 		if(channel.chanId == iCurChannelId  && isCheckPlaying)
 		{
-			P.i("playChannel the channle is playing,return direct .");
+			P.i("playChannel the channle is playing,return direct .#3");
 			return channel.chanId;
 		}
+		
+		P.i("playChannel#3>> chid="+channel.chanId+",logicNo=" + channel.logicNo);
 
 		dvbPlayer.stop();
 		
@@ -758,7 +797,10 @@ public class SysApplication extends Application implements CAListener {
 		
 		iCurChannelId = channel.chanId;
     	
-    	SetUserInfo(keyLastChanId, iCurChannelId);
+    	//SetUserInfo(keyLastChanId, iCurChannelId);
+    	SetUserInfo(channel);
+		updateCaStatusBroadcast();
+
 		return 0;
 	}
 	
@@ -1102,6 +1144,10 @@ public class SysApplication extends Application implements CAListener {
     	Channel tChannel = DVB.getManager().getChannelDBInstance().getChannel(channelId);
     	saveLastPlayingInfo(tChannel);
     }
+    public void SetUserInfo(Channel playingChannel)
+    {
+    	saveLastPlayingInfo(playingChannel);
+    }
     
     private void saveLastPlayingInfo(Channel playingChannel)
     {
@@ -1300,6 +1346,7 @@ public class SysApplication extends Application implements CAListener {
 	
 	private void showAudioPlaying(boolean show)
 	{
+		/*
 		if(show)
 		{
 			if(ll_audioplaying != null && !ll_audioplaying.isShown())
@@ -1314,19 +1361,23 @@ public class SysApplication extends Application implements CAListener {
 				ll_audioplaying.setVisibility(View.INVISIBLE);     
 			}
 		}
+		*/
 	}
 
 	private String getNovelNoticeContent(DVB_CA_NOVEL_MSG_CODE code)
-	{
+	{//因为有另一个apk监控卡是否插入以及是否有效卡,所以此处屏蔽部分提示语,避免OSD重复提示.
+	// NOVEL_MSG_CODE_INSERTCARD_TYPE, NOVEL_MSG_CODE_BADCARD_TYPE
 		String noticeContent = null;
 		int stringId = 0;
-		
+		Log.i("YYY", "CA index="+code);
 		switch(code)
 		{
 			case NOVEL_MSG_CODE_BADCARD_TYPE:
 			{
-				stringId = R.string.MESSAGE_CALLBACK_TYPE;
-				break;
+				//stringId = R.string.MESSAGE_CALLBACK_TYPE;
+				stringId = R.string.MESSAGE_BADCARD_TYPE;
+				//break;
+				return null;
 			}
 			case NOVEL_MSG_CODE_EXPICARD_TYPE:
 			{
@@ -1336,7 +1387,8 @@ public class SysApplication extends Application implements CAListener {
 			case NOVEL_MSG_CODE_INSERTCARD_TYPE:
 			{
 				stringId = R.string.MESSAGE_INSERTCARD_TYPE;
-				break;
+				//break;
+				return null;
 			}
 			case NOVEL_MSG_CODE_NOOPER_TYPE:
 			{
@@ -1682,83 +1734,75 @@ public class SysApplication extends Application implements CAListener {
 	public void caCallbackNovel(DVB_CA_NOVEL data, Object reserved)
 	{
 		P.i("caCallbackNovel");
-		switch(data.getCode())
-		{
-			case NOVEL_CODE_CB_SHOW_BUY_MSG:
-			{
-				if (!data.hasMsgcode())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				
-				if (DVB_CA_NOVEL_MSG_CODE.NOVEL_MSG_CODE_CANCEL_VALUE == data.getMsgcode().getNumber())
-				{
-					message.what = MESSAGE_CA_HIDENOTICE;  
-				}
-				else
-				{
-					message.what = MESSAGE_CA_SHOWNOTICE;  
-					message.arg1 = data.getCode().getNumber();
-					message.arg2 = 0;
-					message.obj = getNovelNoticeContent(data.getMsgcode());
-				}
-
-				mAppHandler.sendMessage(message); 
+		
+		switch (data.getCode()) {
+		
+		case NOVEL_CODE_CB_SHOW_BUY_MSG: {
+			if (!data.hasMsgcode()) {
 				break;
 			}
-			
-			case NOVEL_CODE_CB_SHOW_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				message.what = MESSAGE_CA_SHOWOSDROLL;
-				
-				DVB_CA_NOVEL_Data novel_data = data.getData();
-				if(novel_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = novel_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				if(novel_data.getDataStringCount() == 0)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
-				message.obj = novel_data.getDataString(0);
-				if(message.obj == null)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
+			Message message = new Message();
 
-				mAppHandler.sendMessage(message); 
+			if (DVB_CA_NOVEL_MSG_CODE.NOVEL_MSG_CODE_CANCEL_VALUE == data.getMsgcode().getNumber()) {
+				message.what = MESSAGE_CA_HIDENOTICE;
+			} else {
+				message.what = MESSAGE_CA_SHOWNOTICE;
+				message.arg1 = data.getCode().getNumber();
+				message.arg2 = 0;
+				message.obj = getNovelNoticeContent(data.getMsgcode());
+			}
+			mAppHandler.sendMessage(message);
+			break;
+		}
+
+		case NOVEL_CODE_CB_SHOW_OSD: {
+			if (!data.hasData()) {
 				break;
 			}
-			case NOVEL_CODE_CB_HIDE_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
+			Message message = new Message();
+			message.what = MESSAGE_CA_SHOWOSDROLL;
+
+			DVB_CA_NOVEL_Data novel_data = data.getData();
+			if (novel_data.getDataIntCount() == 0) {
+				message.arg1 = 1;
+			}
+			int novel_data_int = novel_data.getDataInt(0);
+			message.arg1 = novel_data_int;
+			if (novel_data.getDataStringCount() == 0) {
 				message.what = MESSAGE_CA_HIDEOSDROLL;
-				DVB_CA_NOVEL_Data novel_data = data.getData();
-				if(novel_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = novel_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				mAppHandler.sendMessage(message); 
+			}
+			message.obj = novel_data.getDataString(0);
+			if (message.obj == null) {
+				message.what = MESSAGE_CA_HIDEOSDROLL;
+			}
+			mAppHandler.sendMessage(message);
+			break;
+		}
+		case NOVEL_CODE_CB_HIDE_OSD: {
+			if (!data.hasData()) {
 				break;
 			}
-			default:
-			{
-				return;
+			Message message = new Message();
+			message.what = MESSAGE_CA_HIDEOSDROLL;
+			DVB_CA_NOVEL_Data novel_data = data.getData();
+			if (novel_data.getDataIntCount() == 0) {
+				message.arg1 = 1;
 			}
+			int novel_data_int = novel_data.getDataInt(0);
+			message.arg1 = novel_data_int;
+			mAppHandler.sendMessage(message);
+			break;
+		}
+		default: {
+			int cmdCode=data.getCode().getNumber();
+			Intent novelIntent = new Intent();
+			novelIntent.setAction(CaConfig.CA_MSG_NOVEL_EVENT);
+			novelIntent.putExtra("eventType", 2);//CA_NOVEL
+			novelIntent.putExtra("cmdCode", cmdCode);
+			novelIntent.putExtra("caData", data);
+			sendBroadcast(novelIntent);
+			return;
+		}
 		}		
 	}	
 	
@@ -1875,11 +1919,9 @@ public class SysApplication extends Application implements CAListener {
 				//caSumaCallback(ri_Event,ri_EventData,ro_PriData);
 				break;
 			}
-			case CA_NOVEL:
-			{
-				if (data.hasNovel())
-				{
-					caCallbackNovel(data.getNovel(), reserved);
+		case CA_NOVEL: {
+			if (data.hasNovel()) {
+				//caCallbackNovel(data.getNovel(), reserved);
 				}				
 				break;
 			}
@@ -1901,4 +1943,54 @@ public class SysApplication extends Application implements CAListener {
 	}
 	
 
+	
+
+	/**
+	 * 解锁服务
+	 */
+	public void unForcedShow() {
+		if(mList.size() <=0)return;
+		for (Activity activity : mList) {
+			if (activity.getClass().equals(CaLockService.class)){
+				activity.finish();
+				mList.remove(activity);
+				activity=null;
+				return;
+			}
+		}		
+	}
+
+	
+	public void finishActivity(Object className) {
+		if(mList.size() <=0)return;
+		for (Activity activity : mList) {		
+			if(null == activity)continue;			
+			if (activity.getClass().equals(className)){
+				activity.finish();
+				mList.remove(activity);
+				activity=null;
+				return;
+			}
+		}		
+	}
+	
+	
+	public String getChanelNameByID(int mProductId) {
+		String channelName="";
+		Channel[] channels = dvbDatabase.getChannelsAll();
+		for (Channel channel : channels) {
+			if (channel.chanId == mProductId ) {
+				channelName=channel.name;
+				break;
+			}
+		}
+		return channelName;
+	}
+	
+	private void updateCaStatusBroadcast(){	
+		mContext=MyApp.getContext();
+	    Intent mIntentCa = new Intent("com.chots.app.ca.change.status");
+	    mContext.sendBroadcast(mIntentCa);	
+	}
+	
 }

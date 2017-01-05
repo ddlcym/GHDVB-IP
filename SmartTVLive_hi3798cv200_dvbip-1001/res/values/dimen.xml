@@ -15,4 +15,14 @@
 	<dimen name="dialog_title_logo_left_margin">5dp</dimen>
 	<dimen name="pop_titletextsize">24sp</dimen>
 	<dimen name="dialog_title_height">30dp</dimen>	
+	
+	<!-- 新增 -->
+	
+    <dimen name="txt_font_28">14sp</dimen>
+    <dimen name="txt_font_38">25sp</dimen>   
+     <!-- 45点 -->
+    <dimen name="txt_font_45">31sp</dimen>
+	<dimen name="txt_font_50">34sp</dimen>
+	
+    
 </resources>

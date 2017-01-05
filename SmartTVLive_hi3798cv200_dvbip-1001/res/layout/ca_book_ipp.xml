@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout     
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/linout_caset_id"
+    android:layout_width="1060dip"
+ 	android:layout_height="599dip"
+ 	android:orientation="horizontal"
+ 	android:background="@drawable/back" 	
+ 	android:layout_gravity="center">
+ 	<LinearLayout 
+ 	    android:orientation="vertical"
+ 	    android:layout_height="fill_parent"
+ 	    android:layout_width="fill_parent"
+ 	    >
+ 	    <TextView 
+ 	        android:layout_marginTop="30dip"
+ 	        android:text="验证PIN码"
+ 	        android:textSize="28sp"
+ 	        android:textColor="@color/white"
+ 	        android:gravity="center"
+ 	        android:layout_width="fill_parent"
+ 	        android:layout_height="40dip"
+ 	        android:background="@color/transparent"
+ 	        />
+ 	<RelativeLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center" >     
+  
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_pin_ipp_"
+        android:textColor="@color/white"
+        android:textSize="@dimen/FONT_SIZE_SMALL"
+        android:layout_marginTop="180dip"
+        android:layout_marginLeft="0dip"/>
+    <EditText 
+        android:id="@+id/pin_input_check"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="170dip"
+        android:layout_marginLeft="120dp"
+        android:inputType="textPassword"
+        android:gravity="center"
+        android:singleLine="true"
+        android:maxWidth="260dip"
+        android:maxLength="8"
+        android:background="@drawable/item_pinset_selector"/>
+
+    <Button 
+        android:id="@+id/button_pin_sure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="240dip"
+        android:layout_marginLeft="190dp"
+        android:background="@drawable/button_sure_selector"/>
+    
+    
+     
+          
+            <TextView
+                android:id="@+id/txt_pin_hint_firstline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button_pin_sure"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/FONT_SIZE_NORMAL" />
+
+            <TextView
+                android:id="@+id/txt_pin_hint_secondline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_pin_hint_firstline"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/FONT_SIZE_NORMAL" />
+            
+             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_pin_hint_secondline"            
+                android:layout_centerHorizontal="true"
+                android:text="@string/ca_worktime_hint_threeline"
+                android:textSize="@dimen/FONT_SIZE_NORMAL" />
+		</RelativeLayout>
+ 	</LinearLayout>
+ </FrameLayout>
+
+

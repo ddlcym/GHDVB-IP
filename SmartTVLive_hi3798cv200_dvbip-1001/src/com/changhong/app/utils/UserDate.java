@@ -95,4 +95,10 @@ public class UserDate {
 	public String getMDHM() {
 		return this.mMonth+this.mDay+this.mHour+this.mMinute;
 	}	
+	public String getCurDate() {
+		return this.mYear + this.mMonth+this.mDay;
+	}
+	public String getCurTime() {
+		return this.mHour+this.mMinute+this.mSeconds;
+	}	
 }
