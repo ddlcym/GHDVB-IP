@@ -2399,6 +2399,7 @@ public class Main extends Activity implements ISceneListener {
 	private void initCategoryData() {
 		{
 			String URL2 = processData.getCategoryString();
+			P.i("mmmm", "Main=initCategoryData:" + URL2);
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
 					Request.Method.GET, URL2, null,
 					new Response.Listener<org.json.JSONObject>() {

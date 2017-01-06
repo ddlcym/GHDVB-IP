@@ -324,7 +324,10 @@ public class JsonResolve {
 	public List<SortData> jsonToCategoryName(JSONObject json){
 		SortData sortName;
 		List<SortData> listExtra=new ArrayList<SortData>();		
-		JSONArray jsonArray=getJsonObjectArray(json, "groups");		
+		JSONArray jsonArray=getJsonObjectArray(json, "groups");	
+		if(null==jsonArray){
+			return null;
+		}
 		for(int i=0;i<jsonArray.length();i++){
 			JSONObject extraJson;
 			try { 

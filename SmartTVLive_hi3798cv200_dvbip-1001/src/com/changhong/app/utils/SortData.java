@@ -19,7 +19,7 @@ public class SortData {
 	public static void saveSortNameList(List<SortData> rSortNameList){
 		sortNameList = rSortNameList;
 		int sortNum;
-		if(( sortNum=sortNameList.size())!=0){
+		if(sortNameList!=null&&( sortNum=sortNameList.size())!=0){
 			Log.i("mmmm","saveSortNameList>> total type= "+sortNum);			
 			for (int i = 0; i < sortNum; i++) {
 				Log.i("mmmm","<<"+sortNameList.get(i).rank+","+sortNameList.get(i).pramValue+","+sortNameList.get(i).pramKey+">>");

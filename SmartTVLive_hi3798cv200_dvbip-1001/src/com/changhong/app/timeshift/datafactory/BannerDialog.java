@@ -45,6 +45,7 @@ import com.changhong.app.timeshift.widget.PlayButton;
 import com.changhong.app.timeshift.widget.ShiftDialog;
 import com.changhong.app.timeshift.widget.TwoWayAdapterView;
 import com.changhong.app.timeshift.widget.TwoWayAdapterView.OnItemClickListener;
+import com.changhong.app.timeshift.widget.TwoWayAdapterView.OnItemSelectedListener;
 import com.changhong.app.timeshift.widget.TwoWayGridView;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.ChannelDB;
@@ -484,7 +485,30 @@ public class BannerDialog extends Dialog {
 		player.setLiveFlag(true);
 		player.initSeekbar();
 		
+		timeshiftProList.setOnItemSelectedListener(new OnItemSelectedListener() {
 
+			@Override
+			public void onItemSelected(TwoWayAdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				if(list!=null&&(list.size()-1)==position){
+					right_arrows.setVisibility(View.INVISIBLE);
+					left_arrows.setVisibility(View.VISIBLE);
+				}else if(list!=null&&position==0){
+					left_arrows.setVisibility(View.INVISIBLE);
+					right_arrows.setVisibility(View.VISIBLE);
+				}else{
+					right_arrows.setVisibility(View.VISIBLE);
+					left_arrows.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(TwoWayAdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	@Override
