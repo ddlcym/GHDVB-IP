@@ -589,7 +589,7 @@ public class BannerDialog extends Dialog {
 		if (curvolumn == 0) {
 			Log.i("volumn", "huifu");
 			parentHandler.removeCallbacks(VolumnbackRunnable);
-			parentHandler.postDelayed(VolumnbackRunnable, 5000);
+//			parentHandler.postDelayed(VolumnbackRunnable, 5000);
 		}else {
 			Log.i("volumn", "set mute");
 			if (VolumnbackRunnable != null) {
