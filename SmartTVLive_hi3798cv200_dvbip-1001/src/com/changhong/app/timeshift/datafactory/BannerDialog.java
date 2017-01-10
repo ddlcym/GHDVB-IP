@@ -416,7 +416,7 @@ public class BannerDialog extends Dialog {
 					PlayVideo.getInstance().playLiveBack(player, curChannel, program);
 					
 					
-					palyButton.setMyBG(PlayButton.Play);
+					palyButton.setMyBG(PlayButton.Pause);
 					if(programListInfo.size()!=0&&(list.size()-1)!=position){
 						programListInfo.remove(2);
 						programListInfo.add(2, list.get(position+1));
@@ -430,6 +430,12 @@ public class BannerDialog extends Dialog {
 					nextProgramContainer.setVisibility(View.VISIBLE);
 					programListContainer.setVisibility(View.GONE);
 					IsFocusList = false;
+					
+					//解决第一次选择时移列表节目时，PF条不消失的情况
+					if(bannerRunnable!=null){
+						parentHandler.removeCallbacks(bannerRunnable);
+						parentHandler.postDelayed(bannerRunnable, 5000);
+					}
 				}
 			}
 		});
@@ -515,8 +521,10 @@ public class BannerDialog extends Dialog {
 	public void show() {
 		super.show();
 		// player.pause();
-		// parentHandler.removeCallbacks(bannerRunnable);
-		// parentHandler.postDelayed(bannerRunnable, 5000);
+//		if (bannerRunnable != null) {
+//			parentHandler.removeCallbacks(bannerRunnable);
+//			parentHandler.postDelayed(bannerRunnable, 5000);
+//		}
 		initData();
 		Player.setFirstPlayInShift(true);
 		dvbBack();
@@ -527,60 +535,72 @@ public class BannerDialog extends Dialog {
 		// TODO Auto-generated method stub
 		super.hide();
 	}
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		
-		if (keyCode == Class_Constant.KEYCODE_VOICE_UP) {
-			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);
-			curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			Log.i("volumn", "KEYCODE_VOICE_UP curvolumn is"+curvolumn);
-			revolumnback.setBackgroundResource(vols[curvolumn]);
-			revolumnback.setVisibility(View.VISIBLE);
-			if (curvolumn != 0) {
-				parentHandler.removeCallbacks(VolumnbackRunnable);
-				parentHandler.postDelayed(VolumnbackRunnable, 5000);
-			}else {
-				parentHandler.removeCallbacks(VolumnbackRunnable);
-			}
-			return true;
+		if (keyCode == Class_Constant.KEYCODE_VOICE_UP||keyCode == Class_Constant.KEYCODE_VOICE_DOWN) {
+		boolean isMute2 = mAudioManager.isStreamMute(AudioManager.STREAM_MUSIC);
+		if (isMute2) {
+			isMute2 = false;
+			mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, isMute2);
+			Intent mIntent20 = new Intent("chots.anction.muteon");
+			mContext.sendBroadcast(mIntent20);
+
 		}
-		if (keyCode == Class_Constant.KEYCODE_VOICE_DOWN) {
+		if(keyCode == Class_Constant.KEYCODE_VOICE_UP){
+			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, 0);		
+			
+		}else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, 0);
-			curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			Log.i("volumn", "KEYCODE_VOICE_DOWN curvolumn is"+curvolumn);
-			revolumnback.setBackgroundResource(vols[curvolumn]);
-			revolumnback.setVisibility(View.VISIBLE);
-			if (curvolumn != 0) {
-				parentHandler.removeCallbacks(VolumnbackRunnable);
-				parentHandler.postDelayed(VolumnbackRunnable, 5000);
-			}else {
-				parentHandler.removeCallbacks(VolumnbackRunnable);
-			}
-			return true;
+			
 		}
 		
-		if (keyCode == Class_Constant.KEYCODE_MUTE){
-			curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			if (curvolumn == 0) {
-				mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
-				curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-				Log.i("volumn", "huifu");
-				revolumnback.setBackgroundResource(vols[curvolumn]);
-				revolumnback.setVisibility(View.VISIBLE);
-				parentHandler.removeCallbacks(VolumnbackRunnable);
-				parentHandler.postDelayed(VolumnbackRunnable, 5000);
-			}else {
-				mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-				curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-				Log.i("volumn", "set mute");
-				revolumnback.setBackgroundResource(vols[curvolumn]);
-				revolumnback.setVisibility(View.VISIBLE);
-				if (VolumnbackRunnable != null) {
-					parentHandler.removeCallbacks(VolumnbackRunnable);
-				}
-			}
-			return true;
+		curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+		if (curvolumn <= 0 && isMute2 == false) {
+			isMute2 = true;
+			mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, isMute2);
+			Intent mIntent40 = new Intent("chots.anction.muteon");
+			mContext.sendBroadcast(mIntent40);
 		}
+		
+		;
+		Log.i("volumn", "KEYCODE_VOICE_UP curvolumn is"+curvolumn);
+		revolumnback.setBackgroundResource(vols[curvolumn]);
+		revolumnback.setVisibility(View.VISIBLE);
+		if (curvolumn != 0) {
+			parentHandler.removeCallbacks(VolumnbackRunnable);
+			parentHandler.postDelayed(VolumnbackRunnable, 5000);
+		}else {
+			parentHandler.removeCallbacks(VolumnbackRunnable);
+		}
+		return true;
+	}
+	
+	if (keyCode == Class_Constant.KEYCODE_MUTE){
+		boolean isMute1 = mAudioManager.isStreamMute(AudioManager.STREAM_MUSIC);
+		mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, !isMute1);
+		
+		curvolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		revolumnback.setBackgroundResource(vols[curvolumn]);
+		revolumnback.setVisibility(View.VISIBLE);
+		
+		if (curvolumn == 0) {
+			Log.i("volumn", "huifu");
+			parentHandler.removeCallbacks(VolumnbackRunnable);
+			parentHandler.postDelayed(VolumnbackRunnable, 5000);
+		}else {
+			Log.i("volumn", "set mute");
+			if (VolumnbackRunnable != null) {
+				parentHandler.removeCallbacks(VolumnbackRunnable);
+			}
+		}
+		
+		Intent mIntent1 = new Intent("chots.anction.muteon");
+		mContext.sendBroadcast(mIntent1);
+		return true;
+	}
 		
 		switch (keyCode) {
 		/* 返回--取消 */
