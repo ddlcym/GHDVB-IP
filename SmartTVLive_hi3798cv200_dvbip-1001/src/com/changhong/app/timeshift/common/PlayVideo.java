@@ -135,7 +135,7 @@ public class PlayVideo {
 	public void getProgramInfo(final Handler handler, Channel outterChannelInfo) {
 //		mReQueue.cancelAll("program");
 		String pgmRequestURL = processData.getCurrentChannelProgramList(outterChannelInfo);
-//		Log.i("zyt", pgmRequestURL);
+		Log.i("mmmm", pgmRequestURL);
 		// final ProgramInfo rPgmInfo = new ProgramInfo();
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, pgmRequestURL, null,
 				new Response.Listener<org.json.JSONObject>() {

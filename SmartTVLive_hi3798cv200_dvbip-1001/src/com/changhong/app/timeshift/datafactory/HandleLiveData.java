@@ -80,7 +80,7 @@ public class HandleLiveData {
 			if(channel2!=null){
 				chanId=channel2.chanId;
 				int flag=db.updateChannel(chanId, "is_ttv", "1");
-				db.updateChannel(chanId, "resource_code", channel.resource_code);
+				db.updateChannel(chanId, "ResourceCode", channel.resource_code);
 //				a=a+1;//test
 //				Log.i("mmmm","dealChannelIsTTV_updateChannel_"+"=channel.logicNo:"+flag);
 			}
@@ -104,7 +104,7 @@ public class HandleLiveData {
 			Channel channel2 = db.getChannelByLogicNo(channel.logicNo);
 			if(channel2!=null){
 				chanId=channel2.chanId;
-				db.updateChannel(chanId, "resource_code", channel.resource_code);
+				db.updateChannel(chanId, "ResourceCode", channel.resource_code);
 				db.updateChannel(chanId, "logo",channel.logo );
 				db.updateChannel(chanId, "is_ttv", channel.is_ttv);
 				db.updateChannel(chanId, "is_btv",channel. is_btv);
