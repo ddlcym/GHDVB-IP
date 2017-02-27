@@ -195,7 +195,7 @@ public class BannerDialog extends Dialog {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 //									Log.i("mmmm", "PositiveButton"+list.get(shiftcurindex-1).getEventName());
-									
+									mHandler.removeCallbacks(Player.fastOperationRunnable);//快退后防止播、停、播的情况
 									PlayVideo.getInstance().playLiveBack(player,curChannel,list.get(shiftcurindex-1));
 									CacheData.setCurProgram(list.get(shiftcurindex-1));
 									
