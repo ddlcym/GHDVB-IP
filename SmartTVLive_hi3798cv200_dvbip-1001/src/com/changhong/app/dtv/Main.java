@@ -2392,7 +2392,7 @@ public class Main extends Activity implements ISceneListener {
 						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
 					}
 				}, errorListener);
-		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+//		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
 		mReQueue.add(jsonObjectRequest);
 	}
 
