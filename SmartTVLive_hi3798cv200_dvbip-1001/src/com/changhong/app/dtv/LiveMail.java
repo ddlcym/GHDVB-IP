@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import com.changhong.app.ca.CaMailInfor;
-import com.changhong.app.dtv.EpgWarn.UI_Handler;
 import com.changhong.dvb.CA;
 import com.changhong.dvb.CA_MailContent;
 import com.changhong.dvb.CA_Mail_Head;

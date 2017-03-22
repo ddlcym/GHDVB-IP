@@ -3,13 +3,16 @@ package com.changhong.app.ca;
 
 
 public class CaConfig {
-	
+		
 	public final static String CA_MSG_NOVEL_EVENT = "com.chots.app.ca.nove.event";// 同方消息
 	public final static String CA_MSG_IPP_DIALOG = "com.changhong.app.ca.ipp.dialog";//订购消息
 	public final static String CA_MSG_MAIL_EVENT = "chots.action.mailEvent";//邮件
 	public final static String CA_MSG_CARD_UPGRATE = "com.chots.action.card.upgrate";//智能卡升级
 	public final static String CA_MSG_PARENT_FEED = "com.chots.action.parent.feed";//子母卡喂养
 	public final static String CA_MSG_CHANGE_STATUS = "com.chots.app.ca.change.status";//状态变化
+	public final static String CA_MSG_SHOW_NEW_MAIL = "com.chots.app.ca.show.newmail";//显示新邮件
+	public final static String CA_MSG_HIDE_MSGBOX = "com.chots.app.ca.hide.msgbox";//隐藏信息盒子
+	public final static String CA_MSG_CTR_SWITCH = "com.chots.app.ca.ctr.switch";//使能CA开关
 
 	
 	public final static int CA_MSG_EMAIL_MAX_NUM = 50;// 邮件最大值
@@ -19,8 +22,11 @@ public class CaConfig {
 	/***************************************************** CA消息 命令定义 ****************************************/
 	
 	public final static int CA_COMMAND_HIDE_MSGBOX= 255;// 关闭信息盒子
-	public final static int CA_COMMAND_HIDE_OSDBOX= 256;// 关闭OSD盒子
+	public final static int CA_COMMAND_HIDE_FINGER= 256;// 关闭指纹信息
+	public final static int CA_COMMAND_HIDE_OSDBOX= 257;// 关闭OSD盒子
 
+	
+	
 	public final static int CA_COMMAND_SHOW_NOTICE = 1;//显示Notice信息
 	
 	// 指纹
@@ -31,6 +37,7 @@ public class CaConfig {
 	public final static int CA_COMMAND_SUPEROSD_SHOW = 4;//超级OSD显示
 
 	public final static int CA_COMMAND_SHOW_CURTAIN = 6;//高级预览
+	public final static int CA_COMMAND_HIDE_CURTAIN = 7;//隐藏高级预览
 
 	// 强制换台
 	public final static int CA_COMMAND_LOCK_SERVICE = 8;// 强制换台
@@ -60,6 +67,9 @@ public class CaConfig {
 
 	//重启机顶盒
      public final static int CA_COMMAND_REBOOT = 20;// 重启机顶盒
+     
+   //初始化机顶盒
+     public final static int CA_COMMAND_INITBOX = 21;// 初始化机顶盒
 
 	/********************************************* CA 信息定义 *********************************************/
 

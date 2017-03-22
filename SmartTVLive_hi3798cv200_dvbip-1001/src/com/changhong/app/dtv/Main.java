@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import org.json.JSONObject;
 
+import android.R.bool;
 import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,6 +31,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemProperties;
@@ -247,8 +249,11 @@ public class Main extends Activity implements ISceneListener {
 	private SurfaceView surfaceView;
 	int testInde=0;
 
+	public static NitMonitor nMonitor=null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//Debug.startMethodTracing("CH_dtvApp#2");
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
@@ -257,8 +262,8 @@ public class Main extends Activity implements ISceneListener {
 		context = Main.this;
 		scene = new Scene(context);
 		feedback = new Feedback(context);
+		bAllowSignalDis = false;
 		objApplication = SysApplication.getInstance();
-
 		objApplication.initDtvApp(this);
 		objApplication.addActivity(this);
 		banner = Banner.getInstance(this);
@@ -277,7 +282,7 @@ public class Main extends Activity implements ISceneListener {
 
 		// init views
 		findView();
-		initValue();
+		//initValue();
 
 		checkChannel();
 		registerBroadReceiver();
@@ -285,7 +290,10 @@ public class Main extends Activity implements ISceneListener {
 
 		//启动CaService
 		startService(new Intent(this,CaService.class));
-
+		if(nMonitor==null){
+			nMonitor = new NitMonitor(mContext);
+			Log.i(TAG, "create new NitMonitor()-->"+nMonitor);
+		}		
 	}
 
 	/**
@@ -340,7 +348,7 @@ public class Main extends Activity implements ISceneListener {
 
 		IntentFilter filter6 = new IntentFilter();
 		filter6.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-		filter6.addAction("com.changhong.action.rescan");
+		//filter6.addAction("com.changhong.action.rescan");
 		filter6.addAction("com.changhong.ota.launch");
 		registerReceiver(myNetChangedReceiver, filter6);
 
@@ -396,19 +404,20 @@ public class Main extends Activity implements ISceneListener {
 			if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 				//checkNetVailable();
 			}
-			if (action.equals("com.changhong.action.rescan")) {
+			/*if (action.equals("com.changhong.action.rescan")) {
 				int ver = SystemProperties.getInt("property.ots.nit.version", -2);
 				Log.i(TAG, "GOT rescan broadcast:"+curNitVerRequested+" VS "+ver);				
 				if((curNitVerRequested!=ver && ver!=-2 && isInDvbLive(context))){
 					curNitVerRequested = ver;
 					mUiHandler.sendEmptyMessage(MESSAGE_SHOW_AUTOSEARCH);
+					SystemProperties.set("com.changhong.action.rescan","false");
 				}
-			}	
+			}*/
 			if (action.equals("com.changhong.ota.launch")) {
 				int ota_status = intent.getIntExtra("ota_status", -1);
 				Log.i(TAG, "GOT ota broadcast:"+ota_status);				
 				if(ota_status==1){
-					SetDtvStatus(false, true);
+					SetDtvStatus(false, false);
 				}else if(ota_status==0){
 					SetDtvStatus(true, false);
 				}					
@@ -627,11 +636,12 @@ public class Main extends Activity implements ISceneListener {
 		}
 	};
 	private int iCallChanListId = -1;
+	protected boolean bAllowSignalDis=false;
+	private boolean bNeedPlay=true;
 
 	private void checkChannel() {
-
+		
 		P.i("checkChannel()");
-
 		int iBouqtID = getIntent().getIntExtra("bouquetId", -1);
 		int iFreq = getIntent().getIntExtra("frequency", -1);
 		int iSerId = getIntent().getIntExtra("serviceId", -1);
@@ -648,7 +658,7 @@ public class Main extends Activity implements ISceneListener {
 			if (toPlayChannel != null) {
 				objApplication.SetUserInfo(toPlayChannel);
 				P.d("GOT logicNo =" + toPlayChannel.logicNo);
-				return;
+				//return;
 			}
 		} else if (iBouqtID != -1) {
 
@@ -669,11 +679,14 @@ public class Main extends Activity implements ISceneListener {
 					iCallChanListId = iBouqtID;
 					P.d("GOT list[" + iBouqtID + "] logicNo ="
 							+ curChan.logicNo);
-					return;
+					//return;
 				}
 
 			}
 
+		}
+		if(objApplication.playLastChannel()){
+			bNeedPlay = false;
 		}
 
 	}
@@ -764,6 +777,8 @@ public class Main extends Activity implements ISceneListener {
 
 		super.onResume();
 
+		bAllowSignalDis = false;
+		
 		if (volume_layout.getVisibility() == View.VISIBLE)
 			volume_layout.setVisibility(View.INVISIBLE);
 
@@ -779,10 +794,10 @@ public class Main extends Activity implements ISceneListener {
 
 		P.d("Main onResume  start!");
 
-		SetDtvStatus(true, false);
+		SetDtvStatus(true, true);
 
-		// objApplication.reqNotifySignalChanged(objApplication.mo_Tunner.isLock(0));
-
+		nMonitor.startMonitor();
+		
 		int curChanCount = objApplication.dvbDatabase.getChannelCountSC();
 		String reFlash = SystemProperties.get("persist.sys.live.refresh", "false");
 		if(reFlash.equals("true")){
@@ -795,7 +810,7 @@ public class Main extends Activity implements ISceneListener {
 			}
 		}
 		P.i("check db status>>total="+curChanCount+",reFlash="+reFlash);
-		if (curChanCount <= 0||reFlash.equals("true")) {
+		if (curChanCount <= 0/*||reFlash.equals("true")*/) {
 
 			P.i("弹出没有节目，自动搜索的dialog");
 			onVkey(Class_Constant.VKEY_EMPTY_DBASE);
@@ -813,6 +828,7 @@ public class Main extends Activity implements ISceneListener {
 
 		sendBroadcastInfo(sChkEpgTimer);
 		P.i(TAG, "cateversion=" + Utils.getProp("persist.sys.live.cateversion"));
+		/*
 		if (Utils.getProp("persist.sys.live.cateversion").equals("0")) {
 			// sendBroadcastInfo(sGetcateinfo);
 			if (!bSearchTtvData) {
@@ -822,8 +838,50 @@ public class Main extends Activity implements ISceneListener {
 			} else {
 				bSearchTtvData = false;
 			}
-		}
+			
+		}	*/	
+		if (Utils.getProp("persist.sys.live.cateversion").equals("0")||!bSearchTtvData) {
+				initValue_OnResume();
+				bSearchTtvData = true;
+		}				
+		checkSignal();
+		//Debug.stopMethodTracing();		
+	}
 
+	private void checkSignal() {
+		new Thread(){
+			public void run() {
+				int times=0,lockVnt=0;
+				boolean bLock;
+				while(++times<=10){
+					bLock = objApplication.mo_Tunner.isLock(0);
+					if(bLock){
+						if(lockVnt<=0)
+							lockVnt=1;
+						else
+							lockVnt++;
+					}else{
+						if(lockVnt>=0)
+							lockVnt=-1;
+						else
+							lockVnt--;
+					}
+					Log.i(TAG, "check signal>>"+lockVnt);
+					if(lockVnt>=3 || lockVnt<=(-8)){
+						times = 10;
+						break;
+					}
+					try {
+						Thread.sleep(500);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+				Log.i(TAG, "signal locked ?>>"+(lockVnt>=0?"true":"false"));
+				bAllowSignalDis = true;
+				objApplication.reqNotifySignalChanged(lockVnt<0?false:true);				
+			}			
+		}.start();
 	}
 
 	void DisplayBanner() {
@@ -930,6 +988,8 @@ public class Main extends Activity implements ISceneListener {
 				P.e("set>>>> new vol-->" + currentVolume3 + ",mult--->"
 						+ isMute2);
 				banner.showVolume(channel2.chanId, currentVolume3, isMute2);
+				
+				objApplication.saveVolMaster(keyCode == KeyEvent.KEYCODE_VOLUME_UP?1:-1);
 
 			} else {
 				P.e("channel is null");
@@ -1056,44 +1116,43 @@ public class Main extends Activity implements ISceneListener {
 		}
 			break;
 
-		case KeyEvent.KEYCODE_BACK: {
-
-			/*
-			 * if (layout_set_activity_z.getVisibility() == View.VISIBLE) {
-			 * layout_set_activity_z.setVisibility(View.INVISIBLE); }
-			 */
-			if (volume_layout.getVisibility() == View.VISIBLE) {
-				volume_layout.setVisibility(View.INVISIBLE);
+		case KeyEvent.KEYCODE_BACK: 
+			if(event.getRepeatCount() == 0)
+			{
+	
+				/*
+				 * if (layout_set_activity_z.getVisibility() == View.VISIBLE) {
+				 * layout_set_activity_z.setVisibility(View.INVISIBLE); }
+				 */
+				if (volume_layout.getVisibility() == View.VISIBLE) {
+					volume_layout.setVisibility(View.INVISIBLE);
+				}
+	
+				else if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
+					mUiHandler.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
+					tvRootDigitalkey.setVisibility(View.GONE);
+					tvRootDigitalKeyInvalid.setVisibility(View.INVISIBLE);
+					iKeyNum = 0;
+					iKey = 0;
+					bKeyUsed = true;
+				} else if (Banner.getBannerDisStatus()) {
+					// 如果banner存在,则消除banner
+					banner.cancel();
+					showTimeShiftIcon(false);
+					bKeyUsed = true;
+				} else {
+					objApplication.playPrePlayingChannel();
+					banner.show(SysApplication.iCurChannelId);
+					// GH UI-1.3 换台不显示右上角频道号
+					// Message msg = new Message();
+					// msg.what = MESSAGE_SHOW_DIGITALKEY;
+					// msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
+					// mUiHandler.sendMessage(msg);
+					bKeyUsed = true;
+				}
+				return true;
 			}
-
-			else if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
-				mUiHandler.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
-				tvRootDigitalkey.setVisibility(View.GONE);
-				tvRootDigitalKeyInvalid.setVisibility(View.INVISIBLE);
-				iKeyNum = 0;
-				iKey = 0;
-				bKeyUsed = true;
-			} else if (Banner.getBannerDisStatus()) {
-				// 如果banner存在,则消除banner
-				banner.cancel();
-				showTimeShiftIcon(false);
-				bKeyUsed = true;
-
-			} else {
-
-				objApplication.playPrePlayingChannel();
-				banner.show(SysApplication.iCurChannelId);
-
-				// GH UI-1.3 换台不显示右上角频道号
-				// Message msg = new Message();
-				// msg.what = MESSAGE_SHOW_DIGITALKEY;
-				// msg.arg1 = objApplication.getCurPlayingChannel().logicNo;
-				// mUiHandler.sendMessage(msg);
-				bKeyUsed = true;
-			}
-			return true;
-		}
-
+			break;
 		case Class_Constant.KEYCODE_KEY_DIGIT0:
 		case Class_Constant.KEYCODE_KEY_DIGIT1:
 		case Class_Constant.KEYCODE_KEY_DIGIT2:
@@ -1277,7 +1336,7 @@ public class Main extends Activity implements ISceneListener {
 
 							@Override
 							public void onSubmit(DialogMessage dialogMessage) {
-
+								nMonitor.stopMonitor();
 								Intent mIntent = new Intent();
 								/*
 								 * mIntent.setComponent(new ComponentName(
@@ -1355,7 +1414,7 @@ public class Main extends Activity implements ISceneListener {
 				 * 
 				 * } else
 				 */
-
+				P.i("exec logic_num   =  " + theActivity.iKey);
 				if (theActivity.iKey < 0) {
 					theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 
@@ -1376,6 +1435,7 @@ public class Main extends Activity implements ISceneListener {
 					// int succ =
 					// theActivity.objApplication.playChannelKeyInput(theActivity.iKey,true);
 					if (succ < 0) {
+						P.i("exec logic_num error  =  " + theActivity.iKey);
 						theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 						theActivity.tvRootDigitalKeyInvalid
 								.setVisibility(View.VISIBLE);
@@ -1743,7 +1803,7 @@ public class Main extends Activity implements ISceneListener {
 	 * }
 	 */
 
-	private boolean onVkey(int ri_KeyCode) {
+	public boolean onVkey(int ri_KeyCode) {
 
 		boolean b_Result = false;
 		P.d(" main->onVkey: " + ri_KeyCode);
@@ -1789,6 +1849,7 @@ public class Main extends Activity implements ISceneListener {
 			Intent toChanList = new Intent(Main.this, ChannelList.class);
 			toChanList.putExtra("curType", 0);
 			startActivity(toChanList);
+			nMonitor.stopMonitor();
 		}
 
 			break;
@@ -1807,14 +1868,12 @@ public class Main extends Activity implements ISceneListener {
 			mUiHandler.removeMessages(MESSAGE_DISAPPEAR_DIGITAL);
 
 			iKeyNum++;
-			P.i("onVkey-key<" + iKey + ">");
 
 			if (iKeyNum > 0 && iKeyNum <= 3) {
 				iKey = (ri_KeyCode - Class_Constant.KEYCODE_KEY_DIGIT0) + iKey
 						* 10;
 			}
 
-			P.i("get digital key   =  " + ri_KeyCode);
 			P.i("iKey value   =  " + iKey);
 
 			tvRootDigitalKeyInvalid.setVisibility(View.GONE);
@@ -1822,7 +1881,7 @@ public class Main extends Activity implements ISceneListener {
 
 			Display_Program_Num(iKey);
 
-			if (iKey >= 100) {
+			if (iKeyNum>=3 /*iKey >= 100*/) {
 				mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY); // 输入3位数字立即切台
 				// mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY,2000);
 			} else {
@@ -1933,7 +1992,11 @@ public class Main extends Activity implements ISceneListener {
 	@Override
 	protected void onStop() {
 		P.d("Main onStop!");
-
+		/*
+		 if(Main.nMonitor!=null)
+		 	nMonitor.stopMonitor();		
+		*/		 	
+		SetDtvStatus(false, true);
 		super.onStop();
 		scene.release();
 	}
@@ -1971,7 +2034,18 @@ public class Main extends Activity implements ISceneListener {
 		// findViewById(R.id.layout_set_activity_z);
 
 	}
-
+	private void initValue_OnResume() {
+		if(volleyTool==null)
+			volleyTool = VolleyTool.getInstance();
+		if(mReQueue==null)
+			mReQueue = volleyTool.getRequestQueue();
+		if (null == processData) {
+			processData = new ProcessData();
+		}
+		initTimeshiftData();
+		initCategoryData();		
+		P.i(TAG, "exec catedata & timeshift data");
+	}
 	private void initValue() {
 
 		// string array
@@ -2024,7 +2098,7 @@ public class Main extends Activity implements ISceneListener {
 
 	// int index: 0:dtv status,1:signal status;2 sc status: 3 mult status 4
 	// avplay status 5 ca status
-	public void SetDtvStatus(boolean status, boolean blank) {
+	public void SetDtvStatus(boolean status, boolean act) {
 
 		if (bOnDtvThread[0] == status) {
 			P.d("SetDtvStatus >>> the same status, return!");
@@ -2035,6 +2109,8 @@ public class Main extends Activity implements ISceneListener {
 
 		if (status == false)// 隐藏显示
 		{
+			act = true; //强制黑屏，for调试用途
+			
 			if (banner != null)
 				banner.cancel();
 
@@ -2042,8 +2118,8 @@ public class Main extends Activity implements ISceneListener {
 
 			if (objApplication != null) {
 				objApplication.dvbPlayer.stop();
-				if (blank)
-					objApplication.dvbPlayer.blank();
+				if(act)	
+					objApplication.dvbPlayer.blank(); 
 				bOnDtvThread[4] = false;
 			}
 
@@ -2051,9 +2127,14 @@ public class Main extends Activity implements ISceneListener {
 				flNoSignal.setVisibility(View.INVISIBLE);
 				Log.i(TAG, "hide nosignal window");
 			}
-			if (bOnDtvThread[2] && flCaInfo.getVisibility() == View.VISIBLE) {
+			/*if (bOnDtvThread[2] && flCaInfo.getVisibility() == View.VISIBLE) {
 				flCaInfo.setVisibility(View.INVISIBLE);
+			}*/
+			if (objApplication != null){
+				//objApplication.hideCaMsgBoxBroadcast();
+				objApplication.switchCaCtr(false);//disable ca
 			}
+			
 			if (bOnDtvThread[3]
 					&& vol_mult_icon.getVisibility() == View.VISIBLE) {
 				vol_mult_icon.setVisibility(View.GONE);
@@ -2065,32 +2146,39 @@ public class Main extends Activity implements ISceneListener {
 
 		} else // 恢复显示
 		{
+			if (objApplication != null)
+				objApplication.switchCaCtr(true);//enable ca
+			
 			// 恢复播放
 			if (!bOnDtvThread[4]) {
 				bOnDtvThread[4] = true;
 				// onVkey(Class_Constant.KEYCODE_INFO_KEY);
-				if (objApplication != null)
-					if (objApplication.playLastChannel()) {
-						if (iCallChanListId != -1) {
-							Message msg = new Message();
-							msg.what = MESSAGE_CHANLIST_SHOW;
-							msg.arg1 = SysApplication.iCurChannelId;
-							msg.arg2 = iCallChanListId;
-							mUiHandler.sendMessage(msg);
-						} else {
-							banner.show(SysApplication.iCurChannelId);
-						}
-					}
+				if (objApplication != null && bNeedPlay)
+						objApplication.playLastChannel();
+				
+				if (iCallChanListId != -1) {
+					Message msg = new Message();
+					msg.what = MESSAGE_CHANLIST_SHOW;
+					msg.arg1 = SysApplication.iCurChannelId;
+					msg.arg2 = iCallChanListId;
+					mUiHandler.sendMessage(msg);
+				} else if(SysApplication.iCurChannelId!=-1){
+					banner.show(SysApplication.iCurChannelId);
+				}
+				
 				iCallChanListId = -1;
+				bNeedPlay = true;
 			}
 
-			if (bOnDtvThread[1] && flNoSignal.getVisibility() == View.INVISIBLE) {
+			if (!act && bOnDtvThread[1] && flNoSignal.getVisibility() == View.INVISIBLE) {
 				flNoSignal.setVisibility(View.VISIBLE);
+				Log.i(TAG, "display nosignal window");
 			}
 
+			/*
 			if (bOnDtvThread[2] && flCaInfo.getVisibility() == View.INVISIBLE) {
 				flCaInfo.setVisibility(View.VISIBLE);
-			}
+			}*/
 
 			Log.d("INFO", "" + bOnDtvThread[5]
 					+ objApplication.getCaLayout().getVisibility());
@@ -2149,16 +2237,22 @@ public class Main extends Activity implements ISceneListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
+			if(!bAllowSignalDis){
+				Log.i(TAG, "signalRecever>>forbid#2");
+				return;
+			}
 			Bundle myBundle = intent.getExtras();
 			boolean bIsLocked = myBundle.getBoolean(TunerInfo.TunerInfo_Locked);
+			Log.i(TAG, "get tuner intent>>>"+bIsLocked);
 			if (!updateDtvStatus(1, (!bIsLocked))) {
-				Log.i(TAG, "signalRecever>>forbid");
+				Log.i(TAG, "signalRecever>>forbid#1");
 				return;
 			}
 
 			if (!bIsLocked) {
 				flNoSignal.setVisibility(View.VISIBLE);
 				objApplication.blackScreen();
+				Log.i(TAG, "display no signal>>>");
 			} else {
 				flNoSignal.setVisibility(View.GONE);
 			}
@@ -2177,7 +2271,8 @@ public class Main extends Activity implements ISceneListener {
 				P.i(TAG, "HOME_PRESSED");
 				if (banner != null)
 					banner.cancel();
-				finish();
+				nMonitor.stopMonitor();
+				//finish();
 			}
 
 		}
@@ -2377,7 +2472,7 @@ public class Main extends Activity implements ISceneListener {
 		// jsonObjectRequest.setTag(Main.class.getSimpleName());//
 		// 设置tag,cancelAll的时候使用
 		// mReQueue.add(jsonObjectRequest);
-
+		mReQueue.cancelAll(Main.class.getSimpleName());
 		String URL = processData.getChannelList();
 		Log.i("mmmm", "getIsTTVData_url:" + URL);
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -2392,12 +2487,13 @@ public class Main extends Activity implements ISceneListener {
 						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
 					}
 				}, errorListener);
-//		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+		jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
 		mReQueue.add(jsonObjectRequest);
 	}
 
 	private void initCategoryData() {
 		{
+			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
 			String URL2 = processData.getCategoryString();
 			P.i("mmmm", "Main=initCategoryData:" + URL2);
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -2430,7 +2526,7 @@ public class Main extends Activity implements ISceneListener {
 							cateThread = null;
 						}
 					}, errorListener_sort);
-			jsonObjectRequest.setTag(Main.class.getSimpleName());// 设置tag,cancelAll的时候使用
+			jsonObjectRequest.setTag(Main.class.getSimpleName()+"_forCata");// 设置tag,cancelAll的时候使用
 			mReQueue.add(jsonObjectRequest);
 		}
 	}
@@ -2532,6 +2628,23 @@ public class Main extends Activity implements ISceneListener {
 			}
 		} else {
 			Log.i(TAG, "flTimeShift is null");
+		}
+	}
+	
+	//for test
+	private void startAutoSearch(){
+		try {
+			Intent intent = new Intent();
+			ComponentName name = new ComponentName("com.SysSettings.main",
+					"com.SysSettings.main.MainActivity");
+			intent.setComponent(name);
+			intent.putExtra("StartId", 1);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+			if(Main.nMonitor!=null)
+			Main.nMonitor.stopMonitor();//发起搜台成功时，需要关闭nit监控			
+		} catch (Exception e) {
+			Toast.makeText(this, "请先安装该app", Toast.LENGTH_SHORT).show();
 		}
 	}
 }

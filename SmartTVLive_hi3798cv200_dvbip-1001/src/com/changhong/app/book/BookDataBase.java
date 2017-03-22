@@ -239,8 +239,9 @@ public class BookDataBase {
 				}
 				curCarrier.moveToNext();
 			}
-			curCarrier.close();
+			//curCarrier.close();
 		}
+		curCarrier.close();
 		return mso_BookInfo;
 	}
 

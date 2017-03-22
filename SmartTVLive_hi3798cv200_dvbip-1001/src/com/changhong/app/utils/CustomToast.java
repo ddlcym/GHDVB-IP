@@ -38,17 +38,17 @@ public class CustomToast extends Activity {
 	}	
 	
 	public void update(View view){
-		Log.i("GHLive", "CustomToast update----->0");
+		//Log.i("GHLive", "CustomToast update----->0");
 		try {
 			this.toast.setView(view);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Log.i("GHLive", "CustomToast update----->1");
+		//Log.i("GHLive", "CustomToast update----->1");
 	}
 	
 	public void show(){
-		Log.i("GHLive", "CustomToast show----->0");
+		//Log.i("GHLive", "CustomToast show----->0");
 		try {
 			//android4.0以上就要以下处理  
 			/*
@@ -66,21 +66,21 @@ public class CustomToast extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Log.i("GHLive", "CustomToast show----->1");
+		//Log.i("GHLive", "CustomToast show----->1");
 	}
 	
 	public void hide(){
-		Log.i("GHLive", "CustomToast hide----->0");
+		//Log.i("GHLive", "CustomToast hide----->0");
 		try {
 			hideMethod.invoke(obj, null);// 调用TN对象的hide()方法，关闭toast
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Log.i("GHLive", "CustomToast hide----->1");
+		//Log.i("GHLive", "CustomToast hide----->1");
 	}
 	
 	private void reflectionTN() {
-		Log.i("GHLive", "reflectionTN ----->0");
+		//Log.i("GHLive", "reflectionTN ----->0");
 		try {
 			field = toast.getClass().getDeclaredField("mTN");
 			field.setAccessible(true);
@@ -92,6 +92,6 @@ public class CustomToast extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Log.i("GHLive", "reflectionTN ----->1");
+		//Log.i("GHLive", "reflectionTN ----->1");
 	}
 }

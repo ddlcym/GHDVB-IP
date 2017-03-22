@@ -232,6 +232,10 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
     
+    <style name="MyAppTheme" parent="android:style/Theme.Black.NoTitleBar.Fullscreen">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    
     <style name="replayDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/dialog_back</item>

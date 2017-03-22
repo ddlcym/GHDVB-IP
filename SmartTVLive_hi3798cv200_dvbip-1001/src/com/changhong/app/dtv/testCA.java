@@ -57,9 +57,8 @@ public class testCA extends Activity{
 		}else if(arg0 == KeyEvent.KEYCODE_0){
 			thisCa.setRating("000000", 0);
 			isAction=true;
-		}else if(arg0 == KeyEvent.KEYCODE_ALT_RIGHT){
-			thisCa.setRating("000000", 10);
-			isAction=true;
+		}else if(arg0 == KeyEvent.KEYCODE_DPAD_RIGHT){
+			SysApplication.getInstance().hideCaMsgBoxBroadcast();
 		}						
 		return isAction?true:super.onKeyDown(arg0, arg1);
 	}

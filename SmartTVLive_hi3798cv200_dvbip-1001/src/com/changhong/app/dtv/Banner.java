@@ -16,6 +16,7 @@ import com.changhong.app.timeshift.common.NetworkUtils;
 import com.changhong.app.utils.CustomToast;
 import com.changhong.dvb.Channel;
 import com.changhong.dvb.DVB;
+import com.changhong.dvb.PlayingInfo;
 import com.changhong.dvb.ProtoMessage.DVB_EPG_PF;
 import com.xormedia.adplayer.AdItem;
 import com.xormedia.adplayer.AdItem;
@@ -125,44 +126,47 @@ public class Banner {
 	}
 
 	public void show(int chanId) {
-		Log.i(TAG, "show bar>> chanId==" + chanId+",Duration="+5000);
-		
-
-		initViewInBar();
-		
-		channelInBar = sysApplication.dvbDatabase.getChannel(chanId);		
-		
-		updatePFInfo();
-		updateBanner();
-		updateChannelStatus(channelInBar);
-		updateDateTime();
-		bannerToast.setView(bannerView);
-		showToast(bannerView,5000);
+		show(chanId,5000);
 	}
 	
 	/**
 	 * public void show(int chanId,int DurationInSecond)
 	 * @param
 	 * int chanId: 频道在数据库中的ID
-	 * int DurationInSecond: 显示时长
+	 * int DurationInSecond: 显示时长MS
 	 * */
-	public void show(int chanId,int DurationInSecond) {
-		Log.i(TAG, "show bar>> chanId==" + chanId+",Duration="+DurationInSecond);
+	public void show(int chanId,int Duration) {
+		Log.i(TAG, "show bar>> chanId==" + chanId+",Duration="+Duration);
 		
-		initViewInBar();
-	
+		initViewInBar();	
 		channelInBar = sysApplication.dvbDatabase.getChannel(chanId);		
-
-		
 		updatePFInfo();
 		updateBanner();
-		updateChannelStatus(channelInBar);
+		updateChannelStatus(channelInBar,true);
 		updateDateTime();
-
 		bannerToast.setView(bannerView);
 		
-		showToast(bannerView,DurationInSecond);
+		showToast(bannerView,Duration);
+		if(Duration==999999999){
+			mHandlerTimer.sendEmptyMessageDelayed(0, 5000);
+		}
 	}
+
+	private Handler mHandlerTimer = new Handler() {
+
+		public void handleMessage(Message msg) {
+			if(getBannerDisStatus()){
+				PlayingInfo pi = sysApplication.dvbDatabase.getSavedPlayingInfo();
+				if(pi!=null && channelInBar.chanId!=pi.mChannelId){
+					channelInBar = sysApplication.dvbDatabase.getChannel(pi.mChannelId);
+				}				
+				updatePFInfo();
+				updateBanner();
+				updateDateTime();		
+				mHandlerTimer.sendEmptyMessageDelayed(0, 5000);
+			}
+		}
+	};
 
 	/**
 	 * 
@@ -234,7 +238,7 @@ public class Banner {
 		
 		updatePFInfo();
 		updateBanner();
-		updateChannelStatus(channelInBar);
+		updateChannelStatus(channelInBar,false);
 		updateDateTime();
 		bannerToast.setView(bannerView);
 		showToast(bannerView,5000);
@@ -253,7 +257,7 @@ public class Banner {
 	        	if(customBannerToast!=null){
 	        		customBannerToast.hide();
 	        		Main.showTimeShiftIcon(false);
-	        	setBannerDisStatus(false);
+	        		setBannerDisStatus(false);
 	        	}
 	        }
 	    };	
@@ -295,19 +299,19 @@ public class Banner {
 		}
 	}
 
-	private void updateChannelStatus(Channel curChannel) {
+	private void updateChannelStatus(Channel curChannel, boolean bAllowTtvTag) {
 		
 		if(curChannel==null)
 			return;
 		
-		boolean bHD=false, b3D=false, bMulAudio=false,bSubTitle=false,bAc3=false,bNewMail=false,bttv=false;
-
-		if(curChannel.is_ttv.equals("1")&& NetworkUtils.isConnectInternet(mContext))//支持时移且网络连接
+		boolean bHD=false, b3D=false, bSubTitle=false,bAc3=false,bNewMail=false,bttv=false;
+		int iAudioChannel=0; //0: 单声道，不显示图标;=2 显示CN 左声道; =3 显示 EN 立体声 
+		if(bAllowTtvTag && curChannel.is_ttv.equals("1")&& NetworkUtils.isConnectInternet(mContext))//支持时移且网络连接
 		{
 			bttv = true; 
 		}
-		if(curChannel.signalType==0xe4||curChannel.signalType==0xe6||curChannel.signalType==0xe8||
-				curChannel.signalType==0xe9||curChannel.signalType==0xf9)
+		if(curChannel.sortId==0xe4||curChannel.sortId==0xe6||curChannel.sortId==0xe8||
+				curChannel.sortId==0xe9||curChannel.sortId==0xf9)
 		{
 			bHD = true;
 		}
@@ -315,37 +319,46 @@ public class Banner {
 		{
 			bAc3 = true;
 		}
+		if(curChannel.audioMode==2||curChannel.audioMode==3){
+			iAudioChannel = curChannel.audioMode;
+		}
+		/*
 		if(curChannel.subtitle!=null && !curChannel.subtitle.equals("null"))
 		{
 			bSubTitle = true;
-		}
+		}*/
 		bNewMail=Main.getNewMailStatus();		
 		Log.i("BBY", "SWITCH>>>chid="+curChannel.chanId+",logic="+curChannel.logicNo+",ttv="+curChannel.is_ttv+",net="+NetworkUtils.isConnectInternet(mContext)
 				+",newmail="+bNewMail);
 		
 		Main.showTimeShiftIcon(bttv);
 		
-		if(bMulAudio)
+		if(iAudioChannel==2){
+			channel_multAudio.setBackgroundResource(R.drawable.icon_cn);
 			channel_multAudio.setVisibility(View.VISIBLE);
-		else {
+		}else if(iAudioChannel==3){
+			channel_multAudio.setBackgroundResource(R.drawable.icon_en);
+			channel_multAudio.setVisibility(View.VISIBLE);
+		}else {
 			channel_multAudio.setVisibility(View.INVISIBLE);
 		}
-		
+		/*
 		if(bSubTitle)
 			channel_subtitle.setVisibility(View.VISIBLE);
 		else {
 			channel_subtitle.setVisibility(View.INVISIBLE);
-		}
+		}*/
 		if(bAc3)
 			channel_Dolby.setVisibility(View.VISIBLE);
 		else {
 			channel_Dolby.setVisibility(View.INVISIBLE);
 		}
+		/*
 		if(bNewMail)
 			channel_mail.setVisibility(View.VISIBLE);
 		else {
 			channel_mail.setVisibility(View.INVISIBLE);
-		}			
+		}*/			
 		if(b3D){
 			channel_vid_hd.setVisibility(View.GONE);
 			channel_vid_3d.setVisibility(View.VISIBLE);			
@@ -414,19 +427,21 @@ public class Banner {
 	}
 
 	private void updateDateTime() {
-		String mYear;
+		/*String mYear;
 		String mMonth;
 		String mDay;
-		String mWeek;
+		String mWeek;*/
 		String mHour, mMinute;
-		String[] week = mContext.getResources().getStringArray(R.array.str_dtv_epg_week_name);
+		//String[] week = mContext.getResources().getStringArray(R.array.str_dtv_epg_week_name);
 
 		Calendar c = Calendar.getInstance();
 		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+		/*
 		mYear = String.valueOf(c.get(Calendar.YEAR));
 		mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);
 		mDay = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
 		mWeek = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+		*/
 		if (c.get(Calendar.HOUR_OF_DAY) < 10) {
 			mHour = "0" + String.valueOf(c.get(Calendar.HOUR_OF_DAY));
 		} else {
@@ -437,7 +452,7 @@ public class Banner {
 		} else {
 			mMinute = String.valueOf(c.get(Calendar.MINUTE));
 		}
-		if ("1".equals(mWeek)) {
+		/*if ("1".equals(mWeek)) {
 			mWeek = week[6];
 		} else if ("2".equals(mWeek)) {
 			mWeek = week[0];
@@ -451,10 +466,11 @@ public class Banner {
 			mWeek = week[4];
 		} else if ("7".equals(mWeek)) {
 			mWeek = week[5];
-		}
+		}*/
 
 		Log.i("banner", "PF_dtw------" + mHour + "   " + mMinute);
 		PF_dtw.setText(mHour + ":" + mMinute);
+		Log.i("banner", "PF_dtw------over");
 	}
 
 	private String timeFormat(int hour, int minute) {
@@ -560,9 +576,9 @@ public class Banner {
 		channel_vid_3d = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_3d);		
 		channel_vid_hd = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_hd);	
 		channel_multAudio = 	(ImageView) bannerView.findViewById(R.id.banner_channel_multAudio);
-		channel_subtitle = 	(ImageView) bannerView.findViewById(R.id.banner_channel_subtitle);
+		//channel_subtitle = 	(ImageView) bannerView.findViewById(R.id.banner_channel_subtitle);
 		channel_Dolby = 	(ImageView) bannerView.findViewById(R.id.banner_channel_Dolby);
-		channel_mail = 	(ImageView) bannerView.findViewById(R.id.banner_channel_mail);
+		//channel_mail = 	(ImageView) bannerView.findViewById(R.id.banner_channel_mail);
 		
 		v_vol = (ImageView)bannerView.findViewById(R.id.v_vol_id);
 		v_vol_drawable = (ClipDrawable)v_vol.getDrawable(); 

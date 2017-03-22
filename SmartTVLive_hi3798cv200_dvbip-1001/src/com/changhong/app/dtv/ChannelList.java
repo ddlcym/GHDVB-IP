@@ -20,6 +20,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -141,11 +142,13 @@ public class ChannelList extends Activity implements ISceneListener {
 		registerBroadReceiver();
 
 		// setfullscreen
+		/*
 		Point size = new Point();
 		getWindowManager().getDefaultDisplay().getSize(size);
 		DVB_RectSize.Builder builder = DVB_RectSize.newBuilder().setX(0)
 				.setY(0).setW(size.x).setH(size.y);
 		objApplication.dvbPlayer.setSize(builder.build());
+		*/
 		initView();
 	}
 
@@ -338,7 +341,9 @@ public class ChannelList extends Activity implements ISceneListener {
 			Log.i("mmmm","dtv: channel>> id="+chan.chanId+",logicNo="+chan.logicNo+",categoryId="+chan.favorite+",name= "+chan.name);
 			*/
 			if(checkValidofAVChannel(chan.sortId)){
-				allTvList.add(chan);				// all tv type;
+			
+			allTvList.add(chan);				// all tv type;
+			
 			if((chan.favorite&(1<<1))!=0){
 				CCTVList.add(chan);
 			}
@@ -370,7 +375,7 @@ public class ChannelList extends Activity implements ISceneListener {
 	}
 	
 	private boolean checkValidofAVChannel(int sortId) {
-		if(sortId==0x1||sortId==0x2||sortId>=0xe3&&sortId<=0xe9){
+		if(sortId==0x1||sortId==0x2||sortId==0xF9||sortId>=0xe3&&sortId<=0xeb){
 			return true;
 		}else {
 			return false;
@@ -469,7 +474,7 @@ public class ChannelList extends Activity implements ISceneListener {
 		
 		showChannelList();
 		channelListView.setSelection(getSortIndex2(curType,channelId));
-		request_update_banner(channelId);
+		request_update_banner(channelId,999999999);
 		channelListView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -538,7 +543,7 @@ public class ChannelList extends Activity implements ISceneListener {
 
 				int index = Integer.parseInt(channelIndex.getText().toString());
 				objApplication.playChannel(index, true);
-				request_update_banner(index);
+				request_update_banner(index,5000);
 				finish();//退出列表
 			}
 		});
@@ -588,6 +593,16 @@ public class ChannelList extends Activity implements ISceneListener {
 			
 		Log.i(TAG, "key>>"+keyCode); 
 		switch (keyCode) {
+		
+		case KeyEvent.KEYCODE_VOLUME_DOWN:
+		case KeyEvent.KEYCODE_VOLUME_UP:	
+		case KeyEvent.KEYCODE_VOLUME_MUTE:
+			//objApplication.saveVolMaster(keyCode == KeyEvent.KEYCODE_VOLUME_UP?1:-1);
+			updateBannerVol(channelId);
+			bKeyUsed = true;
+			finish();//调整音量则退出频道分类列表
+			break;
+		
 		case Class_Constant.KEYCODE_RIGHT_ARROW_KEY:
 
 			if (curType == tvTypeNoMax) {
@@ -899,20 +914,26 @@ public class ChannelList extends Activity implements ISceneListener {
 		dtv_digital_3.setBackgroundResource(num[pos3]);
 
 	}
-	private void request_update_banner(int postion){
+	private void request_update_banner(int chanid, int duration){
 		mUiHandler.removeMessages(MESSAGE_REQ_UPBANNER);
 		Message msg = new Message();
 		msg.what = MESSAGE_REQ_UPBANNER;
-		msg.arg1 = postion;
+		msg.arg1 = chanid;
+		msg.arg2 = duration;
 		mUiHandler.sendMessage(msg);		
 	}
 	/**
 	 * @param position
 	 */
-	private static void updateBannerinfo2(int chanid) {
-		banner.show(chanid,999999999);	
+	private static void updateBannerinfo2(int chanid,int duration) {
+		banner.show(chanid,duration/*999999999*/);	
 	}	
-
+	private void updateBannerVol(int chanid) {
+		AudioManager am1 = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
+		int currentVolume1 = am1.getStreamVolume(AudioManager.STREAM_MUSIC);
+		banner.showVolume(chanid,currentVolume1,isMute1);	
+	}
 	private int getChanId(int position) {
 		try{
 			/*String sProgId = channelIndex.getText().toString();
@@ -1086,7 +1107,7 @@ public class ChannelList extends Activity implements ISceneListener {
 				break;
 
 			case MESSAGE_REQ_UPBANNER:
-				updateBannerinfo2(msg.arg1);
+				updateBannerinfo2(msg.arg1,msg.arg2);
 				break;
 			}
 		}
@@ -1148,12 +1169,21 @@ public class ChannelList extends Activity implements ISceneListener {
 			calPageData(true);	
 			//calCurPosInPageMode();
 		}
-		else if(pageIndex>0)
+		else if(pageIndex>0){
 			pageIndex--;
-		else if(channelListView.getSelectedItemPosition()>0)
+		}else if(channelListView.getSelectedItemPosition()>0){
 			channelListView.setSelection(0);		
-		else
-			return;
+		}else{//需要循环切换 0105, 原来处理是直接返回
+	        int pageNum = totalCount/pageSize; 
+	        int iReset = totalCount%pageSize;
+	        if( iReset > 0){    //最后一页不足pagesize个   
+	        	pageIndex=pageNum;  	
+	        	channelListView.setSelection(iReset-1);
+	        }else{
+	        	pageIndex=pageNum-1;  	
+	        	channelListView.setSelection(pageSize-1);
+	        }
+		}
 		Log.i(TAG,"prePage:" + pageIndex);		
 		mAdapter.notifyDataSetChanged();
 	}
@@ -1169,8 +1199,10 @@ public class ChannelList extends Activity implements ISceneListener {
 			pageIndex++;
 		else if(channelListView.getSelectedItemPosition()<(mAdapter.getCount()-1))
 			channelListView.setSelection(mAdapter.getCount()-1);
-		else
-			return;		
+		else{//需要循环切换 0105, 原来处理是直接返回
+			pageIndex = 0;
+			channelListView.setSelection(0);
+		}
 		Log.i(TAG,"nextPage:" + pageIndex);
 		mAdapter.notifyDataSetChanged();
 	}	
@@ -1212,8 +1244,15 @@ public class ChannelList extends Activity implements ISceneListener {
 			}else{
 				Log.i(TAG, "this is realy the last page>>> "+pageIndex);
 				pageSize = 0;
+				channelListView.setSelection(0);
+				mAdapter.notifyDataSetChanged();				
 			}			
-		}		
+		}else if (curListIndex == (channelListView.getCount() - 1)) {
+				 getAllTVtype(curType); 
+				 showChannelList();
+				 channelListView.setSelection(0); 
+			}			
+			
 	}
 	
 	//从翻页模式按上键滚动到上一页
@@ -1231,9 +1270,13 @@ public class ChannelList extends Activity implements ISceneListener {
 				mAdapter.notifyDataSetChanged();
 			}else{
 				Log.i(TAG, "this is realy the first page>>> "+pageIndex);
-				pageSize = 0;
+				pageSize = 0;			
 			}			
-		}		
+		} else if (curListIndex == 0) {
+		  getAllTVtype(curType);
+		  showChannelList();
+		 channelListView.setSelection(channelListView.getCount() - 1); 
+		}
 	}
 	//计算从单行模式切换到翻页模式的位置
 	private int calCurPosInPageMode(){

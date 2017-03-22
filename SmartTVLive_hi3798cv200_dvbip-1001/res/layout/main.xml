@@ -243,7 +243,7 @@
         android:layout_height="256dip"
         android:layout_centerInParent="true"
         android:background="@drawable/gh_dialog"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <TextView
             style="@style/ghTextEpgWarnTitleStyle"

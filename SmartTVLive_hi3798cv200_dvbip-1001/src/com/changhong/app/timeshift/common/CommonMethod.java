@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class CommonMethod {
 
@@ -19,10 +20,13 @@ public class CommonMethod {
 		mIntent.setComponent(new ComponentName(
 				"com.SysSettings.main",
 				"com.SysSettings.main.MainActivity"));
+		mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		try { 
 			outterContext.startActivity(mIntent);
+			Log.i("CYM", "startSettingPage OK ");			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			Log.e("CYM",Log.getStackTraceString(e));  
 		}
 	}
 

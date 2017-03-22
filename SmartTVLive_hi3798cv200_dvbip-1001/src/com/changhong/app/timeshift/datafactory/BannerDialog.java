@@ -299,6 +299,7 @@ public class BannerDialog extends Dialog {
 		}
 		
 	};
+	private int iVol_adjust=0;
 	public BannerDialog(Context context, Channel outterChannelInfo,
 			List<ProgramInfo> outterListProgramInfo, Handler outterHandler,
 			SurfaceView surView, AudioManager audioManager) {
@@ -445,6 +446,7 @@ public class BannerDialog extends Dialog {
 			revolumnback.setBackgroundResource(vols[curvolumn]);
 			revolumnback.setVisibility(View.VISIBLE);
 		}
+		vol_adjust_enter();
 
 	}
 
@@ -626,6 +628,7 @@ public class BannerDialog extends Dialog {
 				builder.setTitle("温馨提示");
 				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
+							vol_adjust_exit();							
 							dismiss();
 							dialog.dismiss();
 							parentHandler.sendEmptyMessage(Class_Constant.BACK_TO_LIVE);
@@ -741,7 +744,8 @@ public class BannerDialog extends Dialog {
 			CommonMethod.saveMutesState((whetherMute + ""), MyApp.getContext());
 			break;*/
 		case Class_Constant.KEYCODE_MENU_KEY:
-			// Log.i("zyt", "onkeydown menukey is pressed " + keyCode);
+			//Log.i("CYM", "onkeydown menukey is pressed " + keyCode);
+			vol_adjust_exit();			
 			dismiss();
 			CommonMethod.startSettingPage(MyApp.getContext());
 			break;
@@ -901,6 +905,34 @@ public class BannerDialog extends Dialog {
 			bannerView.setVisibility(View.GONE);
 			timeshiftback.setVisibility(View.GONE);
 			break;
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void vol_adjust_exit() {
+		if(iVol_adjust>0){
+			curvolumn =  mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			if((curvolumn-iVol_adjust)>0){
+				curvolumn -= iVol_adjust;
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,curvolumn,0);
+				//mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_RAISE, 0);		
+			}	
+			Log.i("VOL_ADJ", "volume DOWN>>"+iVol_adjust);			
+			iVol_adjust = 0;			
+		}
+	}	
+	public void vol_adjust_enter() {
+		if(iVol_adjust==0){
+			curvolumn =  mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			if(curvolumn>0&&curvolumn<15){
+				iVol_adjust = 1;
+				curvolumn += iVol_adjust;
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,curvolumn,0);
+				//mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_RAISE, 0);		
+				Log.i("VOL_ADJ", "volume UP>>"+iVol_adjust);
+			}			
 		}
 	}
 }

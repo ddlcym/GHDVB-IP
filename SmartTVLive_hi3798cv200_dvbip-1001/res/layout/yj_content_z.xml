@@ -8,49 +8,47 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </SurfaceView>
-
-    <RelativeLayout
+    
+    <LinearLayout
         android:layout_width="900dip"
         android:layout_height="450dip"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:background="@drawable/mail_bg">
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:background="@drawable/mail_bg" >
 
         <TextView
             android:id="@+id/yj_lmdnrbt_z"
             android:layout_width="match_parent"
-            android:layout_height="100dp"            
-            android:gravity="center"
+            android:layout_height="90dp"
             android:focusable="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/FONT_SIZE_SMALL" />
-
-        <ScrollView android:id="@+id/sv_lmdnrnr_z"
+            android:gravity="center"
+            android:textColor="@color/cb3b3b3"
+            android:textSize="@dimen/txt_font_50" />
+        <ScrollView
+            android:id="@+id/sv_lmdnrnr_z"
             android:layout_width="match_parent"
-            android:layout_height="290dip"
-            android:layout_below="@id/yj_lmdnrbt_z"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="60dp"            
             android:scrollbars="vertical"
-            >
-
+            android:fadeScrollbars="false" >
             <TextView
                 android:id="@+id/yj_lmdnrnr_z"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="20dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:focusable="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/FONT_SIZE_SMALL" />
+                android:paddingLeft="20dp"                              
+                android:paddingRight="20dp"             
+                android:textColor="@color/cb3b3b3"
+                android:textSize="@dimen/txt_font_38" />
         </ScrollView>
         
-        <include layout="@layout/mail_footer"
-             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@id/sv_lmdnrnr_z"/>
-    </RelativeLayout>
-    
-    
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginRight="20dp"
+            layout="@layout/mail_footer" />
+    </LinearLayout>
 
 </RelativeLayout>

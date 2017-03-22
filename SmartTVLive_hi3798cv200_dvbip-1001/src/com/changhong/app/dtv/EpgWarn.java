@@ -28,7 +28,7 @@ public class EpgWarn extends Activity implements OnClickListener {
 
 	SysApplication objApplication;
 	Context context;
-	private final UI_Handler mUiHandler = new UI_Handler(this);
+	//private final UI_Handler mUiHandler = new UI_Handler(this);
 	// private TextView tvSecond;
 	private static int iSecond = 60;
 
@@ -38,6 +38,7 @@ public class EpgWarn extends Activity implements OnClickListener {
 	private com.changhong.app.dtv.TextMarquee textView;
 	private BookInfo bookInfo;
 	private Button btnOK;
+	private Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +62,11 @@ public class EpgWarn extends Activity implements OnClickListener {
 						+ bookInfo.bookChannelName
 						+ " "
 						+ bookInfo.bookEnventName);
-		mUiHandler.sendEmptyMessage(0);
+		
+		iSecond = 60; 
 
-		iSecond = 60;
+		//mUiHandler.sendEmptyMessage(0);
+
 
 		/* 暂时屏蔽 , 测试显示效果 */
 		if (!objApplication.isBookedChannel(bookInfo)) {
@@ -99,6 +102,7 @@ public class EpgWarn extends Activity implements OnClickListener {
 		// doFinish();
 		buttonok.setOnClickListener(this);
 		buttoncancel.setOnClickListener(this);
+		initEvent();
 	}
 
 	private void doFinish() {
@@ -143,13 +147,13 @@ public class EpgWarn extends Activity implements OnClickListener {
 			showBanneForYuYueDialog.setAction("showBanneForYuYueDialog");
 			showBanneForYuYueDialog.putExtra("chanid", bookInfo.bookChannelIndex);
 			context.sendBroadcast(showBanneForYuYueDialog);
-			mUiHandler.removeMessages(0);
+			//mUiHandler.removeMessages(0);
 
 			Intent intent = new Intent(EpgWarn.this, Main.class);
 			startActivity(intent);
 
 		} else {
-			mUiHandler.removeMessages(0);
+			//mUiHandler.removeMessages(0);
 		}
 		sendBroadcastInfo(Main.sChkEpgTimer);
 		finish();
@@ -161,12 +165,60 @@ public class EpgWarn extends Activity implements OnClickListener {
 
 		super.onPause();
 
-		if (mUiHandler != null) {
-			mUiHandler.removeMessages(0);
-		}
+		//if (mUiHandler != null) {
+		//	mUiHandler.removeMessages(0);
+		//}
 
 	}
 
+	public void initEvent() {
+		/* 计时器 */
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message message) {
+				// TODO Auto-generated method stub
+				super.handleMessage(message);
+				switch (message.what) {
+				case 0x01:
+
+					break;
+
+				default:
+					break;
+				}
+			}
+		};
+		mHandler.postDelayed(CountRunnable, 1000);
+
+	}
+	public Runnable CountRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			iSecond--;
+			if (iSecond > 0) {
+				buttonok.setText(context.getString(
+						R.string.str_OKButton).toString()
+						+ "(" + iSecond + "s)");	
+				buttonok.invalidate();				
+				mHandler.postDelayed(CountRunnable, 1000);
+			}
+			if (iSecond == 0) {
+
+				Log.i("Epgwarn", "Start main !");
+
+				objApplication.playChannel(
+						bookInfo.bookChannelIndex, false);
+				Intent intent = new Intent(EpgWarn.this, Main.class);
+				startActivity(intent);
+				finish();
+				
+			}
+		}
+
+	};	
+/*
 	static class UI_Handler extends Handler {
 		WeakReference<EpgWarn> mActivity;
 
@@ -179,14 +231,14 @@ public class EpgWarn extends Activity implements OnClickListener {
 
 			EpgWarn theActivity = mActivity.get();
 
-			Log.i("Epgwarn", "now second  ->  " + iSecond);
+			Log.i("Epgwarn", "rev second  ->  " + iSecond+",act="+theActivity);
 			if (iSecond > 0) {
 				theActivity.buttonok.setText(theActivity.context.getString(
 						R.string.str_OKButton).toString()
-						+ "(" + iSecond + "s)");
-				theActivity.mUiHandler.sendEmptyMessageDelayed(0, 1000);
-				iSecond--;
-				if (iSecond == 0) {
+						+ "(" + iSecond + "s)");	
+				theActivity.buttonok.invalidate();
+				iSecond--;		
+				if (iSecond <= 0) {
 					Log.i("Epgwarn", "Start main !");
 
 					theActivity.objApplication.playChannel(
@@ -195,11 +247,15 @@ public class EpgWarn extends Activity implements OnClickListener {
 					theActivity.startActivity(intent);
 					theActivity.finish();
 				}
+				theActivity.mUiHandler.removeMessages(0);				
+				theActivity.mUiHandler.sendEmptyMessageDelayed(0, 1000);
+				theActivity.mUiHandler.sendEmptyMessageDelayed(0, 1000);
+				Log.i("Epgwarn", "send second  ->  " + iSecond);
 			}
 
 		}
 	}
-
+*/
 	public void regOneShotTimer(long new_time/* ,BookInfo bookInfo */) {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(EpgWarn.this, AlarmReceiver.class); // 创建Intent对象

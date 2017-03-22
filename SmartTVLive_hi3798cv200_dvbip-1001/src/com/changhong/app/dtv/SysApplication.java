@@ -1,5 +1,11 @@
 package com.changhong.app.dtv;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,11 +13,15 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.json.JSONObject;
+
+import android.R.integer;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -122,8 +132,8 @@ public class SysApplication extends Application implements CAListener {
 	
 	 private WindowManager.LayoutParams wmParams=new WindowManager.LayoutParams();
 
-	   
-	   
+	 public final static int volumeMap[] = {-100,-38,-34,-32,-30,-28,-27,-23,-19,-15,-13,-12,-10,-8,-6,-4};
+	 public final String volume_rec_path = "/data/changhong/dvb/volmaster.txt";  
 	 public WindowManager.LayoutParams getMywmParams(){  
 	  return wmParams;  
 	 } 
@@ -300,7 +310,7 @@ public class SysApplication extends Application implements CAListener {
 		bundle.putBoolean(TunerInfo.TunerInfo_Locked, locked);
 		mTunerInfo.putExtras(bundle);
 		mContext.sendBroadcast(mTunerInfo);
-		Log.i("DBG", ">>>>tuner locked: "+locked);
+		Log.i("GHLive", ">>>>sent tuner status>>>>"+locked);
 	}
 	
 	public void initBookDatabase(Context mContext)
@@ -580,22 +590,17 @@ public class SysApplication extends Application implements CAListener {
 		if(channel==null){
 			return -1;
 		}
+		//判断只有音视频频道才返回有效值，其余忽略
+		if(!(channel.sortId==1||channel.sortId==2||channel.sortId==249||channel.sortId>=227&&channel.sortId<=235)){
+			return -1;
+		}
 		if(channel.chanId==iCurChannelId&&isCheckPlaying){
-			P.i("playChannel the channel is playing,return direct .");
+			P.i("playChannel the channel is playing,return direct ."); 
 			return iCurChannelId;
 		}
 		dvbPlayer.stop();	
-		/* If it is audio channel, blank the screen */
-		if(channel.sortId == 2 || channel.videoPid == 0x0 || channel.videoPid == 0x1fff)
-		{
-			dvbPlayer.blank();
-			showAudioPlaying(true);
-		}
-		else
-		{
-			showAudioPlaying(false);
-		}
-
+		processAudPlayBg(channel);
+		vol_adjust(channel);
 		dvbPlayer.play(channel);
 		
 		//mo_Ca.channelNotify(curChannel);
@@ -637,18 +642,12 @@ public class SysApplication extends Application implements CAListener {
 		
 		dvbPlayer.stop();	
 		/* If it is audio channel, blank the screen */
-		if(curChannel.sortId == 2 || curChannel.videoPid == 0x0 || curChannel.videoPid == 0x1fff)
-		{
-			dvbPlayer.blank();
-			showAudioPlaying(true);
-		}
-		else
-		{
-			showAudioPlaying(false);
-		}
+		processAudPlayBg(curChannel);
+		
+		vol_adjust(curChannel);
 
 		dvbPlayer.play(curChannel);
-		
+				
 		//mo_Ca.channelNotify(curChannel);
 		
 		iCurChannelId = channelId;
@@ -658,6 +657,157 @@ public class SysApplication extends Application implements CAListener {
 		updateCaStatusBroadcast();
 
 		return 0;
+	}
+
+	public void vol_adjust(Channel channel){
+		/*
+		AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+		int currentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);	
+		int vol_adj = calVolAdj(currentVolume,channel.audioLevel);
+		if(vol_adj>=0){
+			am.setStreamVolume(AudioManager.STREAM_MUSIC,
+				vol_adj, 0);
+			Log.i("VOL", "NO="+channel.logicNo+",oldVol="+currentVolume+",adjVol="+channel.audioLevel+",newVol="+vol_adj);					
+		}
+		*/
+	}
+
+	private int calVolAdj(int currentVolume, int audioLevel) {
+		// TODO Auto-generated method stub
+		
+		if(currentVolume==0){
+			Log.i("VOL", "DONT set VolAdj in some case>>"+currentVolume+"/"+audioLevel);
+			return -1;
+		}
+		
+		int val=0;
+		if(audioLevel>=0&&audioLevel<=0x7){
+			val = audioLevel;
+		}else if(audioLevel>=8&&audioLevel<=0xf){
+			val = 0x8-audioLevel;
+		}
+		
+		int mVol = getVolMaster();
+		
+		mVol +=val;
+		
+		if(mVol<1)
+			mVol = 1;
+		else if(mVol>15)
+			mVol = 15;
+		
+		return mVol;
+		
+	}
+	private int calVolAdj_bak(int currentVolume, int audioLevel) {
+		// TODO Auto-generated method stub
+		
+		if(currentVolume==0){
+			Log.i("VOL", "cur volume is mult,so DONT set VolAdj");
+			return -1;
+		}
+		
+		int val=-1;
+		if(audioLevel>=0&&audioLevel<=0x7){
+			val = (audioLevel-0x7)*2;
+		}else if(audioLevel>=8&&audioLevel<=0xf){
+			val = (1-audioLevel)*2;
+		}else{
+			return -1;
+		}
+		if(currentVolume>=0&&currentVolume<=15){
+			int i;
+			val = volumeMap[currentVolume]+val;
+			for(i=0;i<15;i++){
+				if(val<=volumeMap[i]){
+					break;
+				}				
+			}
+			return i;
+		}else{
+			return -1;
+		}
+	}	
+	private static int volMaster=-1; 
+	public int saveVolMaster(int direction){
+		if(volMaster==-1){
+			Log.i("VOL", "saveVolMaster=-1,so read firstly");
+			getVolMaster();
+		}
+		if((volMaster+direction)<0||(volMaster+direction)>15){
+			Log.i("VOL", "volMaster+adj exceed[0~15],so skip:"+(volMaster+direction));
+			return volMaster;
+		}
+		
+		volMaster +=direction;
+		String str_volString = ""+volMaster;
+		try {
+            FileWriter fw = new FileWriter(volume_rec_path);  
+            PrintWriter out = new PrintWriter(fw);  
+            out.write(str_volString);  
+            out.println();  
+            out.flush();
+            fw.close();  
+            out.close();  			
+		} catch (Exception e) {
+			//e.printStackTrace();
+			Log.i("VOL", "save volMaster failure:"+volMaster);
+		}		
+		Log.i("VOL", "save volMaster succeed:"+volMaster);
+		return volMaster;
+   	}
+	public int getVolMaster(){
+		
+		if(volMaster!=-1){
+			Log.i("VOL", "cur volMaster:"+volMaster);
+			return volMaster;
+		}
+		
+        File file = new File(volume_rec_path);  
+        BufferedReader reader = null;  
+        String laststr = "";  
+        try {  
+            reader = new BufferedReader(new FileReader(file));  
+            String tempString = null;  
+            while ((tempString = reader.readLine()) != null) {  
+                laststr = laststr + tempString;  
+            }  
+            reader.close();  
+            volMaster = Integer.parseInt(laststr);
+            Log.i("VOL", "volume read from file:"+volMaster);
+        } catch (Exception e) {  
+           //e.printStackTrace();  
+    		AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);    		
+    		volMaster = am.getStreamVolume(AudioManager.STREAM_MUSIC);	  
+    		Log.i("VOL", "volume read from system:"+volMaster);
+        } finally {  
+            if (reader != null) {  
+                try {  
+                    reader.close();  
+                } catch (IOException e1) {  
+                	//e1.printStackTrace();
+                }  
+            }  
+        }                
+        return volMaster;  
+   	}
+
+	/**
+	 * @param curChannel
+	 * 歌华音频广播也带有视频pid因此不要额外提示语和黑屏处理
+	 */
+	public void processAudPlayBg(Channel curChannel) {
+		/*
+		if(curChannel.sortId == 2 || curChannel.videoPid == 0x0 || curChannel.videoPid == 0x1fff)
+		{
+			dvbPlayer.blank();
+			showAudioPlaying(true);
+		}
+		else
+		{
+			showAudioPlaying(false);
+		}
+		*/
 	}
 	
 	
@@ -685,15 +835,8 @@ public class SysApplication extends Application implements CAListener {
 		 */
 
 		dvbPlayer.stop();
-		/* If it is audio channel, blank the screen */
-		if (curChannel.sortId == 2 || curChannel.videoPid == 0x0
-				|| curChannel.videoPid == 0x1fff) {
-			dvbPlayer.blank();
-			showAudioPlaying(true);
-		} else {
-			showAudioPlaying(false);
-		}
-
+		processAudPlayBg(curChannel);
+		vol_adjust(curChannel);
 		dvbPlayer.play(curChannel);
 
 		// mo_Ca.channelNotify(curChannel);
@@ -738,17 +881,8 @@ public class SysApplication extends Application implements CAListener {
 		
 		dvbPlayer.stop();		
 		
-		/* If it is audio channel, blank the screen */
-		if(curChannel.sortId == 2 || curChannel.videoPid == 0x0 || curChannel.videoPid == 0x1fff)
-		{
-			dvbPlayer.blank();
-			showAudioPlaying(true);
-		}
-		else
-		{
-			showAudioPlaying(false);
-		}
-
+		processAudPlayBg(curChannel);
+		vol_adjust(curChannel);
 		dvbPlayer.play(curChannel);
 		
 		//mo_Ca.channelNotify(curChannel);
@@ -780,16 +914,9 @@ public class SysApplication extends Application implements CAListener {
 
 		dvbPlayer.stop();
 		
-		/* If it is audio channel, blank the screen */
-		if(channel.sortId == 2 || channel.videoPid == 0x0 || channel.videoPid == 0x1fff)
-		{
-			dvbPlayer.blank();
-			showAudioPlaying(true);
-		}
-		else
-		{
-			showAudioPlaying(false);
-		}
+		processAudPlayBg(channel);
+		
+		vol_adjust(channel);
 
 		dvbPlayer.play(channel);
 		
@@ -1001,6 +1128,7 @@ public class SysApplication extends Application implements CAListener {
 		}		
 		pipCurChannelId = channel.chanId;
 		pipPlayer.stop();
+		vol_adjust(channel);
 		pipPlayer.play(channel);
 		return true;
 	}
@@ -1346,7 +1474,7 @@ public class SysApplication extends Application implements CAListener {
 	
 	private void showAudioPlaying(boolean show)
 	{
-		/*
+		
 		if(show)
 		{
 			if(ll_audioplaying != null && !ll_audioplaying.isShown())
@@ -1361,7 +1489,7 @@ public class SysApplication extends Application implements CAListener {
 				ll_audioplaying.setVisibility(View.INVISIBLE);     
 			}
 		}
-		*/
+		
 	}
 
 	private String getNovelNoticeContent(DVB_CA_NOVEL_MSG_CODE code)
@@ -1369,7 +1497,7 @@ public class SysApplication extends Application implements CAListener {
 	// NOVEL_MSG_CODE_INSERTCARD_TYPE, NOVEL_MSG_CODE_BADCARD_TYPE
 		String noticeContent = null;
 		int stringId = 0;
-		Log.i("YYY", "CA index="+code);
+		
 		switch(code)
 		{
 			case NOVEL_MSG_CODE_BADCARD_TYPE:
@@ -1990,6 +2118,35 @@ public class SysApplication extends Application implements CAListener {
 	private void updateCaStatusBroadcast(){	
 		mContext=MyApp.getContext();
 	    Intent mIntentCa = new Intent("com.chots.app.ca.change.status");
+	    mContext.sendBroadcast(mIntentCa);	
+	}
+	
+	
+	
+	/**
+	 * 隐藏CA信息盒子
+	 */
+	public void hideCaMsgBoxBroadcast(){	
+		mContext=MyApp.getContext();
+	    Intent mIntentCa = new Intent(CaConfig.CA_MSG_HIDE_MSGBOX);
+	    mContext.sendBroadcast(mIntentCa);	
+	}
+	
+	/**
+	 * 改变CA控制开关，
+	 * @param isEnable false=关闭CA；true=开启CA控制。
+	 */
+	public void switchCaCtr(boolean isEnable){	
+		mContext=MyApp.getContext();
+	    Intent mIntentCa = new Intent(CaConfig.CA_MSG_CTR_SWITCH);
+	    mIntentCa.putExtra("isEnable", isEnable);
+	    mContext.sendBroadcast(mIntentCa);	
+	}
+	
+	
+	public void testCaMsgBoxBroadcast(){	
+		mContext=MyApp.getContext();
+	    Intent mIntentCa = new Intent(CaConfig.CA_MSG_NOVEL_EVENT);
 	    mContext.sendBroadcast(mIntentCa);	
 	}
 	

@@ -34,14 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="60dip"
-                android:singleLine="true" />
+                android:singleLine="true" />          
 
             <ImageView
                 android:id="@+id/banner_channel_vid_hd"
                 android:layout_width="50dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="410dip"
+                android:layout_marginLeft="540dip"
                 android:background="@drawable/icon_hd"
                 android:visibility="gone" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="460dip"
+                android:layout_marginLeft="560dip"
                 android:background="@drawable/icon_3d"
                 android:visibility="invisible" />
 
@@ -59,35 +59,17 @@
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="510dip"
+                android:layout_marginLeft="610dip"
                 android:background="@drawable/icon_aud"
                 android:visibility="invisible" />
 
             <ImageView
-                android:id="@+id/banner_channel_subtitle"
-                android:layout_width="30dip"
-                android:layout_height="30dip"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="560dip"
-                android:background="@drawable/icon_subtitle"
-                android:visibility="invisible" />
-
-            <ImageView
                 android:id="@+id/banner_channel_Dolby"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="610dip"
-                android:background="@drawable/icon_db"
-                android:visibility="invisible" />
-
-            <ImageView
-                android:id="@+id/banner_channel_mail"
                 android:layout_width="30dip"
                 android:layout_height="30dip"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="660dip"
-                android:background="@drawable/icon_mail"
+                android:background="@drawable/icon_db"
                 android:visibility="invisible" />
 
             <TextView
@@ -249,6 +231,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="710dip"
+                    android:layout_marginTop="6dip"
                     android:background="@drawable/icon_exit"
                     android:visibility="visible" />
 

@@ -82,6 +82,7 @@ public class HandleLiveData {
 				int flag=db.updateChannel(chanId, "is_ttv", "1");
 				int updateFlag=db.updateChannel(chanId, "resource_code", channel.resource_code);
 //				a=a+1;//test
+                if(updateFlag!=0)
 				Log.i("mmmm","dealChannelIsTTV_updateChannel_"+"channel.name:"+channel.name+" isttv:"+flag+" resourcecode:"+channel.resource_code+" updateFlag:"+updateFlag);
 			}
 		}
