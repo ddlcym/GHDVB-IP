@@ -5,6 +5,13 @@
     android:layout_height="fill_parent" 
     >
 	
+    <SurfaceView 
+        android:id="@+id/ts_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        
+        
+        />
     <ImageView
         android:id="@+id/timeshift_back"
         android:layout_width="match_parent"

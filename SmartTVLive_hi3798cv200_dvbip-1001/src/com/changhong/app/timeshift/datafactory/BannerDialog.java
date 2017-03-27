@@ -312,7 +312,8 @@ public class BannerDialog extends Dialog {
 		parentHandler = outterHandler;
 		mAudioManager = audioManager;
 		whetherMute = false;
-		this.surView = surView;
+//		this.surView = surView;
+		this.surView = (SurfaceView) findViewById(R.id.ts_surface);
 
 		//备份当前频道的节目信息
 		if(outterListProgramInfo!=null&&outterListProgramInfo.size()>0){

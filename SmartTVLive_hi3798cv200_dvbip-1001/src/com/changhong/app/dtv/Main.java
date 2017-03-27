@@ -2118,8 +2118,9 @@ public class Main extends Activity implements ISceneListener {
 
 			if (objApplication != null) {
 				objApplication.dvbPlayer.stop();
-				if(act)	
+//				if(act)	
 					objApplication.dvbPlayer.blank(); 
+					objApplication.dvbPlayer.release();
 				bOnDtvThread[4] = false;
 			}
 
@@ -2493,41 +2494,41 @@ public class Main extends Activity implements ISceneListener {
 
 	private void initCategoryData() {
 		{
-			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
-			String URL2 = processData.getCategoryString();
-			P.i("mmmm", "Main=initCategoryData:" + URL2);
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-					Request.Method.GET, URL2, null,
-					new Response.Listener<org.json.JSONObject>() {
-
-						@Override
-						public void onResponse(org.json.JSONObject arg0) {
-							// TODO Auto-generated method stub
-							String newVer = HandleLiveData.getInstance()
-									.dealCategoryVer(arg0);
-							String oldVer = Utils
-									.getProp("persist.sys.live.cateversion");
-							P.i("cateversion>>>>> old: " + oldVer + " vs new:"
-									+ newVer);
-							if (oldVer == null || newVer != null
-									&& !newVer.equals(oldVer)) {
-								P.i("initSortData_new:" + arg0);
-								SortData.saveSortNameList(HandleLiveData
-										.getInstance().dealCategoryName(arg0));
-								HandleLiveData.getInstance().dealCategoryData(
-										arg0);
-								Utils.setProp("persist.sys.live.cateversion",
-										newVer);
-								P.i("save new cateversion:" + newVer);
-								OpJsonFile.writeJSONObj(
-										"/data/changhong/dvb/catedata.json",
-										arg0);
-							}
-							cateThread = null;
-						}
-					}, errorListener_sort);
-			jsonObjectRequest.setTag(Main.class.getSimpleName()+"_forCata");// 设置tag,cancelAll的时候使用
-			mReQueue.add(jsonObjectRequest);
+//			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
+//			String URL2 = processData.getCategoryString();
+//			P.i("mmmm", "Main=initCategoryData:" + URL2);
+//			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+//					Request.Method.GET, URL2, null,
+//					new Response.Listener<org.json.JSONObject>() {
+//
+//						@Override
+//						public void onResponse(org.json.JSONObject arg0) {
+//							// TODO Auto-generated method stub
+//							String newVer = HandleLiveData.getInstance()
+//									.dealCategoryVer(arg0);
+//							String oldVer = Utils
+//									.getProp("persist.sys.live.cateversion");
+//							P.i("cateversion>>>>> old: " + oldVer + " vs new:"
+//									+ newVer);
+//							if (oldVer == null || newVer != null
+//									&& !newVer.equals(oldVer)) {
+//								P.i("initSortData_new:" + arg0);
+//								SortData.saveSortNameList(HandleLiveData
+//										.getInstance().dealCategoryName(arg0));
+//								HandleLiveData.getInstance().dealCategoryData(
+//										arg0);
+//								Utils.setProp("persist.sys.live.cateversion",
+//										newVer);
+//								P.i("save new cateversion:" + newVer);
+//								OpJsonFile.writeJSONObj(
+//										"/data/changhong/dvb/catedata.json",
+//										arg0);
+//							}
+//							cateThread = null;
+//						}
+//					}, errorListener_sort);
+//			jsonObjectRequest.setTag(Main.class.getSimpleName()+"_forCata");// 设置tag,cancelAll的时候使用
+//			mReQueue.add(jsonObjectRequest);
 		}
 	}
 
