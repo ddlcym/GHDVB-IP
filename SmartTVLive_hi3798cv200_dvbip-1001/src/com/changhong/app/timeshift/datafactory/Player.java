@@ -41,7 +41,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 	private int videoWidth;
 	private int videoHeight;
 	public static MediaPlayer mediaPlayer;
-	private static HiMediaPlayer hiMediaPlayer;
+//	private static HiMediaPlayer hiMediaPlayer;
 	private SurfaceHolder surfaceHolder;
 	public static SeekBar skbProgress;
 	private SurfaceView surfaceView;
@@ -373,21 +373,21 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 			mediaPlayer.setDataSource(videoUrl);
 			mediaPlayer.prepare();// prepare֮���Զ�����
 
-			try {
-				bemode = hiMediaPlayer.getFreezeMode();
-			} catch (Exception e) {
-				Log.e("mmmm", "playUrl-curmode" + e);
-			}
-			try {
-				result = hiMediaPlayer.setFreezeMode(0);
-			} catch (Exception e) {
-				Log.e("mmmm", "playUrl-result" + e);
-			}
-			try {
-				afmode = hiMediaPlayer.getFreezeMode();
-			} catch (Exception e) {
-				Log.e("mmmm", "playUrl-afmode" + e);
-			}
+//			try {
+//				bemode = hiMediaPlayer.getFreezeMode();
+//			} catch (Exception e) {
+//				Log.e("mmmm", "playUrl-curmode" + e);
+//			}
+//			try {
+//				result = hiMediaPlayer.setFreezeMode(0);
+//			} catch (Exception e) {
+//				Log.e("mmmm", "playUrl-result" + e);
+//			}
+//			try {
+//				afmode = hiMediaPlayer.getFreezeMode();
+//			} catch (Exception e) {
+//				Log.e("mmmm", "playUrl-afmode" + e);
+//			}
 			Log.e("mmmm", "playUrl-bemode" + bemode + "result"
 					+ result+"afmode"+afmode);
 			
@@ -430,7 +430,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 
 	public void stop() {
 		if (mediaPlayer != null) {
-			hiMediaPlayer.setFreezeMode(1);
+//			hiMediaPlayer.setFreezeMode(1);
 
 			mediaPlayer.stop();
 
@@ -478,23 +478,23 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 		try {
 			if (null == mediaPlayer) {
 				mediaPlayer = new MediaPlayer();
-				hiMediaPlayer = new HiMediaPlayer(mediaPlayer);
+//				hiMediaPlayer = new HiMediaPlayer(mediaPlayer);
 			}
 			mediaPlayer.setDisplay(surfaceHolder);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		} catch (Exception e) {
 			Log.e("mmmm", "error" + e);
 		}
-		try {
-			curmode = hiMediaPlayer.getFreezeMode();
-		} catch (Exception e) {
-			Log.e("mmmm", "initMediaPlayer-curmode" + e);
-		}
-		try {
-			result = hiMediaPlayer.setFreezeMode(0);
-		} catch (Exception e) {
-			Log.e("mmmm", "initMediaPlayer-result" + e);
-		}
+//		try {
+//			curmode = hiMediaPlayer.getFreezeMode();
+//		} catch (Exception e) {
+//			Log.e("mmmm", "initMediaPlayer-curmode" + e);
+//		}
+//		try {
+//			result = hiMediaPlayer.setFreezeMode(0);
+//		} catch (Exception e) {
+//			Log.e("mmmm", "initMediaPlayer-result" + e);
+//		}
 		Log.e("mmmm", "initMediaPlayer" + curmode + "result"
 				+ result);
 		mediaPlayer.setOnBufferingUpdateListener(this);

@@ -66,6 +66,9 @@ public class HandleLiveData {
 	public void dealChannelIsTTV(JSONObject json){
 		int chanId=0;
 //		int a=1;//test
+//		if(null!=json){
+//			TtvSP.getInstance().setDataString(TtvSP.ttvData, json.toString()); 
+//		}
 		List<Channel> channels = JsonResolve.jsonToChannels(json);
 		CacheData.setAllChannelExtraInfo(channels);
 		if(null==channels||channels.size()==0) 

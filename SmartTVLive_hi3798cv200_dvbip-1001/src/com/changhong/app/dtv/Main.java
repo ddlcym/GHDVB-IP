@@ -74,6 +74,7 @@ import com.changhong.app.timeshift.common.ProgramInfo;
 import com.changhong.app.timeshift.common.VolleyTool;
 import com.changhong.app.timeshift.datafactory.BannerDialog;
 import com.changhong.app.timeshift.datafactory.HandleLiveData;
+import com.changhong.app.timeshift.datafactory.TtvSP;
 import com.changhong.app.utils.OpJsonFile;
 import com.changhong.app.utils.SortData;
 import com.changhong.app.utils.TestFunc;
@@ -2484,7 +2485,7 @@ public class Main extends Activity implements ISceneListener {
 					public void onResponse(org.json.JSONObject arg0) {
 						// TODO Auto-generated method stub
 						P.i("mmmm", "Main=getUserChannel:" + arg0);
-
+						
 						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
 					}
 				}, errorListener);

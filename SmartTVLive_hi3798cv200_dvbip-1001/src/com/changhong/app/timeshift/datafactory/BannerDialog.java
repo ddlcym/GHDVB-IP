@@ -147,14 +147,17 @@ public class BannerDialog extends Dialog {
 					curshiftpro = CacheData.getCurProgram();
 					Log.i("test", "curshiftpro.getEventName()"+curshiftpro.getEventName()+curshiftpro.getBeginTime());
 					//shiftlist = CacheData.getTimeshiftPrograms();
-					int i = curshiftpro.getBeginTime().compareTo(list.get(len-1).getBeginTime());
-					Log.i("test","i"+ i);
-					if(i==0){
-						shiftcurindex = len-1;
-					}else{
+					if(0==len){
 						shiftcurindex = list.indexOf(curshiftpro);
+					}else{
+						int i = curshiftpro.getBeginTime().compareTo(list.get(len-1).getBeginTime());
+						Log.i("test","i"+ i);
+						if(i==0){
+							shiftcurindex = len-1;
+						}else{
+							shiftcurindex = list.indexOf(curshiftpro);
+						}
 					}
-					
 					Log.i("test", "curindex"+shiftcurindex);
 					for (ProgramInfo p : list) {
 					   Log.i("test","EventName"+ p.getEventName());
