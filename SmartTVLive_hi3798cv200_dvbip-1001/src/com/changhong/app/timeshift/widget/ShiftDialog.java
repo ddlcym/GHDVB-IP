@@ -3,9 +3,12 @@ package com.changhong.app.timeshift.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -125,6 +128,16 @@ public class ShiftDialog extends Dialog {
 			View layout = inflater.inflate(R.layout.shift_end_dia, null);
 			dialog.addContentView(layout, new LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			
+			//设置dialog大小
+			Window dialogWindow = dialog.getWindow();
+			WindowManager m = dialogWindow.getWindowManager();
+			Display d = m.getDefaultDisplay(); // 获取屏幕宽、高度
+			WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+			        p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6，根据实际情况调整
+			p.width = (int) (d.getWidth() * 0.4); // 宽度设置为屏幕的0.65，根据实际情况调整
+			dialogWindow.setAttributes(p);
+			
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
 			// set the confirm button
