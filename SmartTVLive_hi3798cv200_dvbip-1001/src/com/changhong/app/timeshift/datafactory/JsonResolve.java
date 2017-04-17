@@ -110,6 +110,9 @@ public class JsonResolve {
 	public List<Channel> jsonToChannels(JSONObject jsonObject) {
 		List<Channel> list = new ArrayList<Channel>();
 		JSONArray channels = getJsonObjectArray(jsonObject, "channelInfo");
+		if(null==channels||channels.length()<1){
+			return null;
+		}
 		for (int i = 0; i < channels.length(); i++) {
 			Channel channelInfo = null;
 			try {

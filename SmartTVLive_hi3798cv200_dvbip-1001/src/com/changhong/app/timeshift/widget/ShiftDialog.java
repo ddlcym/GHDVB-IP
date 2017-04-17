@@ -126,17 +126,18 @@ public class ShiftDialog extends Dialog {
 			// instantiate the dialog with the custom Theme
 			final ShiftDialog dialog = new ShiftDialog(context,R.style.replayDialog);
 			View layout = inflater.inflate(R.layout.shift_end_dia, null);
-			dialog.addContentView(layout, new LayoutParams(
-					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			dialog.setContentView(layout);
+//			dialog.addContentView(layout, new LayoutParams(
+//					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			
-			//设置dialog大小
+			
 			Window dialogWindow = dialog.getWindow();
-			WindowManager m = dialogWindow.getWindowManager();
-			Display d = m.getDefaultDisplay(); // 获取屏幕宽、高度
-			WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-			        p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6，根据实际情况调整
-			p.width = (int) (d.getWidth() * 0.4); // 宽度设置为屏幕的0.65，根据实际情况调整
-			dialogWindow.setAttributes(p);
+	        WindowManager m = dialogWindow.getWindowManager();
+	        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+	        WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+	        p.height = (int) (d.getHeight() * 0.4); // 高度设置为屏幕的0.6
+	        p.width = (int) (d.getWidth() * 0.4); // 宽度设置为屏幕的0.65
+	        dialogWindow.setAttributes(p);
 			
 			// set the dialog title
 			((TextView) layout.findViewById(R.id.title)).setText(title);
