@@ -1001,19 +1001,19 @@
     
     
     <!-- timeshift -->
-    <string name="cur_program">Current program</string>
-    <string name="next_program">Next program</string>
-    <string name="replay_dialog_title">Reminder</string>
-    <string name="back_shiftlist">Exit shift list</string>
-    <string name="time_shift_list">Time shift list</string>
-    <string name="play_completes">Play completes</string>
-    <string name="exit_timeshift">Exit time shift</string>
+    <string name="cur_program">Present</string>
+    <string name="next_program">Next</string>
+    <string name="replay_dialog_title">REMINDER</string>
+    <string name="back_shiftlist">Exit</string>
+    <string name="time_shift_list">Time-shift List</string>
+    <string name="play_completes">is finished.</string>
+    <string name="exit_timeshift">Exit</string>
     <string name="dialog_replay">Replay</string>
-    <string name="isabout_to_begin">is about to begin</string>
-    <string name="confirm_play">Confirm play</string>
-    <string name="play_the_last_program">Play the last program</string>
-    <string name="play_the_next_program">Play the next program</string>
+    <string name="isabout_to_begin">is about to play.</string>
+    <string name="confirm_play">Play</string>
+    <string name="play_the_last_program">Watch it!</string>
+    <string name="play_the_next_program">Watch it!</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_exit_sure">Are you sure you want to exit the time shift？</string>
+    <string name="dialog_exit_sure">Are you sure to exit?</string>
 </resources>
