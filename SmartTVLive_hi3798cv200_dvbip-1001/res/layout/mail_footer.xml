@@ -30,11 +30,11 @@
         <ImageView
             android:id="@+id/footer_psubtract"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
-            android:scaleType="centerInside"
+            android:layout_marginRight="60dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/upanddown" />
         <!--
     <TextView
@@ -55,9 +55,7 @@
                  android:layout_marginRight="10dp"  
                  android:layout_centerVertical="true"                
                 android:src="@drawable/p_add"  
-                android:scaleType="centerInside"/> 
-
-
+                android:scaleType="centerInside"/> 
         -->
     </RelativeLayout>
 
@@ -75,20 +73,21 @@
 
     <ImageView
         android:id="@+id/footer_return_img"
-        android:layout_width="wrap_content"
-        android:layout_height="39dp"
-        android:layout_centerVertical="true"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/footer_return"
         android:scaleType="fitCenter"
-        android:src="@drawable/banner_exit_icon" />
+        android:src="@drawable/back_btn" />
 
     <RelativeLayout
         android:id="@+id/footer_next"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@id/footer_return_img"
-        android:focusable="false" >
+        android:focusable="false" 
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/footer_switch"

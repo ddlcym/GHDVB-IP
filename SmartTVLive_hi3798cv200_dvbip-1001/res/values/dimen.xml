@@ -22,5 +22,34 @@
     <!-- 45点 -->
     <dimen name="txt_font_45">31sp</dimen>
     <dimen name="txt_font_50">34sp</dimen>
+	<!-- defined for GHprj -->
+	<!-- font size -->
+	<dimen name ="ghFONT_SIZE_BIG">32sp</dimen>
+	<dimen name ="ghFONT_SIZE_NORMAL">24sp</dimen> 
+	<dimen name ="ghFONT_SIZE_24">24sp</dimen>
+	<dimen name ="ghFONT_SIZE_26">26sp</dimen> 	
+	<dimen name ="ghFONT_SIZE_28">28sp</dimen>
+	<dimen name ="ghFONT_SIZE_30">30sp</dimen> 		
+	<dimen name ="ghFONT_SIZE_32">32sp</dimen>
+	<dimen name ="ghFONT_SIZE_34">34sp</dimen> 		
+	<dimen name ="ghFONT_SIZE_36">36sp</dimen>
+	<dimen name ="ghFONT_SIZE_45">45sp</dimen>
+		
+	<!-- epgwarn window size -->
+	<dimen name ="ghWindow_epgwarn_w">520dp</dimen>
+	<dimen name ="ghWindow_epgwarn_h">256dp</dimen>
+	<dimen name ="ghWindow_epgwarn_button_w">258dp</dimen>
+	<dimen name ="ghWindow_epgwarn_button_h">44dp</dimen>
+	
+	<dimen name ="ghWindow1_epgwarn_w">815dp</dimen>
+	<dimen name ="ghWindow1_epgwarn_h">402dp</dimen>
+	<dimen name ="ghWindow1_epgwarn_button_w">390dp</dimen>
+	<dimen name ="ghWindow1_epgwarn_button_h">70dp</dimen>
+	
+	<!-- livemail window size -->
+	<dimen name ="ghWindow_livemail_w">1340dp</dimen>
+	<dimen name ="ghWindow_livemail_h">750dp</dimen>				
+
+	<dimen name="seekbar_margin">40dp</dimen>	
 
 </resources>

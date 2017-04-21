@@ -588,12 +588,6 @@ public class Banner {
 		v_status_id = (ImageView) bannerView.findViewById(R.id.v_status_id);
 	}
 
-	private void getValue() {
-		sWeek = mContext.getResources().getStringArray(R.array.str_dtv_epg_week_name);
-		sMonth = mContext.getResources().getString(R.string.moon);
-		sDay = mContext.getResources().getString(R.string.day);
-	}
-
 	public static String formatLeftS(String str, int min_length) {
 		String format = "%-" + (min_length < 1 ? 1 : min_length) + "s";
 		return String.format(format, str);

@@ -105,21 +105,17 @@ public class Main extends Activity implements ISceneListener {
 	public Context mContext;
 
 	LinearLayout id_dtv_digital_root;
-	TextView id_dtv_channel_name;
+	//TextView id_dtv_channel_name;
 	ImageView dtv_digital_1;
 	ImageView dtv_digital_2;
 	ImageView dtv_digital_3;
-	TextView volume_value;
 	private ImageView vol_mult_icon;
 
 	int tempChannelID = -1;
 
 	Dialog searchPromptDiaog = null;
 
-	RelativeLayout volume_layout;
 	AudioManager mAudioManager;
-
-	ProgressBar volume_progress_view;
 
 	/**
 	 * for handler parm
@@ -171,7 +167,7 @@ public class Main extends Activity implements ISceneListener {
 	 */
 	private RelativeLayout flCaInfo;
 	// private CAMarquee tvCaSubtitleDown, tvCaSubtitleUp;
-	private TextView tvCaInfo;
+	//private TextView tvCaInfo;
 
 	/**
 	 * no program
@@ -233,11 +229,6 @@ public class Main extends Activity implements ISceneListener {
 	private String startTime = "";
 	private String endTime = "";
 
-	/* yihan advertisement */
-	private AdPlayer adPlayer;
-	private ArrayList<AdItem> adList = new ArrayList<AdItem>();
-	private AdStrategy ads;
-
 	/*
 	 * timeshift data
 	 */
@@ -254,7 +245,7 @@ public class Main extends Activity implements ISceneListener {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//Debug.startMethodTracing("CH_dtvApp#2");
+		//Debug.startMethodTracing("CH_dtvApp#3");
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
@@ -588,54 +579,6 @@ public class Main extends Activity implements ISceneListener {
 		return bNewMail;
 	}
 
-	BroadcastReceiver checkMailBR = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			int caType = arg1.getIntExtra("CaType", -1);
-			int eventType = arg1.getIntExtra("eventType", -1);
-			int mailId = arg1.getIntExtra("eventData", -1);
-			Log.i("livemail", "MAIL event coming>> caType=" + caType
-					+ ",eventType=" + eventType + ",mailId=" + mailId);
-			if (caType == 2 && eventType != -1 && mailId != -1) {
-				// fillMailData();
-				bNewMailComing = eventType == 0 ? false : true;
-				if (eventType == 2) {
-
-					CaMailInfor testMailInfor = new CaMailInfor();
-					testMailInfor.id = 1;
-					testMailInfor.title = new String("这是一封测试邮件(标题)");
-					testMailInfor.content = new String("这是测试邮件(内容)");
-					testMailInfor.revDate = new String(
-							new UserDate().getCurDate());
-					testMailInfor.revTime = new String(
-							new UserDate().getCurTime());
-
-					/*
-					 * Intent mIntent = new Intent(); mIntent.setComponent(new
-					 * ComponentName( "com.changhong.app.dtv",
-					 * "com.changhong.app.dtv.LiveMail")); Bundle bundle = new
-					 * Bundle();
-					 * bundle.putSerializable("TFmailInfo",testMailInfor);
-					 * mIntent.putExtras(bundle);
-					 */
-
-					Intent mIntent = new Intent(Main.this, LiveMail.class);
-					mIntent.putExtra("TFmailInfo", testMailInfor);
-
-					try {
-						startActivity(mIntent);
-						Log.i("livemail", "sent mail succeed!!!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						Log.i("livemail", "sent mail fail!!!");
-					}
-
-				}
-			}
-
-		}
-	};
 	private int iCallChanListId = -1;
 	protected boolean bAllowSignalDis=false;
 	private boolean bNeedPlay=true;
@@ -692,96 +635,12 @@ public class Main extends Activity implements ISceneListener {
 
 	}
 
-	private void checkChannel_bk() {
-
-		P.i("checkChannel()");
-		// getIntent().getIntExtra for GHprj
-
-		int iBouqtID = getIntent().getIntExtra("bouquetId", -1);
-		int iFreq = getIntent().getIntExtra("frequency", -1);
-		int iSerId = getIntent().getIntExtra("serviceId", -1);
-		int iTsId = getIntent().getIntExtra("tsId", -1);
-
-		P.d("getIntent().getStringExtra>>> bouquetId =" + iBouqtID
-				+ ",frequency=" + iFreq + ",serviceId=" + iSerId + ",tsId="
-				+ iTsId);
-
-		if (iSerId != -1 && iTsId != -1)// Live
-		{
-			Channel toPlayChannel = objApplication.dvbDatabase
-					.getChannelByTsIdAndServiceId(iTsId, iSerId);
-			if (toPlayChannel != null) {
-				objApplication.playChannel(toPlayChannel.chanId, false);
-				banner.show(toPlayChannel.chanId);
-				P.d("GOT and play channel pointed by Intent params ts&serId");
-				/*
-				 * if(iBouqtID==-1){ banner.show(toPlayChannel.chanId); }else{
-				 * Message msg = new Message(); //msg.what =
-				 * MESSAGE_SHOW_DIGITALKEY; //msg.arg1 =
-				 * objApplication.getCurPlayingChannel().logicNo; msg.what =
-				 * MESSAGE_CHANLIST_SHOW; msg.arg1 =
-				 * objApplication.getCurPlayingChannel().chanId; msg.arg2 =
-				 * 999999999; mUiHandler.sendMessage(msg); }
-				 */
-				return;
-			} else {
-				P.d("DONT get channel pointed by Intent from Launcher ");
-			}
-		} else if (iBouqtID != -1 || iFreq != -1) {
-			Channel[] allChannels = objApplication.dvbDatabase.getChannelsAll();
-
-			if (iBouqtID != -1) {
-				for (Channel ch : allChannels) {
-					if ((ch.favorite & iBouqtID) == iBouqtID) {
-						objApplication.playChannel(ch.chanId, false);
-						P.d("GOT first channel >> id=" + ch.chanId + ",logic="
-								+ ch.logicNo + ",cateId=" + iBouqtID);
-						Message msg = new Message();
-						msg.what = MESSAGE_CHANLIST_SHOW;
-						msg.arg1 = ch.chanId/*
-											 * objApplication.getCurPlayingChannel
-											 * ().chanId
-											 */;
-						msg.arg2 = 999999999;
-						mUiHandler.sendMessage(msg);
-						return;
-					}
-				}
-
-			}
-			if (iFreq != -1) {
-				for (Channel ch1 : allChannels) {
-					if (ch1.frequencyKhz == iFreq) {
-						objApplication.playChannel(ch1.chanId, false);
-						P.d("GOT and play channel pointed by Intent params iFreq ");
-						Message msg = new Message();
-						// banner.show(toPlayChannel.chanId);
-						// msg.what = MESSAGE_SHOW_DIGITALKEY;
-						// msg.arg1 =
-						// objApplication.getCurPlayingChannel().logicNo;
-						msg.what = MESSAGE_CHANLIST_SHOW;
-						msg.arg1 = objApplication.getCurPlayingChannel().chanId;
-						msg.arg2 = 999999999;
-						mUiHandler.sendMessage(msg);
-						return;
-					}
-				}
-			}
-
-		}
-		// 播放last频道
-
-	}
-
 	@Override
 	protected void onResume() {
 
 		super.onResume();
 
 		bAllowSignalDis = false;
-		
-		if (volume_layout.getVisibility() == View.VISIBLE)
-			volume_layout.setVisibility(View.INVISIBLE);
 
 		DVB_RectSize.Builder builder = DVB_RectSize.newBuilder().setX(0)
 				.setY(0).setW(0).setH(0);
@@ -999,7 +858,7 @@ public class Main extends Activity implements ISceneListener {
 			}
 			return true;
 		case KeyEvent.KEYCODE_VOLUME_MUTE:
-
+			
 			P.i("mute key arrived.");
 			AudioManager am1 = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
@@ -1048,9 +907,6 @@ public class Main extends Activity implements ISceneListener {
 				if (channel != null) {
 					P.i("channelId >>" + channel.chanId);
 
-					if (volume_layout.getVisibility() == View.VISIBLE)
-						volume_layout.setVisibility(View.INVISIBLE);
-
 					banner.show(channel.chanId);
 					tempChannelID = channel.chanId;
 
@@ -1088,8 +944,7 @@ public class Main extends Activity implements ISceneListener {
 				}
 				if (channel != null) {
 					P.i("yangtong", "channelId >>" + channel.chanId);
-					if (volume_layout.getVisibility() == View.VISIBLE)
-						volume_layout.setVisibility(View.INVISIBLE);
+
 					banner.show(channel.chanId);
 					tempChannelID = channel.chanId;
 
@@ -1121,15 +976,7 @@ public class Main extends Activity implements ISceneListener {
 			if(event.getRepeatCount() == 0)
 			{
 	
-				/*
-				 * if (layout_set_activity_z.getVisibility() == View.VISIBLE) {
-				 * layout_set_activity_z.setVisibility(View.INVISIBLE); }
-				 */
-				if (volume_layout.getVisibility() == View.VISIBLE) {
-					volume_layout.setVisibility(View.INVISIBLE);
-				}
-	
-				else if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
+				if (mUiHandler.hasMessages(MESSAGE_HANDLER_DIGITALKEY)) {
 					mUiHandler.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
 					tvRootDigitalkey.setVisibility(View.GONE);
 					tvRootDigitalKeyInvalid.setVisibility(View.INVISIBLE);
@@ -1266,42 +1113,7 @@ public class Main extends Activity implements ISceneListener {
 				Intent toChanList = new Intent(Main.this, ChannelList.class);
 				toChanList.putExtra("curType", msg.arg2);
 				startActivity(toChanList);
-				break;
-			case MESSAGE_BAR_SHOW:
-				banner.show(msg.arg1, msg.arg2);
-				break;
-			case MESSAGE_VOLUME_SHOW:
-
-				P.i(TAG, "UI_Handler---->MESSAGE_VOLUME_SHOW");
-
-				if (theActivity.banner.bannerToast != null)
-					theActivity.banner.bannerToast.cancel();
-
-				if (theActivity.volume_layout.getVisibility() == View.INVISIBLE) {
-
-					P.i(TAG,
-							"UI_Handler---->MESSAGE_VOLUME_SHOW------>volume_layout.getVisibility()="
-									+ theActivity.volume_layout.getVisibility());
-					theActivity.volume_layout.setVisibility(View.VISIBLE);
-					theActivity.volume_layout.requestLayout();
-
-				}
-
-				P.i(TAG,
-						"UI_Handler---->MESSAGE_VOLUME_SHOW------>volume_layout.getVisibility()="
-								+ theActivity.volume_layout.getVisibility());
-				theActivity.mUiHandler.removeMessages(MESSAGE_VOLUME_DISAPPEAR);
-				theActivity.mUiHandler.sendEmptyMessageDelayed(
-						MESSAGE_VOLUME_DISAPPEAR, 2000);
-
-				break;
-
-			case MESSAGE_VOLUME_DISAPPEAR:
-
-				if (theActivity.volume_layout.getVisibility() == View.VISIBLE)
-					theActivity.volume_layout.setVisibility(View.INVISIBLE);
-
-				break;
+				break;			
 
 			case MESSAGE_PLAY_PRE:
 
@@ -1440,15 +1252,10 @@ public class Main extends Activity implements ISceneListener {
 						theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 						theActivity.tvRootDigitalKeyInvalid
 								.setVisibility(View.VISIBLE);
-						theActivity.id_dtv_channel_name
-								.setVisibility(View.INVISIBLE);
+						//theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
 						theActivity.mUiHandler.sendEmptyMessageDelayed(
 								MESSAGE_DISAPPEAR_DIGITAL, 5000);
 					} else {
-
-						if (theActivity.volume_layout.getVisibility() == View.VISIBLE)
-							theActivity.volume_layout
-									.setVisibility(View.INVISIBLE);
 
 						theActivity.banner.show(SysApplication.iCurChannelId);
 
@@ -1521,10 +1328,10 @@ public class Main extends Activity implements ISceneListener {
 					theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 				}
 
-				theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
+				//theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
 			}
 				break;
-
+/*
 			case MESSAGE_CA_SHOWNOTICE: {
 				if (updateDtvStatus(2, true)) {
 					theActivity.flCaInfo.setVisibility(View.VISIBLE);
@@ -1543,6 +1350,7 @@ public class Main extends Activity implements ISceneListener {
 				}
 			}
 				break;
+*/				
 			case MESSAGE_START_RECORD: {
 
 			}
@@ -1883,8 +1691,8 @@ public class Main extends Activity implements ISceneListener {
 			Display_Program_Num(iKey);
 
 			if (iKeyNum>=3 /*iKey >= 100*/) {
-				mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY); // 输入3位数字立即切台
-				// mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY,2000);
+				//mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY); // 输入3位数字立即切台
+				mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY,200);//如果立即切台，输入第三位数字看不见
 			} else {
 				mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY,
 						4000);
@@ -2004,32 +1812,23 @@ public class Main extends Activity implements ISceneListener {
 
 	private void findView() {
 		surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
-		flCaInfo = (RelativeLayout) findViewById(R.id.id_root_CA_info);
+		//flCaInfo = (RelativeLayout) findViewById(R.id.id_root_CA_info);
 		// tvCaSubtitleDown = (CAMarquee) findViewById(R.id.id_ca_subtitleDown);
 		// tvCaSubtitleUp = (CAMarquee) findViewById(R.id.id_ca_subtitleUp);
-		tvCaInfo = (TextView) findViewById(R.id.id_root_ca_init_textview);
+		//tvCaInfo = (TextView) findViewById(R.id.id_root_ca_init_textview);
 
 		flNoSignal = (RelativeLayout) findViewById(R.id.id_root_nosignal_info);
 
 		tvRootDigitalkey = (LinearLayout) findViewById(R.id.id_dtv_digital_root);
 		tvRootDigitalKeyInvalid = (RelativeLayout) findViewById(R.id.id_dtv_digital_root_invalid);
 
-		id_dtv_channel_name = (TextView) findViewById(R.id.id_dtv_channel_name);
+		//id_dtv_channel_name = (TextView) findViewById(R.id.id_dtv_channel_name);
 		dtv_digital_1 = (ImageView) findViewById(R.id.dtv_digital_1);
 		dtv_digital_2 = (ImageView) findViewById(R.id.dtv_digital_2);
 		dtv_digital_3 = (ImageView) findViewById(R.id.dtv_digital_3);
 
-		flPftUpdate = (FrameLayout) findViewById(R.id.id_root_PFTUpdate_info);
 		flTimeShift = (FrameLayout) findViewById(R.id.id_root_timeshift_support);
 		vol_mult_icon = (ImageView) findViewById(R.id.mute_icon);
-
-		volume_progress_view = (ProgressBar) findViewById(R.id.volume_progress_view);
-		volume_value = (TextView) findViewById(R.id.volume_value);
-
-		volume_layout = (RelativeLayout) findViewById(R.id.volume_layout);
-
-		adPlayer = (AdPlayer) findViewById(R.id.adplayer_volume);
-		adPlayer.setDefaultAd(R.drawable.default_img, 1);
 
 		// layout_set_activity_z = (LinearLayout)
 		// findViewById(R.id.layout_set_activity_z);
@@ -2110,18 +1909,22 @@ public class Main extends Activity implements ISceneListener {
 
 		if (status == false)// 隐藏显示
 		{
-			act = true; //强制黑屏，for调试用途
+			act = true; //强制黑屏
 			
 			if (banner != null)
 				banner.cancel();
 
 			showTimeShiftIcon(false);
+			objApplication.showAudioPlaying(false);
 
 			if (objApplication != null) {
 				objApplication.dvbPlayer.stop();
-//				if(act)	
+				if(act)	
+				{
 					objApplication.dvbPlayer.blank(); 
-					objApplication.dvbPlayer.release();
+					objApplication.dvbPlayer.release();					
+				}
+					
 				bOnDtvThread[4] = false;
 			}
 
@@ -2485,7 +2288,7 @@ public class Main extends Activity implements ISceneListener {
 					public void onResponse(org.json.JSONObject arg0) {
 						// TODO Auto-generated method stub
 						P.i("mmmm", "Main=getUserChannel:" + arg0);
-						
+
 						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
 					}
 				}, errorListener);
@@ -2495,41 +2298,41 @@ public class Main extends Activity implements ISceneListener {
 
 	private void initCategoryData() {
 		{
-//			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
-//			String URL2 = processData.getCategoryString();
-//			P.i("mmmm", "Main=initCategoryData:" + URL2);
-//			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-//					Request.Method.GET, URL2, null,
-//					new Response.Listener<org.json.JSONObject>() {
-//
-//						@Override
-//						public void onResponse(org.json.JSONObject arg0) {
-//							// TODO Auto-generated method stub
-//							String newVer = HandleLiveData.getInstance()
-//									.dealCategoryVer(arg0);
-//							String oldVer = Utils
-//									.getProp("persist.sys.live.cateversion");
-//							P.i("cateversion>>>>> old: " + oldVer + " vs new:"
-//									+ newVer);
-//							if (oldVer == null || newVer != null
-//									&& !newVer.equals(oldVer)) {
-//								P.i("initSortData_new:" + arg0);
-//								SortData.saveSortNameList(HandleLiveData
-//										.getInstance().dealCategoryName(arg0));
-//								HandleLiveData.getInstance().dealCategoryData(
-//										arg0);
-//								Utils.setProp("persist.sys.live.cateversion",
-//										newVer);
-//								P.i("save new cateversion:" + newVer);
-//								OpJsonFile.writeJSONObj(
-//										"/data/changhong/dvb/catedata.json",
-//										arg0);
-//							}
-//							cateThread = null;
-//						}
-//					}, errorListener_sort);
-//			jsonObjectRequest.setTag(Main.class.getSimpleName()+"_forCata");// 设置tag,cancelAll的时候使用
-//			mReQueue.add(jsonObjectRequest);
+			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
+			String URL2 = processData.getCategoryString();
+			P.i("mmmm", "Main=initCategoryData:" + URL2);
+			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+					Request.Method.GET, URL2, null,
+					new Response.Listener<org.json.JSONObject>() {
+
+						@Override
+						public void onResponse(org.json.JSONObject arg0) {
+							// TODO Auto-generated method stub
+							String newVer = HandleLiveData.getInstance()
+									.dealCategoryVer(arg0);
+							String oldVer = Utils
+									.getProp("persist.sys.live.cateversion");
+							P.i("cateversion>>>>> old: " + oldVer + " vs new:"
+									+ newVer);
+							if (oldVer == null || newVer != null
+									&& !newVer.equals(oldVer)) {
+								P.i("initSortData_new:" + arg0);
+								SortData.saveSortNameList(HandleLiveData
+										.getInstance().dealCategoryName(arg0));
+								HandleLiveData.getInstance().dealCategoryData(
+										arg0);
+								Utils.setProp("persist.sys.live.cateversion",
+										newVer);
+								P.i("save new cateversion:" + newVer);
+								OpJsonFile.writeJSONObj(
+										"/data/changhong/dvb/catedata.json",
+										arg0);
+							}
+							cateThread = null;
+						}
+					}, errorListener_sort);
+			jsonObjectRequest.setTag(Main.class.getSimpleName()+"_forCata");// 设置tag,cancelAll的时候使用
+			mReQueue.add(jsonObjectRequest);
 		}
 	}
 

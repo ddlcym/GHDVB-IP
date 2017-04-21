@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string-array name="tvtype">
+        <item>"All"</item>
+        <item>"CCTV"</item>
+	<item>"BeiJing"</item>	
+        <item>"Local"</item>
+        <item>"HD"</item>
+        <item>"County"</item>
+        <item>"Shopping"</item>
+        <item>"Trial"</item>
+        <item>"Radio"</item>
+    </string-array>
+     <string-array name="ca_cantaping"> 
+        <item>Yes</item>     
+        <item>No</item> 
+     </string-array>
+
+
+</resources>

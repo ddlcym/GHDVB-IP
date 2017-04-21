@@ -369,14 +369,16 @@ public class SysApplication extends Application implements CAListener {
 		ll_audioplaying=(FrameLayout) li_inflater.inflate(
 							R.layout.audio, null);
 		text_audioplaying = (TextView)ll_audioplaying.findViewById(R.id.id_audio_playing_text);
-		text_audioplaying.setText(R.string.str_audio_playing);
+		//text_audioplaying.setText(R.string.str_audio_playing);
+		text_audioplaying.setText(R.string.str_video_coming);
+		
 	     //获取WindowManager  
 	     if(mWindowManager == null)
 	     {
 	    	 mWindowManager=(WindowManager)mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 	     }
 	        //设置LayoutParams(全局变量）相关参数  
-	     audioPlayingParam = getMywmParams();  
+	     audioPlayingParam = getMywmParams();    
      
 	     audioPlayingParam.type=WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;     // 系统提示类型,重要  
 	     audioPlayingParam.format=1;  
@@ -794,7 +796,8 @@ public class SysApplication extends Application implements CAListener {
 
 	/**
 	 * @param curChannel
-	 * 歌华音频广播也带有视频pid因此不要额外提示语和黑屏处理
+	 * 歌华音频广播也带有视频pid因此不要额外提示语和黑屏处理;
+	 * 但是歌华有视频节目，但视频pid是无效，要求当作电视频道仅播出音频即可
 	 */
 	public void processAudPlayBg(Channel curChannel) {
 		/*
@@ -808,6 +811,16 @@ public class SysApplication extends Application implements CAListener {
 			showAudioPlaying(false);
 		}
 		*/
+		if((curChannel.sortId==0x1||curChannel.sortId==0xF9||curChannel.sortId>=0xe3&&curChannel.sortId<=0xeb) && (curChannel.videoPid == 0x1fff))
+		{
+			P.d("Found vpid=0x1fff TV channel:"+curChannel.name);
+			dvbPlayer.blank();
+			showAudioPlaying(true);
+		}
+		else
+		{
+			showAudioPlaying(false);
+		}		
 	}
 	
 	
@@ -1472,7 +1485,7 @@ public class SysApplication extends Application implements CAListener {
 		*/
 	}
 	
-	private void showAudioPlaying(boolean show)
+	public void showAudioPlaying(boolean show)
 	{
 		
 		if(show)
@@ -1654,211 +1667,8 @@ public class SysApplication extends Application implements CAListener {
 		}	
 		
 		return noticeContent;
-	}
-	
-	
-	
-	
-	private String getSumaNoticeContent(DVB_CA_SUMA_MSG_CODE code)
-	{
-		String noticeContent = null;
-		int stringId = 0;
-
-		switch(code)		
-		{
-			case SUMA_MSG_CODE_RATING_TOO_LOW:
-			{
-				stringId = R.string.MESSAGE_RATING_TOO_LOW;
-				break;
-			}
-			case SUMA_MSG_CODE_NOT_IN_WATCH_TIME:
-			{
-				stringId = R.string.MESSAGE_NOT_IN_WATCH_TIME;
-				break;
-			}
-			case SUMA_MSG_CODE_NOT_PAIRED:
-			{
-				stringId = R.string.MESSAGE_NOT_PAIRED;
-				break;
-			}
-			case SUMA_MSG_CODE_PLEASE_INSERT_CARD:
-			{
-				stringId = R.string.MESSAGE_PLEASE_INSERT_CARD;
-				break;
-			}
-			case SUMA_MSG_CODE_NO_ENTITLE:
-			{
-				stringId = R.string.MESSAGE_NO_ENTITLE;
-				break;
-			}
-			case SUMA_MSG_CODE_PRODUCT_RESTRICT:
-			{
-				stringId = R.string.MESSAGE_PRODUCT_RESTRICT;
-				break;
-			}
-			case SUMA_MSG_CODE_AREA_RESTRICT:
-			{
-				stringId = R.string.MESSAGE_AREA_RESTRICT;
-				break;
-			}
-			case SUMA_MSG_CODE_MOTHER_RESTRICT:
-			{
-				stringId = R.string.MESSAGE_MOTHER_RESTRICT;
-				break;
-			}
-			case SUMA_MSG_CODE_NO_MONEY:
-			{
-				stringId = R.string.MESSAGE_NO_MONEY;
-				break;
-			}
-			case SUMA_MSG_CODE_IPPV_NO_CONFIRM:
-			{
-				stringId = R.string.MESSAGE_IPPV_NO_CONFIRM;
-				break;
-			}
-			case SUMA_MSG_CODE_IPPV_NO_BOOK:
-			{
-				stringId = R.string.MESSAGE_IPPV_NO_BOOK;
-				break;
-			}
-			case SUMA_MSG_CODE_IPPT_NO_CONFIRM:
-			{
-				stringId = R.string.MESSAGE_IPPT_NO_CONFIRM;
-				break;
-			}
-			case SUMA_MSG_CODE_IPPT_NO_BOOK:
-			{
-				stringId = R.string.MESSAGE_IPPT_NO_BOOK;
-				break;
-			}
-			case SUMA_MSG_CODE_DATA_INVALID:
-			{
-				stringId = R.string.MESSAGE_DATA_INVALID;
-				break;
-			}
-			case SUMA_MSG_CODE_SC_NOT_SERVER:
-			{
-				stringId = R.string.MESSAGE_SC_NOT_SERVER;
-				break;
-			}
-			case SUMA_MSG_CODE_KEY_NOT_FOUND:
-			{
-				stringId = R.string.MESSAGE_KEY_NOT_FOUND;
-				break;
-			}
-			case SUMA_MSG_CODE_IPPNEED_CALLBACK:
-			{
-				stringId = R.string.MESSAGE_IPPNEED_CALLBACK;
-				break;
-			}
-			case SUMA_MSG_CODE_FREE_PREVIEWING:
-			{
-				stringId = R.string.MESSAGE_FREE_PREVIEWING;
-				break;
-			}		
-			default:
-			{
-				return null;
-			}
-		}
-		
-		try
-		{
-			noticeContent = mContext.getResources().getString(stringId);
-		}
-		catch(NotFoundException e)
-		{
-			noticeContent = null;
-		}	
-		
-		return noticeContent;
-	}
-	
-
-	public void caCallbackNovel_new(DVB_CA_NOVEL data, Object reserved)
-	{
-		P.i("caCallbackNovel");
-		switch(data.getCode())
-		{
-			case NOVEL_CODE_CB_SHOW_BUY_MSG:
-			{
-				if (!data.hasMsgcode())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				
-				if (DVB_CA_NOVEL_MSG_CODE.NOVEL_MSG_CODE_CANCEL_VALUE == data.getMsgcode().getNumber())
-				{
-					message.what = MESSAGE_CA_HIDENOTICE;  
-				}
-				else
-				{
-					message.what = MESSAGE_CA_SHOWNOTICE;  
-					message.arg1 = data.getCode().getNumber();
-					message.arg2 = 0;
-					message.obj = getNovelNoticeContent(data.getMsgcode());
-				}
-
-				mAppHandler.sendMessage(message); 
-				break;
-			}
-			
-			case NOVEL_CODE_CB_SHOW_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				message.what = MESSAGE_CA_SHOWOSDROLL;
-				
-				DVB_CA_NOVEL_Data novel_data = data.getData();
-				if(novel_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = novel_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				if(novel_data.getDataStringCount() == 0)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
-				message.obj = novel_data.getDataString(0);
-				if(message.obj == null)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
-
-				mAppHandler.sendMessage(message); 
-				break;
-			}
-			case NOVEL_CODE_CB_HIDE_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				message.what = MESSAGE_CA_HIDEOSDROLL;
-				DVB_CA_NOVEL_Data novel_data = data.getData();
-				if(novel_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = novel_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				mAppHandler.sendMessage(message); 
-				break;
-			}
-						
-			default:
-			{
-				return;
-			}
-		}		
 	}	
-	
+
 	public void caCallbackNovel(DVB_CA_NOVEL data, Object reserved)
 	{
 		P.i("caCallbackNovel");
@@ -1934,105 +1744,6 @@ public class SysApplication extends Application implements CAListener {
 		}		
 	}	
 	
-    public void caCallbackSuma(DVB_CA_SUMA data, Object reserved)
-    {
-    	P.i("caCallbackSuma");
-    	switch(data.getCode())
-    	{
-			case SUMA_CODE_CB_HIDE_IPPV_DLG:
-				break;
-			case SUMA_CODE_CB_LOCK_SERVICE:
-				break;
-			case SUMA_CODE_CB_MAIL:
-				break;
-			case SUMA_CODE_CB_PARENT_FEED:
-				break;
-			case SUMA_CODE_CB_PROMPT_MESSAGE:
-			{
-				if (!data.hasMsgcode())
-				{
-					break;
-				}
-				
-				Message message = new Message(); 
-				
-				if (DVB_CA_SUMA_MSG_CODE.SUMA_MSG_CODE_CANCEL_VALUE == data.getMsgcode().getNumber())
-				{
-					message.what = MESSAGE_CA_HIDENOTICE;  
-				}
-				else
-				{
-					message.what = MESSAGE_CA_SHOWNOTICE;  
-					message.arg1 = data.getCode().getNumber();
-					message.arg2 = 0;
-					message.obj = getSumaNoticeContent(data.getMsgcode());
-				}
-
-				Log.i("ca","MESSAGE_CA_SHOWNOTICE  message.arg1  message.obj"+message.arg1+" "+message.obj);
-			
-				mAppHandler.sendMessage(message); 
-				
-				break;
-			}
-			case SUMA_CODE_CB_SHOW_FINGER:
-				break;
-			case SUMA_CODE_CB_SHOW_IPPV_DLG:
-				break;
-			case SUMA_CODE_CB_SHOW_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				message.what = MESSAGE_CA_SHOWOSDROLL;
-				
-				DVB_CA_SUMA_Data suma_data = data.getData();
-				if(suma_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = suma_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				if(suma_data.getDataStringCount() == 0)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
-				message.obj = suma_data.getDataString(0);
-				if(message.obj == null)
-				{
-					message.what = MESSAGE_CA_HIDEOSDROLL;
-				}
-
-				mAppHandler.sendMessage(message); 
-				break;
-			}
-			case SUMA_CODE_CB_HIDE_OSD:
-			{
-				if (!data.hasData())
-				{
-					break;
-				}				
-				Message message = new Message(); 
-				message.what = MESSAGE_CA_HIDEOSDROLL;
-				DVB_CA_SUMA_Data suma_data = data.getData();
-				if(suma_data.getDataIntCount() == 0)
-				{
-					message.arg1 = 1;
-				}
-				int novel_data_int = suma_data.getDataInt(0);
-				message.arg1 = novel_data_int;
-				mAppHandler.sendMessage(message); 
-				break;
-			}
-			case SUMA_CODE_CB_UNLOCK_SERVICE:
-				break;
-			default:
-				break;    		
-    	}
-    }
-
-
 	@Override
 	public void caCallback(DVB_CA data,Object reserved) {
 
@@ -2052,15 +1763,7 @@ public class SysApplication extends Application implements CAListener {
 				//caCallbackNovel(data.getNovel(), reserved);
 				}				
 				break;
-			}
-			case CA_SUMA:
-			{
-				if (data.hasSuma())
-				{
-					caCallbackSuma(data.getSuma(), reserved);
-				}
-				break;
-			}
+			}		
 
 			default:
 			{
