@@ -67,9 +67,45 @@
     <string name="banner_prompt_z1">当前节目</string>
     <string name="banner_prompt_z2">下一节目</string>
     <string name="banner_prompt_z3">频道列表</string>
+<<<<<<< HEAD
     <string name="banner_prompt_z4">退出</string>
     <string name="noprogrampfinfo">无节目信息</string>
     <!-- pf banner end -->
+=======
+    <string name="banner_prompt_z4">退出</string>    
+    <string name="kshtsy">上页</string>
+    <string name="kshtxy">下页</string>
+    <string name="kshtfh">返回</string>
+    <string name="ksht_dqjm">当前节目 :</string>
+    <string name="ksht_xyjm">下一节目 :</string>    <string name="jmgl_item_move_z">移动</string>
+    <string name="jmgl_item_remove_z">删除</string>
+    <string name="jmgl_item_favor_z">喜爱</string>
+ <string name="email_prompt_1_z"> “返回”  上一层。</string>
+  <string name="str_clear">Confirm clear</string>
+ <string name="beijing_h">北京</string>
+ <string name="notimeinfo">     </string>
+ 
+ 
+ <string name="return_button">返    回</string>
+    
+    <string name="replay">电视回看</string>
+
+    <string name="cur_program">当前节目</string>
+    <string name="next_program">下一节目</string>
+    <string name="replay_dialog_title">温馨提示</string>
+    <string name="back_shiftlist">退出时移列表</string>
+    <string name="time_shift_list">时移列表</string>
+    <string name="play_completes">播放结束</string>
+    <string name="exit_timeshift">退出时移</string>
+    <string name="dialog_replay">重新播放</string>
+    <string name="isabout_to_begin">即将开始</string>
+    <string name="confirm_play">确定播放</string>
+    <string name="play_the_last_program">观看上一个节目</string>
+    <string name="play_the_next_program">观看下一个节目</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_exit_sure">你确定退出时移电视？</string>
+>>>>>>> 9508706e4955062b90b4ac6af3777542c260e93e
 
     <string name="str_audio_playing">正在播放广播节目</string>
     <string name="str_video_coming">精彩视频即将推出</string>

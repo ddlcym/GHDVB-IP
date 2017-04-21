@@ -117,9 +117,9 @@ public class BannerDialog extends Dialog {
 					curshiftpro = CacheData.getCurProgram();
 					Log.i("test", "curshiftpro.getEventName()"+curshiftpro.getEventName()+curshiftpro.getBeginTime());
 					ShiftDialog.Builder builder = new ShiftDialog.Builder(mContext);
-					builder.setMessage("<" + curshiftpro.getEventName()+">"+"播放结束");
-					builder.setTitle("温馨提示");
-					builder.setPositiveButton("退出时移", new DialogInterface.OnClickListener() {
+					builder.setMessage("<" + curshiftpro.getEventName()+">"+mContext.getString(R.string.play_completes));
+					builder.setTitle(mContext.getString(R.string.replay_dialog_title));
+					builder.setPositiveButton(mContext.getString(R.string.exit_timeshift), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								dismiss();
 								dialog.dismiss();
@@ -127,7 +127,7 @@ public class BannerDialog extends Dialog {
 						}
 					});
 		
-					builder.setNegativeButton("重新播放",new DialogInterface.OnClickListener() {
+					builder.setNegativeButton(mContext.getString(R.string.dialog_replay),new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.dismiss();
 								PlayVideo.getInstance().playLiveBack(player,curChannel,curshiftpro);
@@ -166,9 +166,9 @@ public class BannerDialog extends Dialog {
 					
 					
 					if (0 == shiftcurindex) {
-						builder.setMessage("<" + list.get(shiftcurindex).getEventName()+">"+"即将开始");
-						builder.setTitle("温馨提示");
-						builder.setPositiveButton("退出时移", new DialogInterface.OnClickListener() {
+						builder.setMessage("<" + list.get(shiftcurindex).getEventName()+">"+mContext.getString(R.string.isabout_to_begin));
+						builder.setTitle(mContext.getString(R.string.replay_dialog_title));
+						builder.setPositiveButton(mContext.getString(R.string.exit_timeshift), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dismiss();
 									dialog.dismiss();
@@ -176,7 +176,7 @@ public class BannerDialog extends Dialog {
 							}
 						});
 	
-						builder.setNegativeButton("确定播放",new DialogInterface.OnClickListener() {
+						builder.setNegativeButton(mContext.getString(R.string.confirm_play),new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 									PlayVideo.getInstance().playLiveBack(player,curChannel,list.get(shiftcurindex));
@@ -193,9 +193,9 @@ public class BannerDialog extends Dialog {
 							}
 						});
 					}else {
-						builder.setMessage("<" + list.get(shiftcurindex-1).getEventName()+">"+"即将开始");
-						builder.setTitle("温馨提示");
-						builder.setPositiveButton("观看上一个节目", new DialogInterface.OnClickListener() {
+						builder.setMessage("<" + list.get(shiftcurindex-1).getEventName()+">"+mContext.getString(R.string.isabout_to_begin));
+						builder.setTitle(mContext.getString(R.string.replay_dialog_title));
+						builder.setPositiveButton(mContext.getString(R.string.play_the_last_program), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 //									Log.i("mmmm", "PositiveButton"+list.get(shiftcurindex-1).getEventName());
@@ -215,7 +215,7 @@ public class BannerDialog extends Dialog {
 							}
 						});
 	
-						builder.setNegativeButton("重新播放",new DialogInterface.OnClickListener() {
+						builder.setNegativeButton(mContext.getString(R.string.dialog_replay),new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 									PlayVideo.getInstance().playLiveBack(player,curChannel,list.get(shiftcurindex));
@@ -252,9 +252,9 @@ public class BannerDialog extends Dialog {
 					for (ProgramInfo p : list) {
 					   Log.i("test","EventName"+ p.getEventName());
 				    }
-					builder.setMessage("<" + list.get(shiftcurindex+1).getEventName()+">"+"即将开始");
-					builder.setTitle("温馨提示");
-					builder.setPositiveButton("观看下一个节目", new DialogInterface.OnClickListener() {
+					builder.setMessage("<" + list.get(shiftcurindex+1).getEventName()+">"+mContext.getString(R.string.isabout_to_begin));
+					builder.setTitle(mContext.getString(R.string.replay_dialog_title));
+					builder.setPositiveButton(mContext.getString(R.string.play_the_next_program), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.dismiss();
 								Log.i("test", "PositiveButton"+list.get(shiftcurindex+1).getEventName());
@@ -280,7 +280,7 @@ public class BannerDialog extends Dialog {
 						}
 					});
 
-					builder.setNegativeButton("重新播放",new DialogInterface.OnClickListener() {
+					builder.setNegativeButton(mContext.getString(R.string.dialog_replay),new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.dismiss();
 								PlayVideo.getInstance().playLiveBack(player,curChannel,list.get(shiftcurindex));
@@ -629,9 +629,9 @@ public class BannerDialog extends Dialog {
 				parentHandler.sendMessage(msg);
 				
 				ShiftDialog.Builder builder = new ShiftDialog.Builder(mContext);
-				builder.setMessage("你确定退出时移电视？");
-				builder.setTitle("温馨提示");
-				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				builder.setMessage(mContext.getString(R.string.dialog_exit_sure));
+				builder.setTitle(mContext.getString(R.string.replay_dialog_title));
+				builder.setPositiveButton(mContext.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							vol_adjust_exit();							
 							dismiss();
@@ -641,7 +641,7 @@ public class BannerDialog extends Dialog {
 					}
 				});
 
-				builder.setNegativeButton("取消",new DialogInterface.OnClickListener() {
+				builder.setNegativeButton(mContext.getString(R.string.dialog_cancel),new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 					}

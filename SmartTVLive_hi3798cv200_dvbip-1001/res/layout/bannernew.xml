@@ -196,7 +196,7 @@
 	                        android:layout_alignParentRight="true"
 	                        android:layout_gravity="center_vertical"
 	                        android:singleLine="true"
-	                        android:text="时移列表"
+	                        android:text="@string/time_shift_list"
 	                        android:textColor="@color/white"
 	                        android:textSize="30sp"
 	                        android:visibility="visible" />
