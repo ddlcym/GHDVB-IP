@@ -251,31 +251,29 @@
 	                        android:layout_marginTop="50dip"
 	                        android:background="@drawable/timeshift_right_arrows"
 	                        android:focusable="false" />
-	
 	                   
-	
+	                   <TextView
+	                        android:id="@+id/bannernew_exit_tip"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        style="@style/ghBarEpgF"
+	                      	android:layout_alignParentBottom="true"
+	                        android:text="@string/back_shiftlist"
+	                        android:layout_centerVertical="true"
+                    		android:layout_alignParentRight="true"
+                    		android:layout_alignBottom="@+id/timeshift_program_list"
+                    		android:layout_marginRight="12dip"
+	                        />
+	                   
 	                    <ImageView
 	                        android:id="@+id/timeshift_exit"
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:layout_alignParentBottom="true"
-	                        android:layout_alignParentRight="true"
-	                        android:layout_marginBottom="5dip"
+	                        android:layout_toLeftOf="@id/bannernew_exit_tip"
 	                        android:focusable="false"
 	                        android:scaleType="fitCenter"
-	                        android:src="@drawable/banner_shift_back" />
-	                    
-	                    <!-- 1 <TextView
-	                        
-	                        android:layout_width="wrap_content"
-	                        android:layout_height="wrap_content"
-	                      	android:layout_alignParentBottom="true"
-	                        
-	                        android:layout_toRightOf="@id/timeshift_exit"
-	                        android:text="退出时移列表"
-	                        android:textColor="@color/white"
-	                        android:textSize="20sp"
-	                         /> -->
+	                        android:src="@drawable/icon_exit" />
 	                </RelativeLayout>
 	            </RelativeLayout>
 
