@@ -59,7 +59,7 @@ public class ChannelListAdapter extends BaseAdapter {
 		holder.channelResourceOrder.setText((String) (myList.get(position).logicNo + ""));
 		// holder.channelIndex.setText((String)
 		// myList.get(position).getChannelCode());
-		holder.channelName.setText((String) myList.get(position).name);
+		holder.channelName.setText((String) myList.get(position).getChName());
 
 		return convertView;
 	}

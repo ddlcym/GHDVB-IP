@@ -140,6 +140,7 @@ public class CaService extends Service implements CAListener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+        Log.i(TAG, "CaServer is onCreate!");
 		initCaServer();
 		registerCaReceiver();
 	}
@@ -172,7 +173,7 @@ public class CaService extends Service implements CAListener {
 		ArrayList<DVB_CA_TYPE> caType = new ArrayList<DVB_CA_TYPE>();
 
 		// Vanlen change this order
-		caType.add(DVB_CA_TYPE.CA_SUMA);
+		//caType.add(DVB_CA_TYPE.CA_SUMA);
 		caType.add(DVB_CA_TYPE.CA_NOVEL);
 
 		thisCa.setType(caType);
@@ -209,7 +210,7 @@ public class CaService extends Service implements CAListener {
 	}
 
 	/**
-	 * 初始化信息盒子
+	 * 初始化信息
 	 */
 	private void initCaMsgBox() {
 
@@ -387,7 +388,7 @@ public class CaService extends Service implements CAListener {
 						msg.what = CaConfig.CA_COMMAND_SHOW_CURTAIN;
 					}else{					
 						msg.obj = getNovelNoticeContent(tempCode);
-						if (null != msg.obj) {
+						if (null != msg.obj && !isCurtainCtr) {
 							msg.what = CaConfig.CA_COMMAND_SHOW_NOTICE;
 						}
 					}
@@ -561,12 +562,12 @@ public class CaService extends Service implements CAListener {
 					if (0 == msg.arg1 && 0 == msg.arg2) {
 						msg.arg1 = msg.arg2 = 1;
 					}
-
-					if ((0 == tempPosition.H16 && 0 == tempPosition.L16)
-							|| (100 == tempPosition.H16 && 100 == tempPosition.L16)
-							|| (99 == tempPosition.H16 && 0 == tempPosition.L16)) {
-						isForcedShow = true;
-					}
+//
+//					if ((0 == tempPosition.H16 && 0 == tempPosition.L16)
+//							|| (100 == tempPosition.H16 && 100 == tempPosition.L16)
+//							|| (99 == tempPosition.H16 && 0 == tempPosition.L16)) {
+//						isForcedShow = true;
+//					}
 
 				} else {
 					msg.arg1 = msg.arg2 = 0;

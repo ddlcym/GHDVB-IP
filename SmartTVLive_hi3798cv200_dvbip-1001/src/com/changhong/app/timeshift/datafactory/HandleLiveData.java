@@ -86,7 +86,7 @@ public class HandleLiveData {
 				int updateFlag=db.updateChannel(chanId, "resource_code", channel.resource_code);
 //				a=a+1;//test
                 if(updateFlag!=0)
-				Log.i("mmmm","dealChannelIsTTV_updateChannel_"+"channel.name:"+channel.name+" isttv:"+flag+" resourcecode:"+channel.resource_code+" updateFlag:"+updateFlag);
+				Log.i("mmmm","dealChannelIsTTV_updateChannel_"+"channel.name:"+channel.getChName()+" isttv:"+flag+" resourcecode:"+channel.resource_code+" updateFlag:"+updateFlag);
 			}
 		}
 //		Log.i("mmmm","dealChannelIsTTV"+ a+"|channels:"+channels.size());//test

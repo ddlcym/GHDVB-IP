@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- epg_book time up start -->
+    <string name="str_EPGwarn">is about to play,watch now?</string>
+    <string name="str_EPGwarnTitle">REMINDER</string>
+    <string name="str_cancelButton">Cancel</string>
+    <string name="str_OKButton">OK</string>
+    <!-- epg_book time up end -->
+
+
+    <!-- liveTV info start -->
+    <string name="str_AutoSearchPrompt">Channel list is null,\nWould you like to search \nand update it now?</string>
+    <string name="str_ChannelUpdatePrompt">Channel list is changed,\nWould you like to search \nand update it now?</string>
+    <string name="str_zhn_nosignal">No signal detected,\nPlease check RF cable</string>
+    <string name="str_zhn_input_channel_logicnum_error">Incorrect channel number</string>
+    <!-- liveTV info end -->
+
+
+    <!-- time-shift info start -->
+    <string name="timeshift_support">Support timeshift</string>
+    <string name="timeshift_dissupport">Dont support timeshift</string>
+    <string name="timeshift_vodnotfound">Please install VOD moduel</string>
+    <string name="timeshift_fail">Enter timeshift failure, error code:</string>
+    <string name="cur_program">Present</string>
+    <string name="next_program">Next</string>
+    <string name="replay_dialog_title">REMINDER</string>
+    <string name="back_shiftlist">Exit</string>
+    <string name="time_shift_list">Time-shift List</string>
+    <string name="play_completes">is finished.</string>
+    <string name="exit_timeshift">Exit</string>
+    <string name="dialog_replay">Replay</string>
+    <string name="isabout_to_begin">is about to play.</string>
+    <string name="confirm_play">Play</string>
+    <string name="play_the_last_program">Watch it!</string>
+    <string name="play_the_next_program">Watch it!</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_exit_sure">Are you sure to exit?</string>
+    <!-- time-shift info end -->
+
+
+    <!-- ca tip for novel start -->
+    <string name="MESSAGE_BADCARD_TYPE">Unidentified Card</string>
+    <string name="MESSAGE_EXPICARD_TYPE">The card expired. Please replace</string>
+    <string name="MESSAGE_INSERTCARD_TYPE">Please insert the smart card</string>
+    <string name="MESSAGE_CARD_DIRECTION">（Card with Metal face up）</string>
+    <string name="MESSAGE_NOOPER_TYPE">Operator ID error</string>
+    <string name="MESSAGE_BLACKOUT_TYPE">Conditional Blackout</string>
+    <string name="MESSAGE_OUTWORKTIME_TYPE">Out of Working hours</string>
+    <string name="MESSAGE_WATCHLEVEL_TYPE">Out of Teleview Rating</string>
+    <string name="MESSAGE_PAIRING_TYPE">The card is not paired with this STB</string>
+    <string name="MESSAGE_NOENTITLE_TYPE">No Entitlement</string>
+    <string name="MESSAGE_DECRYPTFAIL_TYPE">Programs decrypt failed</string>
+    <string name="MESSAGE_NOMONEY_TYPE">No enough money</string>
+    <string name="MESSAGE_ERRREGION_TYPE">Regional Lockout</string>
+    <string name="MESSAGE_NEEDFEED_TYPE">Please insert the parent-card of the current card</string>
+    <string name="MESSAGE_ERRCARD_TYPE">Card verification failed. Please contact the operator</string>
+    <string name="MESSAGE_UPDATE_TYPE">Card in patching. Not to remove the card or power off</string>
+    <string name="MESSAGE_LOWCARDVER_TYPE">Please upgrade the smart card</string>
+    <string name="MESSAGE_VIEWLOCK_TYPE">please do not switch channets too frequently</string>
+    <string name="MESSAGE_MAXRESTART_TYPE">Card is in dormancy. Please insert the card after 5 minutes</string>
+    <string name="MESSAGE_FREEZE_TYPE">Card is freezed. Please contact the operator</string>
+    <string name="MESSAGE_CALLBACK_TYPE">Please send the IPPV records back to the operator</string>
+    <string name="MESSAGE_CURTAIN_TYPE">Program do not preview</string>
+    <string name="MESSAGE_CARDTESTSTART_TYPE">Card in patching...</string>
+    <string name="MESSAGE_CARDTESTFAILD_TYPE">Patching error, Please check the machine and communication module</string>
+    <string name="MESSAGE_CARDTESTSUCC_TYPE">patching successfully</string>
+    <string name="MESSAGE_NOCALIBOPER_TYPE">Card not transplants custom operators</string>
+    <string name="MESSAGE_STBLOCKED_TYPE">Please restart the STB</string>
+    <string name="MESSAGE_STBFREEZE_TYPE">STB is freezed. Please contact the operator</string>
+    <string name="MESSAGE_STBINIT_TYPE">STB will be initialized</string>
+    <!-- ca tip for novel end -->
+
+
+    <!-- pf banner start -->
+    <string name="notimeinfo"></string>
+    <string name="banner_prompt_z1">Present</string>
+    <string name="banner_prompt_z2">Next</string>
+    <string name="banner_prompt_z3">Channel List</string>
+    <string name="banner_prompt_z4">Exit</string>
+    <string name="noprogrampfinfo">No program info</string>
+    <!-- pf banner end -->
+
+    <string name="str_audio_playing">Radio is playing</string>
+    <string name="str_video_coming">Video will coming</string>
+    <string name="str_zhn_yes">OK</string>
+    <string name="str_zhn_no">Cancel</string>
+    <string name="app_name">Digital TV</string>
+    <string name="btn_ok_timeout">OK(%ds)</string>
+    
+    <!-- CA extra  ipp节目 购买 -->
+    <!-- CA buy IPPProgram  title -->
+    <string name="CA_BUY_IPPV_TITLE_FREE">IPPV free view</string>
+    <string name="CA_BUY_IPPV_TITLE_PAYVIEWED">IPPV pay view</string>
+    <string name="CA_BUY_IPPT_TITLE_PAYVIEWED">IPPT pay view</string>
+    <string name="IPPT_BUY_PRICE">view price：</string>
+    <string name="IPPT_BUY_PRICE_TAPE">view and record price：</string>
+    <string name="IPPT_BUY_EXPIRYDATE">Expiration Date：</string>
+    <string name="IPPT_BUY_OPERATOR_ID">Operator ID：</string>
+    <string name="IPPT_BUY_PRODUCT_ID">Product ID：</string>
+    <string name="IPPT_BUY_TOTEN_ID">Token ID：</string>
+    <string name="ca_pin_input">Enter PIN code</string>
+    <string name="IPPT_BUY_INFOR">Purchase IPPT，Deduct Interval minutes *，Points@，Token ID%</string>
+    <string name="IPPT_BUY_SUCCESS">Purchase succeed</string>
+    <string name="IPPT_BUY_FAILED">Purchase failed</string>
+    <!-- PIN码 -->
+    <string name="ca_pin_invalid">Invalid PIN code</string>
+    <string name="ca_pin_modify_success">New PIN code saved!</string>
+    <string name="ca_pin_modify_failed">Setting failed！</string>
+    <string name="ca_pin_twopin_argument">Inconsistent PIN code！</string>
+    <!-- 高级预览 -->
+    <string name="CA_CURTAIN_ENABLE_NOTICE">Curtain progame. Free view</string>
+    <string name="CA_CURTAIN_DISENABLE_NOTICE">Curtain progame. Pay view</string>
+    <!-- 黑名单 -->
+    <string name="CA_CONTINUE_BLACK_LIST">STB is locked. Please contact the operator</string>
+    <!-- 连续观看 -->
+    <string name="CA_CONTINUE_WATCH_LIMIT">Continue watch limited，Please contact the operator</string>
+    <!-- 进度条 -->
+    <string name="ca_progressstrip_dataloadown">SMC Patching...！</string>
+    <string name="ca_progressstrip_upgrate_progress">SMC upgrade,do not remove the card or shutdown!</string>
+    <string name="ca_progressstrip_upgrate_success">SMC upgrade success！ </string>
+    <string name="ca_progressstrip_upgrate_failed">SMC upgrade failed！</string>
+    <string name="ca_worktime_hint_threeline"> 【#】Cancel，【退出】Return</string>
+    <string name="title_pin_ipp_">Enter PIN code:</string>
+</resources>

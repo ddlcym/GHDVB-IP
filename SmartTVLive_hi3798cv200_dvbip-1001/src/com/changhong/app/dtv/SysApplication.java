@@ -281,6 +281,9 @@ public class SysApplication extends Application implements CAListener {
 						break;
 					case CAR_EVENT_SNR_CHG:
 						break;
+					case CAR_EVENT_FRQ_CHG:
+						NitMonitor.notifyNewFreq();
+						reqNotifySignalChanged(true);
 					default:
 						break;
 				}
@@ -640,7 +643,7 @@ public class SysApplication extends Application implements CAListener {
 		}
 		*/
 		
-		P.i("playChannel#1>> chid="+channelId+",logicNo=" + curChannel.logicNo);
+		P.i("playChannel#1>> chid="+channelId+",logicNo=" + curChannel.logicNo+ ",VID PID="+curChannel.videoPid+",VID streamtype="+curChannel.videoStreamType);
 		
 		dvbPlayer.stop();	
 		/* If it is audio channel, blank the screen */
@@ -813,9 +816,10 @@ public class SysApplication extends Application implements CAListener {
 		*/
 		if((curChannel.sortId==0x1||curChannel.sortId==0xF9||curChannel.sortId>=0xe3&&curChannel.sortId<=0xeb) && (curChannel.videoPid == 0x1fff))
 		{
-			P.d("Found vpid=0x1fff TV channel:"+curChannel.name);
+			P.d("Found vpid=0x1fff TV channel:"+curChannel.getChName());
 			dvbPlayer.blank();
-			showAudioPlaying(true);
+			if(!Main.checkNoSignalOsdExist())
+				showAudioPlaying(true);
 		}
 		else
 		{
@@ -961,7 +965,7 @@ public class SysApplication extends Application implements CAListener {
 			{
 				continue;
 			}
-			if(channel.name.equals(chName))
+			if(channel.getChName().equals(chName))
 			{
 				playChannel(channel, false);
 				return 1;
@@ -1005,7 +1009,7 @@ public class SysApplication extends Application implements CAListener {
 			mo_CurChannel = dvbDatabase.getChannelBySortIdAndIndex(Channel.CHAN_SORT_TV, 0);
 			if (mo_CurChannel != null)
 			{
-				P.i( "find last channel ->  " + mo_CurChannel.name);
+				P.i( "find last channel ->  " + mo_CurChannel.getChName());
 		    	playChannel(mo_CurChannel,false);
 		    	return true;
 			}
@@ -1024,7 +1028,7 @@ public class SysApplication extends Application implements CAListener {
 			mo_CurChannel = dvbDatabase.getChannelBySortIdAndIndex(Channel.CHAN_SORT_TV, 0);
 			if (mo_CurChannel != null)
 			{
-				P.i( "find last channel ->  " + mo_CurChannel.name);
+				P.i( "find last channel ->  " + mo_CurChannel.getChName());
 		    	playChannel(mo_CurChannel,false);
 		    	return true;
 			}
@@ -1260,7 +1264,7 @@ public class SysApplication extends Application implements CAListener {
 			return null;			
 		}
 		
-		String recdir = path + chan.name + "_" + Utils.getCurTime();
+		String recdir = path + chan.getChName() + "_" + Utils.getCurTime();
 		
 		if(!Utils.creatFolderIfNotExists(recdir))
 		{
@@ -1281,16 +1285,18 @@ public class SysApplication extends Application implements CAListener {
     }
     
     private void SetUserInfo(String key, int channelId)
-    {
+    {/*直播框架播放成功后会自动保存，这里不需要再保存了
     	Channel tChannel = DVB.getManager().getChannelDBInstance().getChannel(channelId);
     	saveLastPlayingInfo(tChannel);
+    	*/
     }
     public void SetUserInfo(Channel playingChannel)
-    {
+    {/* 直播框架播放成功后会自动保存，这里不需要再保存了
     	saveLastPlayingInfo(playingChannel);
+    	*/
     }
     
-    private void saveLastPlayingInfo(Channel playingChannel)
+    public void saveLastPlayingInfo(Channel playingChannel)
     {
     	if(playingChannel == null)
     	{
@@ -1301,7 +1307,9 @@ public class SysApplication extends Application implements CAListener {
     	playingRecord.mSymbolRate = playingChannel.symbolRateKbps;
     	playingRecord.mModulationMode = playingChannel.modulation;
     	playingRecord.mSpectrum = playingChannel.spectrum;
-    	playingRecord.mChannelId = playingChannel.chanId;
+    	playingRecord.mChannelId = playingChannel.logicNo<<16|playingChannel.chanId;
+
+    	Log.i("YBD", "saveLastPlayingInfo:"+playingRecord.mChannelId);
     	DVB.getManager().getChannelDBInstance().savePlayingInfo(playingRecord);
     }
     
@@ -1310,9 +1318,16 @@ public class SysApplication extends Application implements CAListener {
     	PlayingInfo playingRecord = DVB.getManager().getChannelDBInstance().getSavedPlayingInfo();
     	if(playingRecord == null)
     	{
+    		Log.i("YBD", "getLastPlayingChannelId:"+(-1));
     		return -1;
     	}
-    	return playingRecord.mChannelId;
+    	Log.i("YBD", "getLastPlayingChannelId:"+playingRecord.mChannelId);
+    	if(playingRecord.getChannelId()==-1&&playingRecord.getLogicNumber()!=-1){
+    		Channel channel = DVB.getManager().getChannelDBInstance().getChannelByLogicNo(playingRecord.getLogicNumber());
+    		if(channel!=null)
+    			return channel.chanId;
+    	}
+    	return playingRecord.getChannelId();
     }
     
     
@@ -1811,7 +1826,7 @@ public class SysApplication extends Application implements CAListener {
 		Channel[] channels = dvbDatabase.getChannelsAll();
 		for (Channel channel : channels) {
 			if (channel.chanId == mProductId ) {
-				channelName=channel.name;
+				channelName=channel.getChName();
 				break;
 			}
 		}

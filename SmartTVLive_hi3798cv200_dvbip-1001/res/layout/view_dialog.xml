@@ -21,8 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
          android:gravity="center"
-        android:layout_marginTop="90dip"
-        android:singleLine="true"/>
+        android:layout_marginTop="90dip"/>
     
     
     <TextView
@@ -33,7 +32,6 @@
         android:layout_centerHorizontal="true"
          android:gravity="center"
         android:layout_marginTop="130dip"
-        android:singleLine="true"
          android:visibility="gone"/>
 
     <RelativeLayout

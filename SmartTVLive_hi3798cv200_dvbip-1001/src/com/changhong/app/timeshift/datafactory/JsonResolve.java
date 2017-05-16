@@ -75,7 +75,7 @@ public class JsonResolve {
 		channel.logicNo=Integer.parseInt(getJsonObjectString(jsonObject, "channelNumber"));
 		channel.is_ttv="1";
 		channel.resource_code=""+getJsonObjInt(jsonObject, "ResourceCode");
-		channel.name=getJsonObjectString(jsonObject, "channelName");
+		channel.name=channel.teletext=getJsonObjectString(jsonObject, "channelName");
 		return channel;
 	}
 
@@ -441,8 +441,8 @@ public class JsonResolve {
 
 			public int compare(Channel o1, Channel o2) {
 				int result = o1.logicNo - o2.logicNo;
-				if (result == 0&&o1.name!=null&&o2.name!=null) {
-					result = o1.name.compareTo(o2.name);
+				if (result == 0&&o1.getChName()!=null&&o2.getChName()!=null) {
+					result = o1.getChName().compareTo(o2.getChName());
 				}
 				return result;
 			}

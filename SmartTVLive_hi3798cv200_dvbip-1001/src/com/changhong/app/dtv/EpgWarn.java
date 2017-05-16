@@ -83,21 +83,9 @@ public class EpgWarn extends Activity implements OnClickListener {
 
 		objApplication.delBookChannel(bookInfo.bookDay, bookInfo.bookTimeStart);
 
-		String bookChannelName = new String();
-		String bookContent = new String();
-
-		/*
-		 * bookContent="你预约的：+bookInfo.bookChannelName
-		 * +"\n"+bookInfo.bookDay+"/"+ bookInfo.bookTimeStart+"\n"+
-		 * bookInfo.bookEnventName;
-		 */
-
-		bookChannelName = bookInfo.bookChannelName;
-		bookContent = "<" + bookInfo.bookEnventName + ">";
-
 		initView();
-		text0View.setText(bookChannelName);
-		textView.setText(bookContent);
+		text0View.setText(bookInfo.bookChannelName);
+		textView.setText("<" + bookInfo.bookEnventName + ">");
 
 		// doFinish();
 		buttonok.setOnClickListener(this);

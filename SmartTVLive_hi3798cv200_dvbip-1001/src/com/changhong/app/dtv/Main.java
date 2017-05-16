@@ -160,7 +160,7 @@ public class Main extends Activity implements ISceneListener {
 	private int iKeyNum = 0;
 	private int iKey = 0;
 	LinearLayout tvRootDigitalkey;
-	private RelativeLayout tvRootDigitalKeyInvalid;
+	private static RelativeLayout tvRootDigitalKeyInvalid;
 	Handler handler_digital = new Handler();
 	/**
 	 * CA INFO
@@ -172,7 +172,7 @@ public class Main extends Activity implements ISceneListener {
 	/**
 	 * no program
 	 */
-	RelativeLayout flNoSignal;
+	private static RelativeLayout flNoSignal;
 
 	/**
 	 * pft update
@@ -247,7 +247,7 @@ public class Main extends Activity implements ISceneListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		//Debug.startMethodTracing("CH_dtvApp#3");
 		super.onCreate(savedInstanceState);
-
+		P.d("Main OnCreate !");
 		setContentView(R.layout.main);
 
 		mContext = Main.this;
@@ -269,7 +269,7 @@ public class Main extends Activity implements ISceneListener {
 
 		objApplication.dvbPlayer.setSize(builder.build());
 
-		P.d("Main OnCreate !");
+
 		startTime = Utils.getCurTime();
 
 		// init views
@@ -600,8 +600,8 @@ public class Main extends Activity implements ISceneListener {
 			Channel toPlayChannel = objApplication.dvbDatabase
 					.getChannelByTsIdAndServiceId(iTsId, iSerId);
 			if (toPlayChannel != null) {
-				objApplication.SetUserInfo(toPlayChannel);
-				P.d("GOT logicNo =" + toPlayChannel.logicNo);
+				objApplication.saveLastPlayingInfo(toPlayChannel);
+				P.d("GOT logicNo =" + toPlayChannel.logicNo + ",VID PID="+toPlayChannel.videoPid+",VID streamtype="+toPlayChannel.videoStreamType);
 				//return;
 			}
 		} else if (iBouqtID != -1) {
@@ -619,7 +619,7 @@ public class Main extends Activity implements ISceneListener {
 					}
 				}
 				if (curChan != null) {
-					objApplication.SetUserInfo(curChan);
+					objApplication.saveLastPlayingInfo(curChan);
 					iCallChanListId = iBouqtID;
 					P.d("GOT list[" + iBouqtID + "] logicNo ="
 							+ curChan.logicNo);
@@ -858,7 +858,7 @@ public class Main extends Activity implements ISceneListener {
 			}
 			return true;
 		case KeyEvent.KEYCODE_VOLUME_MUTE:
-			
+
 			P.i("mute key arrived.");
 			AudioManager am1 = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			boolean isMute1 = am1.isStreamMute(AudioManager.STREAM_MUSIC);
@@ -1138,11 +1138,12 @@ public class Main extends Activity implements ISceneListener {
 				int curChanCount = objApplication.dvbDatabase.getChannelCountSC();
 				if(curChanCount<=0){
 					strInfoString = theActivity.mContext.getString(
-							R.string.str_AutoSearchPrompt).toString();
+							R.string.str_AutoSearchPrompt);
 				}else{
 					strInfoString = theActivity.mContext.getString(
-							R.string.str_ChannelUpdatePrompt).toString();
+							R.string.str_ChannelUpdatePrompt);
 				}
+				objApplication.showAudioPlaying(false);
 				theActivity.searchPromptDiaog = DialogUtil.showPromptDialog(
 						theActivity.mContext,strInfoString,
 						null, null, null, new DialogBtnOnClickListener() {
@@ -1958,8 +1959,9 @@ public class Main extends Activity implements ISceneListener {
 			if (!bOnDtvThread[4]) {
 				bOnDtvThread[4] = true;
 				// onVkey(Class_Constant.KEYCODE_INFO_KEY);
-				if (objApplication != null && bNeedPlay)
-						objApplication.playLastChannel();
+				if (objApplication != null && bNeedPlay){
+					objApplication.playLastChannel();
+				}
 				
 				if (iCallChanListId != -1) {
 					Message msg = new Message();
@@ -2036,7 +2038,9 @@ public class Main extends Activity implements ISceneListener {
 			}
 		}
 	};
-
+	public static boolean checkNoSignalOsdExist(){
+		return (flNoSignal!=null && flNoSignal.getVisibility() == View.VISIBLE);
+	}
 	private class signalRecever extends BroadcastReceiver {
 
 		@Override
@@ -2055,6 +2059,7 @@ public class Main extends Activity implements ISceneListener {
 			}
 
 			if (!bIsLocked) {
+				objApplication.showAudioPlaying(false);
 				flNoSignal.setVisibility(View.VISIBLE);
 				objApplication.blackScreen();
 				Log.i(TAG, "display no signal>>>");
@@ -2248,7 +2253,7 @@ public class Main extends Activity implements ISceneListener {
 				.getSavedPlayingInfo();
 		// 获取当前Channel详细信息
 		if (thisPlayingInfo != null) {
-			DBchan = db.getChannel(thisPlayingInfo.mChannelId);
+			DBchan = db.getChannel(thisPlayingInfo.getChannelId());
 		}
 		P.i("mmmm", "Main=initTimeshiftData_DBchan:" + DBchan
 				+ "thisPlayingInfo:" + thisPlayingInfo);
@@ -2287,7 +2292,7 @@ public class Main extends Activity implements ISceneListener {
 					@Override
 					public void onResponse(org.json.JSONObject arg0) {
 						// TODO Auto-generated method stub
-						P.i("mmmm", "Main=getUserChannel:" + arg0);
+						//P.i("mmmm", "Main=getUserChannel:" + arg0);
 
 						HandleLiveData.getInstance().dealChannelIsTTV(arg0);
 					}
@@ -2300,7 +2305,7 @@ public class Main extends Activity implements ISceneListener {
 		{
 			mReQueue.cancelAll(Main.class.getSimpleName()+"_forCata");
 			String URL2 = processData.getCategoryString();
-			P.i("mmmm", "Main=initCategoryData:" + URL2);
+			//P.i("mmmm", "Main=initCategoryData:" + URL2);
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
 					Request.Method.GET, URL2, null,
 					new Response.Listener<org.json.JSONObject>() {
@@ -2316,7 +2321,7 @@ public class Main extends Activity implements ISceneListener {
 									+ newVer);
 							if (oldVer == null || newVer != null
 									&& !newVer.equals(oldVer)) {
-								P.i("initSortData_new:" + arg0);
+								//P.i("initSortData_new:" + arg0);
 								SortData.saveSortNameList(HandleLiveData
 										.getInstance().dealCategoryName(arg0));
 								HandleLiveData.getInstance().dealCategoryData(
@@ -2373,7 +2378,7 @@ public class Main extends Activity implements ISceneListener {
 		ChannelDB db = DVB.getManager().getChannelDBInstance();
 		PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
 		// 获取当前Channel详细信息
-		Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId);
+		Channel DBchan = db.getChannel(thisPlayingInfo.getChannelId());
 
 		if (programBannerDialog != null) {
 			programBannerDialog.cancel();
@@ -2403,7 +2408,7 @@ public class Main extends Activity implements ISceneListener {
 				ChannelDB db = DVB.getManager().getChannelDBInstance();
 				PlayingInfo thisPlayingInfo = db.getSavedPlayingInfo();
 				// 获取当前Channel详细信息
-				Channel DBchan = db.getChannel(thisPlayingInfo.mChannelId);
+				Channel DBchan = db.getChannel(thisPlayingInfo.getChannelId());
 				// 判断是否可以时移，如果不可以则不进入,is_ttv 0不支持，1支持
 				Log.i(TAG, "DBchan.isttv" + DBchan.is_ttv);
 				if (DBchan.is_ttv.equals("1")) {
@@ -2435,7 +2440,15 @@ public class Main extends Activity implements ISceneListener {
 			Log.i(TAG, "flTimeShift is null");
 		}
 	}
-	
+
+	public static void showErrLogicNum(boolean display) {
+		if (tvRootDigitalKeyInvalid != null) {
+			if (display)
+				tvRootDigitalKeyInvalid.setVisibility(View.VISIBLE);
+			else
+				tvRootDigitalKeyInvalid.setVisibility(View.GONE);
+		}
+	}
 	//for test
 	private void startAutoSearch(){
 		try {

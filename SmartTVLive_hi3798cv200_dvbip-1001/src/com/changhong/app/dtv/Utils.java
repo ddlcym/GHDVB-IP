@@ -226,4 +226,17 @@ public class Utils {
 		}
 		return -1;
 	}
+
+	 public static int stringNumbers(int numer,String str,String subStr)  
+	    {  
+	        if (str.indexOf(subStr)==-1)
+	        {  
+	            return 0;  
+	        }  
+	        else if(str.indexOf(subStr) != -1)  
+	        {  
+	        	return stringNumbers(++numer,str.substring(str.indexOf(subStr)+subStr.length()),subStr);  
+	        }  
+	        return 0;  
+	    } 
 }

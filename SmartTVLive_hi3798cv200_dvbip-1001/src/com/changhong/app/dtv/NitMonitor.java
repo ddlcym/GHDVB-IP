@@ -1,5 +1,6 @@
 package com.changhong.app.dtv;
 
+import android.R.integer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemProperties;
@@ -10,8 +11,10 @@ import com.changhong.dvb.DVB;
 import com.changhong.dvb.NetworkAttribute;
 import com.changhong.dvb.TableListener;
 import com.changhong.dvb.ProtoMessage.DVB_PSI;
+import com.changhong.dvb.ProtoMessage.DVB_Section;
 import com.changhong.dvb.ProtoMessage.DVB_Table;
 import com.changhong.dvb.ProtoMessage.DVB_TableFilter;
+import com.google.protobuf.ByteString;
 
 public class NitMonitor {
 	DVB_TableFilter.Builder  NitFilterBuilder;
@@ -19,7 +22,8 @@ public class NitMonitor {
 	private static String TAG = "NitMonitor";
 	Main context;
 	private boolean ListenerSetted=false;
-	int curNitVer=-1;
+	public static int curNitVer=-1;
+	public static final int GH_NetworkId=16512; //�軪��Ŀ��Ҫ�ж�NetworkId
 	
 	public NitMonitor(Context context){
 		this.context = (Main)context;
@@ -77,6 +81,7 @@ public class NitMonitor {
 		}
 
 	};	
+
 	public void checkNitVersionIsChanged(DVB_Table table) {
 
 		NetworkAttribute networkAttr = DVB.getManager().getChannelDBInstance()
@@ -85,27 +90,54 @@ public class NitMonitor {
 			Log.i(TAG, "nitTableListener-callback:networkAttr is null, return");
 			return;
 		}
-		if (networkAttr.mNitCrc32 == null
-				|| networkAttr.mNitCrc32.equals("null")) {
-			Log.i(TAG, "nitTableListener-networkAttr.mNitCrc32 is null, return");
-			return;
-		}
+		/*
+		 * if (networkAttr.mNitCrc32 == null ||
+		 * networkAttr.mNitCrc32.equals("null")) { Log.i(TAG,
+		 * "nitTableListener-networkAttr.mNitCrc32 is null, return"); return; }
+		 */
 
 		int iNitVerInTable = table.getVersion();
-		if (iNitVerInTable == networkAttr.mNitVersion || iNitVerInTable == curNitVer) {
-			Log.i(TAG,
-					"nitTableListener-callback:Nit version not change, return");
+		if (iNitVerInTable == networkAttr.mNitVersion
+				|| iNitVerInTable == curNitVer) {
+			Log.i(TAG, "Nit version NOT changed,DB=" + networkAttr.mNitVersion + ",LAST="
+					+ curNitVer + ",cur=" + iNitVerInTable);
+			curNitVer = iNitVerInTable;
 			return;
 		}
-		//mHandler.sendEmptyMessage(20); // 0-->20
-		//boolean bHadReqScan =  SystemProperties.getBoolean(PROPERTY_LIVE_NEED_REFRESH_CHANNEL, false);
+		Log.i(TAG, "Nit version changed,DB=" + networkAttr.mNitVersion + ",LAST="
+				+ curNitVer + ",cur=" + iNitVerInTable);
 		
-		//if(!bHadReqScan)
-		{
-			Log.i(TAG,"Nit version changed,"+networkAttr.mNitVersion+" vs "+ curNitVer + " vs "+iNitVerInTable);
-			curNitVer = iNitVerInTable;
-			context.onVkey(Class_Constant.VKEY_EMPTY_DBASE);		
-		}		
-		
+		curNitVer = iNitVerInTable;
+
+		int network_id = getNetworkIdFromNit(table);
+		if (network_id != GH_NetworkId) {
+			Log.i(TAG,
+					"nitTableListener-callback: NOT GH_NetworkId 16512,Return");
+			return;
+		}
+		context.onVkey(Class_Constant.VKEY_EMPTY_DBASE);
+
+	}
+	
+	public static void notifyNewFreq(){
+		curNitVer = -1;
+	}
+	private int getNetworkIdFromNit(DVB_Table table) {
+		DVB_Section tableSection;
+		ByteString tableSecData;
+		int networkid = -1;
+		try {
+			tableSection = table.getSection(0);
+			tableSecData = tableSection.getData();
+			if (tableSecData.size() > 5) {
+				int data1, data2;
+				data1 = tableSecData.byteAt(3);
+				data2 = tableSecData.byteAt(4);
+				networkid = (data1 << 8) & 0xff00 | data2 & 0xff;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return networkid;
 	}	
 }

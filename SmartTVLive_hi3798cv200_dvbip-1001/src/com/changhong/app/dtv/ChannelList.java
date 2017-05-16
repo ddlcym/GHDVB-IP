@@ -340,7 +340,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			}
 			Log.i("mmmm","dtv: channel>> id="+chan.chanId+",logicNo="+chan.logicNo+",categoryId="+chan.favorite+",name= "+chan.name);
 			*/
-			if(checkValidofAVChannel(chan.sortId)){
+			if(chan.isAVChannel()){
 			
 			allTvList.add(chan);				// all tv type;
 			
@@ -374,14 +374,6 @@ public class ChannelList extends Activity implements ISceneListener {
 		
 	}
 	
-	private boolean checkValidofAVChannel(int sortId) {
-		if(sortId==0x1||sortId==0x2||sortId==0xF9||sortId>=0xe3&&sortId<=0xeb){
-			return true;
-		}else {
-			return false;
-		}
-	}
-
 	private void showChannelList() {
 		// TODO show channellist
 		List<Channel> curChannels = null;
@@ -561,7 +553,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			if (channel.skip == 1) {
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("id", "" + channel.chanId);
-				map.put("name", channel.name);
+				map.put("name", channel.getChName());
 				map.put("serviceid", Utils.formatServiceId(channel.serviceId));
 				list.add(map);
 			}
@@ -797,7 +789,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			}
 			
 			holder.channelName.setTextColor(0xffa0a2a4);
-			holder.channelName.setText("" + Channel.name);
+			holder.channelName.setText("" + Channel.getChName());
 			
 			return convertView;
 		}
@@ -855,7 +847,6 @@ public class ChannelList extends Activity implements ISceneListener {
 	private int iKeyNum;
 	private int iKey;
 	LinearLayout tvRootDigitalkey;
-	private RelativeLayout tvRootDigitalKeyInvalid;
 	private final UI_Handler mUiHandler = new UI_Handler(this);
 	private static final int MESSAGE_HANDLER_DIGITALKEY = 202;
 	private static final int MESSAGE_DISAPPEAR_DIGITAL = 203;
@@ -888,11 +879,11 @@ public class ChannelList extends Activity implements ISceneListener {
 		Display_Program_Num(iKey);
 		
 		//mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 1500);//要求1.5秒无操作则执行		
-		
-		if (iKey >= 100) {
-			mUiHandler
-					.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY);
-		} else {
+		if (iKeyNum>=3 /*iKey >= 100*/) {
+			//mUiHandler.sendEmptyMessage(MESSAGE_HANDLER_DIGITALKEY); // 输入3位数字立即切台
+			mUiHandler.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY,200);//如果立即切台，输入第三位数字看不见
+		}		
+		else {
 			mUiHandler
 					.sendEmptyMessageDelayed(MESSAGE_HANDLER_DIGITALKEY, 2000);
 		}
@@ -980,9 +971,9 @@ public class ChannelList extends Activity implements ISceneListener {
 					theActivity.tvRootDigitalkey.setVisibility(View.INVISIBLE);
 					
 					
-					theActivity.tvRootDigitalKeyInvalid
-							.setVisibility(View.VISIBLE);
-
+					/*theActivity.tvRootDigitalKeyInvalid
+							.setVisibility(View.VISIBLE);*/
+					Main.showErrLogicNum(true);
 					theActivity.mUiHandler
 							.removeMessages(MESSAGE_HANDLER_DIGITALKEY);
 					theActivity.mUiHandler.sendEmptyMessageDelayed(
@@ -1008,7 +999,13 @@ public class ChannelList extends Activity implements ISceneListener {
 						//	theActivity.volume_layout.setVisibility(View.INVISIBLE);
 
 						//theActivity.banner.show(SysApplication.iCurChannelId);
-						updateChanListInfo(theActivity.iKey);
+						if (!updateChanListInfo(theActivity.iKey)) {
+							theActivity.tvRootDigitalkey
+									.setVisibility(View.INVISIBLE);
+							/*theActivity.tvRootDigitalKeyInvalid
+									.setVisibility(View.VISIBLE);*/
+							Main.showErrLogicNum(true);
+						}
 	
 						/*
 						Message msg2 = new Message();
@@ -1068,7 +1065,8 @@ public class ChannelList extends Activity implements ISceneListener {
 
 				Log.i("zhougang  main",
 						"MESSAGE_SHOW_DIGITALKEY   -----channelId------- " + channelId2+"   ");
-				theActivity.tvRootDigitalKeyInvalid.setVisibility(View.GONE);
+				/*theActivity.tvRootDigitalKeyInvalid.setVisibility(View.GONE);*/
+				Main.showErrLogicNum(false);
 				
 				if(theActivity.tvRootDigitalkey.getVisibility()==View.INVISIBLE)
 						theActivity.tvRootDigitalkey.setVisibility(View.VISIBLE);
@@ -1094,12 +1092,13 @@ public class ChannelList extends Activity implements ISceneListener {
 
 			case MESSAGE_DISAPPEAR_DIGITAL: {
 				theActivity.iKey = 0;
-				if (theActivity.tvRootDigitalKeyInvalid != null) {
+				/*if (theActivity.tvRootDigitalKeyInvalid != null) {
 					theActivity.tvRootDigitalKeyInvalid
 							.setVisibility(View.INVISIBLE);
-				}
+				}*/
+				Main.showErrLogicNum(false);
 				if (theActivity.tvRootDigitalkey != null) {
-					theActivity.tvRootDigitalkey.setVisibility(View.INVISIBLE);
+					theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 				}
 
 				//theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
@@ -1112,7 +1111,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			}
 		}
 
-		private void updateChanListInfo(int iKey) {
+		private boolean updateChanListInfo(int iKey) {
 			final ChannelList theActivity = mActivity.get();
 			
 			//首先从当前类型分类查找输入频道  --->按歌华规范需要从全部分类频道里查找
@@ -1142,10 +1141,11 @@ public class ChannelList extends Activity implements ISceneListener {
 						theActivity.channelListView.setSelection(i);
 						theActivity.mAdapter.notifyDataSetChanged();
 						Log.i(TAG,"Found/other>> input:"+iKey+", in curType:"+theActivity.curType+",pos:"+i);
-						return ;
+						return true;
 					}
 				}
 			}
+			return false;
 		}
 	}
 

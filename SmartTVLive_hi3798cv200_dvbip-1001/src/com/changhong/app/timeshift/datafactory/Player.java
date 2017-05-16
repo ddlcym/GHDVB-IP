@@ -112,7 +112,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 		PlayingInfo thisPlayingInfo = DVB.getManager().getChannelDBInstance()
 				.getSavedPlayingInfo();
 		// 获取当前Channel详细信息
-		curChannel = db.getChannel(thisPlayingInfo.mChannelId);
+		curChannel = db.getChannel(thisPlayingInfo.getChannelId());
 
 		delayTime = 0;
 		initMediaPlayer();

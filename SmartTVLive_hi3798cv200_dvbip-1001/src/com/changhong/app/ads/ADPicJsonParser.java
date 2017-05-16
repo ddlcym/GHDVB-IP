@@ -1,34 +1,34 @@
 package com.changhong.app.ads;
 
+import android.R.integer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.changhong.app.ads.ADPicData.AD_Content;
-import com.changhong.app.ads.ADPicData.Time_List;
-import com.changhong.app.book.BookInfo;
-import com.changhong.app.dtv.P;
-import com.changhong.app.utils.OpJsonFile;
-import com.changhong.dvb.Channel;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.ImageView;
+
+import com.changhong.app.ads.ADPicData.AD_Content;
+import com.changhong.app.ads.ADPicData.Time_List;
+import com.changhong.app.dtv.P;
+import com.changhong.app.dtv.SysApplication;
+import com.changhong.app.utils.OpJsonFile;
+import com.changhong.app.dtv.R;
 
 public class ADPicJsonParser {
 	private Thread parseThread;
 	private static ADPicJsonParser adPicJsonParser;
 	private ADPicData ad_bannel, ad_vol_bar, ad_chan_list, curAdPicData;
-	public static final String TAG = "ADVPIC";
+	public static final String TAG = "ADV";
 	private static final String advFile_path = "/private/adv";
+	private boolean isParsingOn = false;
 
 	private ADPicJsonParser() {
 		if (parseThread == null) {
@@ -36,7 +36,9 @@ public class ADPicJsonParser {
 				@Override
 				public void run() {
 					P.d(TAG, "parse ad data thread Start  !");
+					isParsingOn = true;
 					do_ParseADJsonFile();
+					isParsingOn = false;
 					P.d(TAG, "parse ad data thread end  !");
 				}
 			};
@@ -44,6 +46,10 @@ public class ADPicJsonParser {
 		}
 	}
 
+	public boolean isADPicParsingNow(){
+		return isParsingOn;
+	}
+	
 	protected void do_ParseADJsonFile() {
 		File AdvDir = new File(advFile_path);
 		if (AdvDir.exists()) {
@@ -67,12 +73,14 @@ public class ADPicJsonParser {
 					curAdPicData.filenameArray.clear();
 					// curAdPicData.bmpall.clear();
 				}
+				String str_json_file=null;
 				for (File file2 : list2) {
 					if (file2.isFile()) {
 						String fileallname = path1 + "/" + file2.getName();
 						Log.d(TAG, "FILE NAME:" + fileallname);
 						if (file2.getName().equalsIgnoreCase("json")) {
-							parseADJson(curAdPicData, fileallname);
+							//parseADJson(curAdPicData, fileallname);
+							str_json_file = fileallname;
 						} else {
 							curAdPicData.filenameArray.add(fileallname);
 							// Bitmap bmp=
@@ -83,6 +91,8 @@ public class ADPicJsonParser {
 						Log.d(TAG, "invalue directory!!!");
 					}
 				}
+				if(str_json_file!=null)
+					parseADJson(curAdPicData, str_json_file);
 			} else {
 				Log.d(TAG, "invalue file!!!");
 			}
@@ -289,7 +299,8 @@ public class ADPicJsonParser {
 			bitmap = BitmapFactory.decodeStream(is);
 			is.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			Log.e(TAG, " getBitMap fail");
 		}
 
 		return bitmap;
@@ -297,27 +308,64 @@ public class ADPicJsonParser {
 
 	public Bitmap getBitMap(int pic_pos,String channel_id,String curTime) {
 		String filename = getAdFile(pic_pos,channel_id,curTime);
-		return getBitMap(filename);
+		Bitmap bitmap = null;
+		if(filename!=null)
+			bitmap = getBitMap(filename);
+		return bitmap;
+	}
+
+	private Bitmap getDefultBtiMap(int pic_pos) {
+		try {
+			if(pic_pos==0||pic_pos==1){
+				return BitmapFactory.decodeResource(SysApplication.getInstance().getResources(), R.drawable.default_img);
+			}			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null; 
 	}
 
 	private String getAdFile(int pic_pos,String channel_id,String curTime) {
+	
 		ADPicData localObj = null;
+		AD_Content ad_Content;
+		String fileName=null;
 		switch(pic_pos){
 		case 0:
 			localObj = ad_bannel;
+			fileName = "/private/adv_def/bannel_ad_default.png";
 			break;
 		case 1:
 			localObj = ad_vol_bar;
+			fileName = "/private/adv_def/volBar_ad_default.png";
 			break;
 		case 2:
 			localObj = ad_chan_list;
+			fileName = "/private/adv_def/chanList_ad_default.png";
 			break;
 		default:
 			return null;
 		}
-	
-		//localObj.list_ad_Content;
-		return null;
+		/*			
+		List<AD_Content> list_ad_Content;	
+		List<Channel_List> list_channel_List;
+		List<Groups_List> list_groups_list;
+
+		for(int n=0;n<localObj.list_ad_Content.size();n++){
+			ad_Content = localObj.list_ad_Content.get(n);
+			if(ad_Content!=null){
+				//ad_Content.
+			}
+		}
+		*/
+		if(localObj==null||localObj.filenameArray==null)
+			return null;
+		int max = localObj.filenameArray.size();
+		int random = (int)(Math.random()*10);
+		fileName = localObj.filenameArray.get(random%max);	
+		Log.i(TAG, "display AD>> idx="+random+"/"+max+",file="+fileName);
+		return fileName;
 	}
 
 	// =================================base function =====================================

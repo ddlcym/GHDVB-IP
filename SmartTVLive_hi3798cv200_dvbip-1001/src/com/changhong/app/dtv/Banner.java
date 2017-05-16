@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import zmq.Mailbox;
 
+import com.changhong.app.ads.ADPicDisplay;
 import com.changhong.app.constant.Advertise_Constant;
 import com.changhong.app.timeshift.common.NetworkUtils;
 import com.changhong.app.utils.CustomToast;
@@ -94,6 +95,10 @@ public class Banner {
 	private AdStrategy ads;
 	private Handler processADHandler;
 	private String tempStr = "";
+	
+	private ADPicDisplay adPicDisplay;
+	private ImageView imageView_ad;
+	
 	private static boolean isBannerRunning=false;
 
 	public Banner() {
@@ -157,8 +162,8 @@ public class Banner {
 		public void handleMessage(Message msg) {
 			if(getBannerDisStatus()){
 				PlayingInfo pi = sysApplication.dvbDatabase.getSavedPlayingInfo();
-				if(pi!=null && channelInBar.chanId!=pi.mChannelId){
-					channelInBar = sysApplication.dvbDatabase.getChannel(pi.mChannelId);
+				if(pi!=null && channelInBar.chanId!=pi.getChannelId()){
+					channelInBar = sysApplication.dvbDatabase.getChannel(pi.getChannelId());
 				}				
 				updatePFInfo();
 				updateBanner();
@@ -266,9 +271,8 @@ public class Banner {
 	}
 
 	private void updateBanner() {
-		String channelname = new String();
-		// TODO channelname PF_channel_name diffs?
-		channelname = channelInBar.name;
+		if(channelInBar==null)
+			return;
 
 		progress.setProgress(getPlayingProgress());
 
@@ -281,7 +285,7 @@ public class Banner {
 		} else {
 			service_id.setText("" + channelInBar.logicNo);
 		}
-		channel_name.setText(channelname);
+		channel_name.setText(channelInBar.getChName());
 		// textview_timeshift_support.setText(getTimeShiftSupportString(channel.chanId));
 
 		PF_P.setText(PF_enventName_P);
@@ -369,6 +373,10 @@ public class Banner {
 			channel_vid_hd.setVisibility(View.INVISIBLE);
 			channel_vid_3d.setVisibility(View.GONE);	
 		}
+		
+		//显示广告：
+		//adPlayer.setDefaultAd(R.drawable.default_img, 1); 
+		adPicDisplay.disADPic(0, curChannel, null);
 
 	}
 	
@@ -570,8 +578,11 @@ public class Banner {
 		// (TextView)bannerView.findViewById(R.id.banner_tshift_support);
 		// param
 		channelInBar = sysApplication.dvbDatabase.getChannel(SysApplication.iCurChannelId);
-		adPlayer = (AdPlayer) bannerView.findViewById(R.id.adplayer);
-		adPlayer.setDefaultAd(R.drawable.default_img, 1);  
+		//adPlayer = (AdPlayer) bannerView.findViewById(R.id.adplayer);
+		//adPlayer.setDefaultAd(R.drawable.default_img, 1); 
+		imageView_ad = (ImageView) bannerView.findViewById(R.id.adplayer2);
+		adPicDisplay=ADPicDisplay.getInstance();
+		adPicDisplay.addPicDisplayItem(0, imageView_ad);
 
 		channel_vid_3d = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_3d);		
 		channel_vid_hd = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_hd);	

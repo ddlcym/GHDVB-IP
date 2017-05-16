@@ -397,7 +397,7 @@ public class BannerDialog extends Dialog {
 		ChannelDB db=DVB.getManager().getChannelDBInstance();
 		PlayingInfo thisPlayingInfo = DVB.getManager().getChannelDBInstance().getSavedPlayingInfo();
 		//获取当前Channel详细信息
-		curChannel = db.getChannel(thisPlayingInfo.mChannelId );
+		curChannel = db.getChannel(thisPlayingInfo.getChannelId() );
 		
 		// 设置时移节目列表的adapter
 		programListAdapter = new TimeShiftProgramAdapter(mContext);

@@ -35,7 +35,9 @@
             android:layout_marginTop="20dip"
             android:addStatesFromChildren="true"
             android:orientation="vertical" >
-<!-- 节目分类选择 -->
+<!-- 节目分类选择 
+android:layout_width="wrap_content"
+-->
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="38dip"
@@ -46,9 +48,10 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/id_epglist_title_left"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/id_epglist_title_left"     
+                    android:layout_width="0.0px"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.0"                    
                     android:layout_marginLeft="30dip"
                     android:gravity="center"
                     android:textSize="@dimen/ghFONT_SIZE_NORMAL" 
@@ -57,9 +60,10 @@
 
                 <TextView
                     android:id="@+id/id_epglist_title_center"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0.0px"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dip"
+                    android:layout_weight="1.3"                    
+                    android:layout_marginLeft="20dip"
                     android:gravity="center"
                     android:textSize="@dimen/ghFONT_SIZE_BIG" 
                     android:textColor="#ffffff">
@@ -67,8 +71,9 @@
                                 
                 <TextView
                     android:id="@+id/id_epglist_title_right"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0.0px"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.0"                    
                     android:layout_marginLeft="25dip"
                     android:gravity="center"
                     android:textSize="@dimen/ghFONT_SIZE_NORMAL" 
