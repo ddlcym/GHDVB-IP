@@ -1363,8 +1363,8 @@ public class Main extends Activity implements ISceneListener {
 			case Class_Constant.BACK_TO_LIVE:
 				if (programBannerDialog != null) {
 					programBannerDialog.dismiss();
-					Toast.makeText(MyApp.getContext(), "退回到直播模式",
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(MyApp.getContext(), getString(R.string.main_backto_living),
+//							Toast.LENGTH_SHORT).show();
 					P.i("mmmm", "退回到直播模式");
 					{
 						// 恢复播放当前频道
