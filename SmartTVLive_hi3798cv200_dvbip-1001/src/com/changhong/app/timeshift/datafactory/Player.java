@@ -313,6 +313,8 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				desPositon = Player.skbProgress.getProgress() + 30000;
 				if (IsOutOfTimes(desPositon)) {
 					if (handlerFlag) {
+						Log.i("mmmm", "Player-handleProgress-LIVE_FAST_FORWARD-handlerFlag" + handlerFlag);
+						handlerFlag=false;
 						parentHandler
 								.sendEmptyMessage(Class_Constant.BACK_TO_LIVE);
 					}
