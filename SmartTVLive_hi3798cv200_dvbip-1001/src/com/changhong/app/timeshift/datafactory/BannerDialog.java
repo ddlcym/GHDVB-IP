@@ -91,7 +91,7 @@ public class BannerDialog extends Dialog {
 	private RelativeLayout nextProgramContainer;
 	private RelativeLayout curProgramContainer;
 	private RelativeLayout programListContainer;//时移节目列表容器
-	private boolean IsFocusList = false;
+	private boolean IsFocusList = false;//时移节目列表是否有焦点，true有，false没有
 	private boolean firstInShift = true;
 	int shiftcurindex;
 	ProgramInfo curshiftpro;

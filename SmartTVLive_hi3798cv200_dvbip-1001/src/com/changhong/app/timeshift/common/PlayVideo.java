@@ -287,6 +287,7 @@ public class PlayVideo {
 					public void onResponse(org.json.JSONObject arg0) {
 						final String url = JsonResolve.getInstance()
 								.getLivePlayURL(arg0);
+						Log.i("mmmm", "playvideo-playTSDelayTime-url:"+url);
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
