@@ -41,6 +41,7 @@ import com.changhong.app.dtv.Main;
 import com.changhong.app.dtv.P;
 import com.changhong.app.dtv.R;
 import com.changhong.app.dtv.SysApplication;
+import com.changhong.app.dtv.Utils;
 import com.changhong.dvb.CA;
 import com.changhong.dvb.CAListener;
 import com.changhong.dvb.Channel;
@@ -734,6 +735,10 @@ public class CaService extends Service implements CAListener {
 		}
 		case CaConfig.CA_NOVEL_ACTIONREQUEST_SEARCHCHANNEL: {/* 重新搜索节目 */
 			try {
+				if(Utils.checkSysSettingMenuOn()){
+					P.e("ca plan to launch SysSetting apk, but it has been running,so skip it ");
+					break;
+				}
 				Intent intent = new Intent();
 				ComponentName name = new ComponentName("com.SysSettings.main",
 						"com.SysSettings.main.MainActivity");
@@ -766,6 +771,10 @@ public class CaService extends Service implements CAListener {
 			break;
 		}
 		case CaConfig.CA_NOVEL_ACTIONREQUEST_SHOWSYSTEMINFO: { /* 显示系统信息 */
+			if(Utils.checkSysSettingMenuOn()){
+				P.e("dtv plan to launch SysSetting apk, but it has been running,so skip it ");
+				break;
+			}			
 			try {
 				Intent intent = new Intent();
 				ComponentName name = new ComponentName("com.SysSettings.main",

@@ -11,14 +11,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.changhong.app.ads.ADPicData.AD_Content;
+import com.changhong.app.ads.ADPicData.Channel_List;
 import com.changhong.app.ads.ADPicData.Time_List;
+import com.changhong.app.ca.CaService;
 import com.changhong.app.dtv.P;
 import com.changhong.app.dtv.SysApplication;
+import com.changhong.app.timeshift.common.MyApp;
 import com.changhong.app.utils.OpJsonFile;
 import com.changhong.app.dtv.R;
 
@@ -30,7 +34,7 @@ public class ADPicJsonParser {
 	private static final String advFile_path = "/private/adv";
 	private boolean isParsingOn = false;
 
-	private ADPicJsonParser() {
+	/*private ADPicJsonParser() {
 		if (parseThread == null) {
 			parseThread = new Thread() {
 				@Override
@@ -44,12 +48,40 @@ public class ADPicJsonParser {
 			};
 			parseThread.start();
 		}
+	}*/
+	public void doParse(){
+		P.d(TAG, "parse ad data thread Start  !");
+		isParsingOn = true;
+		do_ParseADJsonFile();
+		isParsingOn = false;
+		P.d(TAG, "parse ad data thread end  !");		
 	}
-
+	public void startParse(){
+		MyApp.getContext().startService(new Intent(MyApp.getContext(),ADPicService.class));		
+	}
+	public void stopParse(){
+		MyApp.getContext().stopService(new Intent(MyApp.getContext(),ADPicService.class));		
+	}	
+	public static ADPicJsonParser getADPicJsonParserInstance() {
+		if (adPicJsonParser == null) {
+			adPicJsonParser = new ADPicJsonParser();
+		}
+		return adPicJsonParser;
+	}
+	
 	public boolean isADPicParsingNow(){
 		return isParsingOn;
 	}
 	
+	public void lauchUpdate_notused() {
+		if(parseThread!=null){
+			P.d(TAG, "setUpdateStatus begin");
+			//parseThread.start();
+			P.d(TAG, "setUpdateStatus end");
+		}else{
+			P.e(TAG, "setUpdateStatus >>> FATAL !!!");
+		}
+	}	
 	protected void do_ParseADJsonFile() {
 		File AdvDir = new File(advFile_path);
 		if (AdvDir.exists()) {
@@ -74,18 +106,15 @@ public class ADPicJsonParser {
 					// curAdPicData.bmpall.clear();
 				}
 				String str_json_file=null;
+				curAdPicData.savePicPath(path1+ "/");
 				for (File file2 : list2) {
 					if (file2.isFile()) {
 						String fileallname = path1 + "/" + file2.getName();
 						Log.d(TAG, "FILE NAME:" + fileallname);
 						if (file2.getName().equalsIgnoreCase("json")) {
-							//parseADJson(curAdPicData, fileallname);
 							str_json_file = fileallname;
 						} else {
 							curAdPicData.filenameArray.add(fileallname);
-							// Bitmap bmp=
-							// BitmapFactory.decodeFile(fileallname);
-							// curAdPicData.bmpall.add(bmp);
 						}
 					} else {
 						Log.d(TAG, "invalue directory!!!");
@@ -284,13 +313,6 @@ public class ADPicJsonParser {
 		return null;
 	}
 
-	public static ADPicJsonParser getADPicJsonParserInstance() {
-		if (adPicJsonParser == null) {
-			adPicJsonParser = new ADPicJsonParser();
-		}
-		return adPicJsonParser;
-	}
-
 	public static Bitmap getBitMap(String file) {
 		Bitmap bitmap = null;
 		try {
@@ -326,12 +348,13 @@ public class ADPicJsonParser {
 		return null; 
 	}
 
-	private String getAdFile(int pic_pos,String channel_id,String curTime) {
-	
+	private String getAdFile(int pic_pos, String channel_id, String curTime) {
+
 		ADPicData localObj = null;
 		AD_Content ad_Content;
-		String fileName=null;
-		switch(pic_pos){
+		Channel_List chanlist;
+		String fileName = null;
+		switch (pic_pos) {
 		case 0:
 			localObj = ad_bannel;
 			fileName = "/private/adv_def/bannel_ad_default.png";
@@ -347,27 +370,63 @@ public class ADPicJsonParser {
 		default:
 			return null;
 		}
-		/*			
-		List<AD_Content> list_ad_Content;	
-		List<Channel_List> list_channel_List;
-		List<Groups_List> list_groups_list;
 
-		for(int n=0;n<localObj.list_ad_Content.size();n++){
-			ad_Content = localObj.list_ad_Content.get(n);
-			if(ad_Content!=null){
-				//ad_Content.
-			}
+		chanlist = getChannel_list_by_chanName(localObj, channel_id);
+		ad_Content = getAdContent(localObj, chanlist, curTime);
+		if(ad_Content!=null){
+			// return localObj.getPicPath()+ad_Content.url; //目前数据还匹配不上，暂时注释掉
 		}
-		*/
-		if(localObj==null||localObj.filenameArray==null)
+
+		if (localObj == null || localObj.filenameArray == null)
 			return null;
 		int max = localObj.filenameArray.size();
-		int random = (int)(Math.random()*10);
-		fileName = localObj.filenameArray.get(random%max);	
-		Log.i(TAG, "display AD>> idx="+random+"/"+max+",file="+fileName);
+		int random = (int) (Math.random() * 10);
+		fileName = localObj.filenameArray.get(random % max);
+		Log.i(TAG, "display AD>> idx=" + random + "/" + max + ",file="
+				+ fileName);
 		return fileName;
 	}
-
+	private Channel_List getChannel_list_by_chanName(ADPicData localObj,String name){
+		Channel_List chanlist;
+		if(localObj==null||name==null)
+			return null;
+		
+		for(int n=0;n<localObj.list_channel_List.size();n++){
+			chanlist = localObj.list_channel_List.get(n);
+			if(chanlist!=null){
+				for (int i = 0; i < chanlist.list_channel_id.size(); i++) {
+					String strContent = chanlist.list_channel_id.get(i);
+					if(strContent!=null&&strContent.endsWith(name))
+					{
+						return chanlist;
+					}
+				}				  
+			}
+		}	
+		return null;		
+	}
+	AD_Content getAdContent(ADPicData localObj,Channel_List chanlist,String time ){
+		AD_Content ad_Content;
+		if(localObj==null || chanlist==null ||time==null)
+			return null;
+			for(int n=0;n<localObj.list_ad_Content.size();n++){
+				ad_Content = localObj.list_ad_Content.get(n);
+				if(ad_Content!=null&&ad_Content.groups_idx==chanlist.groups_idx&&ad_Content.groups_ad_idx==chanlist.groups_ad_idx){
+					for (int i = 0; i < ad_Content.list_time_list.size(); i++) {
+						Time_List timeList = ad_Content.list_time_list.get(i);
+						if(timeList!=null){
+							if(timeList.start_time!=null&&timeList.start_time.compareTo(time)<=0 &&
+									timeList.end_time!=null&&timeList.end_time.compareTo(time)>0){
+								return ad_Content;
+							}
+						}
+					}
+				}
+			}	
+			
+			return null;
+			
+	}
 	// =================================base function =====================================
 
 	private static String getJsonObjectString(JSONObject jsonObj, String key) {
@@ -417,4 +476,5 @@ public class ADPicJsonParser {
 		}
 		return obj;
 	}
+
 }

@@ -14,8 +14,10 @@ public class ADPicDisplay {
 	private static ADPicDisplay aDPicDisplay;
 	
 	private ADPicDisplay(){
-		if(adPicJsonParser==null)
+		if(adPicJsonParser==null){
 			adPicJsonParser = ADPicJsonParser.getADPicJsonParserInstance();		
+			adPicJsonParser.startParse();
+		}
 	}
 	public static ADPicDisplay getInstance(){
 		if(aDPicDisplay==null)
@@ -61,5 +63,14 @@ public class ADPicDisplay {
 			return image_ad[ad_pos];
 		}		
 		return null;
+	}
+	public void updateADPicSource() {
+		if(adPicJsonParser!=null){
+			Log.i("ADV", "updateADPicSource begin");
+			adPicJsonParser.startParse();
+			Log.i("ADV", "updateADPicSource end");
+		}else{
+			Log.e("ADV", "updateADPicSource error >> adPicJsonParser is null");
+		}
 	}
 }

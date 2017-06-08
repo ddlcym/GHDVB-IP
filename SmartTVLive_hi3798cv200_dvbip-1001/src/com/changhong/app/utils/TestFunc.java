@@ -2,6 +2,9 @@ package com.changhong.app.utils;
 
 import java.util.Locale;
 
+import com.changhong.dvb.DVB;
+import com.changhong.dvb.ProtoCaNovel.DVB_CA_NOVEL_SERVICE_INFO;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -38,5 +41,13 @@ public class TestFunc {
 		}
 		res.updateConfiguration(conf, dm);
 		Log.i("LANG", "cur language is " + conf.locale);
-	}	
+	}
+	
+	public static void tt_caPlay(int idx){
+		if(idx==0)
+			DVB.getManager().getDefaultLivePlayer().tt_play(698000,6875,4,1021,1020,1020,0x1fff,0x1fff,4,2);
+		else if(idx==1) {
+			DVB.getManager().getDefaultLivePlayer().tt_play(698000,6875,4,1041,1040,1040,0x0419,0x0419,4,2);	
+		}
+	}
 }

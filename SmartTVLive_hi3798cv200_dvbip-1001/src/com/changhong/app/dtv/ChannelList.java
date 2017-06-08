@@ -198,7 +198,7 @@ public class ChannelList extends Activity implements ISceneListener {
 			int chanid = -1;
 			chanid = arg1.getIntExtra("chanid", -1);
 			if(chanid!=-1){
-				banner.show(chanid,999999999);	
+				banner.show(chanid,999999999,2);	
 			}
 		}
 	};	
@@ -535,8 +535,10 @@ public class ChannelList extends Activity implements ISceneListener {
 
 				int index = Integer.parseInt(channelIndex.getText().toString());
 				objApplication.playChannel(index, true);
-				request_update_banner(index,5000);
+				request_update_banner(index,999999999);
+				/*request_update_banner(index,5000);
 				finish();//退出列表
+				*/
 			}
 		});
 	}
@@ -917,7 +919,7 @@ public class ChannelList extends Activity implements ISceneListener {
 	 * @param position
 	 */
 	private static void updateBannerinfo2(int chanid,int duration) {
-		banner.show(chanid,duration/*999999999*/);	
+		banner.show(chanid,duration/*999999999*/,2);	
 	}	
 	private void updateBannerVol(int chanid) {
 		AudioManager am1 = (AudioManager) getSystemService(Context.AUDIO_SERVICE);

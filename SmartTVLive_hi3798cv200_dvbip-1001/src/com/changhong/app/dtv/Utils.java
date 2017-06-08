@@ -12,6 +12,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.changhong.app.timeshift.common.MyApp;
+
+import android.Manifest.permission;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -239,4 +244,29 @@ public class Utils {
 	        }  
 	        return 0;  
 	    } 
+		public static boolean checkSysSettingMenuOn() {
+			String curRunning = getCurRunningPackage(MyApp.getContext());
+			if (curRunning.startsWith("com.SysSettings")) {
+				P.i("com.SysSettings ON");
+				return true;
+			}
+			P.i("com.SysSettings OFF");
+			return false;
+		}	
+		@SuppressWarnings("deprecation")
+		private static String getCurRunningPackage(Context context) {
+			
+			ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+			
+			try {
+				RunningTaskInfo runningTask = am.getRunningTasks(1).get(0);
+				
+				return runningTask.topActivity.getPackageName();
+				
+			} catch (Exception e) { 
+				e.printStackTrace();
+				return "";
+			}
+
+		}		 
 }

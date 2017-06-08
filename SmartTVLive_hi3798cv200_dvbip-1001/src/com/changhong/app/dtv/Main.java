@@ -55,6 +55,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.changhong.app.ads.ADPicUpdateEvent;
 import com.changhong.app.book.BookDataBase;
 import com.changhong.app.book.BookInfo;
 import com.changhong.app.ca.CaMailInfor;
@@ -153,7 +154,9 @@ public class Main extends Activity implements ISceneListener {
 	 */
 	private Banner banner;
 	private Point point;
-
+	
+	/*歌华配置信息存储位置,在每次搜台时保存*/
+	private static final String db_boxinfo_save_path="/data/changhong/dvb/gh_cfg_info.json";
 	/**
 	 * Digital key
 	 */
@@ -291,17 +294,18 @@ public class Main extends Activity implements ISceneListener {
 	/**
 	 * 
 	 */
-	private void testEnv() {
+	private void testEnv(int idx) {
 
 		// 测试预约节目触发
 		// new BootCastReceiver2().start(mContext);
 
 		// 测试欢网应用商店需调用的第三方jar包中的接口
-		try {
+		/*try {
 			TestFunc.testThirdPackage();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
+		TestFunc.tt_caPlay(idx);
 	}
 
 	BootCastReceiver epgTime = new BootCastReceiver();
@@ -344,6 +348,7 @@ public class Main extends Activity implements ISceneListener {
 		filter6.addAction("com.changhong.ota.launch");
 		registerReceiver(myNetChangedReceiver, filter6);
 
+		ADPicUpdateEvent.registerAdReceiver(this);
 		// IntentFilter myIntentFilter = new IntentFilter();
 		// myIntentFilter.addAction("FINISH");
 		// registerReceiver(mFinishReceiver, myIntentFilter);
@@ -628,6 +633,24 @@ public class Main extends Activity implements ISceneListener {
 
 			}
 
+		}else{
+			//播放歌华默认开机视频
+			JSONObject obj= OpJsonFile.readJSONObj(db_boxinfo_save_path);
+			if(obj!=null){
+				int net_id,ts_id,service_id;
+				try {
+					net_id=obj.getInt("mi_DEFAULT_ONID");
+					ts_id=obj.getInt("mi_DEFAULT_TSID");
+					service_id=obj.getInt("mi_DEFAULT_SERVICEID");	
+					Channel channel = objApplication.dvbDatabase.getChannelByTsIdAndServiceId(ts_id, service_id);
+					if (channel != null) {
+						objApplication.saveLastPlayingInfo(channel);
+						P.d("play default start video:"+channel.getChName()+",logicNum="+channel.logicNo);						
+					}					
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
 		}
 		if(objApplication.playLastChannel()){
 			bNeedPlay = false;
@@ -780,6 +803,7 @@ public class Main extends Activity implements ISceneListener {
 		unregisterReceiver(epgTime);
 //		unregisterReceiver(checkMailBR);
 		unregisterReceiver(myNetChangedReceiver);
+		ADPicUpdateEvent.unRegisterAdReceiver(this);
 
 		objApplication.exit();
 		android.os.Process.killProcess(android.os.Process.myPid());
@@ -1048,7 +1072,9 @@ public class Main extends Activity implements ISceneListener {
 		}
 			break;
 		case KeyEvent.KEYCODE_F1:
-			banner.show(SysApplication.iCurChannelId, 999999999);
+			if (objApplication.dvbDatabase.getChannelCount() > 0) {
+				banner.show(SysApplication.iCurChannelId, 999999999,0);
+			}
 			// show/hide pip
 			/*
 			 * if (!isPipPlay) { isPipPlay = true;
@@ -1108,8 +1134,8 @@ public class Main extends Activity implements ISceneListener {
 
 			switch (msg.what) {
 
-			case MESSAGE_CHANLIST_SHOW:
-				banner.show(msg.arg1, 999999999);
+			case MESSAGE_CHANLIST_SHOW: //显示频道列表
+				banner.show(msg.arg1, 999999999,2);
 				Intent toChanList = new Intent(Main.this, ChannelList.class);
 				toChanList.putExtra("curType", msg.arg2);
 				startActivity(toChanList);
@@ -1134,6 +1160,10 @@ public class Main extends Activity implements ISceneListener {
 			case MESSAGE_SHOW_AUTOSEARCH: {
 
 				Class_Global.SetAimMenuID(6);
+				if(Utils.checkSysSettingMenuOn()){
+					P.e("dtv plan to launch SysSetting apk, but it has been running,so skip it ");
+					break;
+				}
 				String strInfoString = null;
 				int curChanCount = objApplication.dvbDatabase.getChannelCountSC();
 				if(curChanCount<=0){
@@ -1249,6 +1279,12 @@ public class Main extends Activity implements ISceneListener {
 					// int succ =
 					// theActivity.objApplication.playChannelKeyInput(theActivity.iKey,true);
 					if (succ < 0) {
+						/*if(theActivity.iKey==911){
+							testEnv(0);
+						}else if(theActivity.iKey==912){
+							testEnv(1);
+						}else*/
+						{
 						P.i("exec logic_num error  =  " + theActivity.iKey);
 						theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 						theActivity.tvRootDigitalKeyInvalid
@@ -1256,10 +1292,10 @@ public class Main extends Activity implements ISceneListener {
 						//theActivity.id_dtv_channel_name.setVisibility(View.INVISIBLE);
 						theActivity.mUiHandler.sendEmptyMessageDelayed(
 								MESSAGE_DISAPPEAR_DIGITAL, 5000);
+						}
 					} else {
 
 						theActivity.banner.show(SysApplication.iCurChannelId);
-
 						theActivity.tvRootDigitalkey.setVisibility(View.GONE);
 						/*
 						 * Message msg2 = new Message(); msg2.what =
@@ -1363,8 +1399,10 @@ public class Main extends Activity implements ISceneListener {
 			case Class_Constant.BACK_TO_LIVE:
 				if (programBannerDialog != null) {
 					programBannerDialog.dismiss();
-//					Toast.makeText(MyApp.getContext(), getString(R.string.main_backto_living),
-//							Toast.LENGTH_SHORT).show();
+					/*
+					 Toast.makeText(MyApp.getContext(), "退回到直播模式",
+							Toast.LENGTH_SHORT).show();
+					*/
 					P.i("mmmm", "退回到直播模式");
 					{
 						// 恢复播放当前频道
@@ -2451,6 +2489,10 @@ public class Main extends Activity implements ISceneListener {
 	}
 	//for test
 	private void startAutoSearch(){
+		if(Utils.checkSysSettingMenuOn()){
+			P.e("caTest plan to launch SysSetting apk, but it has been running,so skip it ");
+			return;
+		}		
 		try {
 			Intent intent = new Intent();
 			ComponentName name = new ComponentName("com.SysSettings.main",

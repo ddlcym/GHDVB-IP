@@ -131,7 +131,7 @@ public class Banner {
 	}
 
 	public void show(int chanId) {
-		show(chanId,5000);
+		show(chanId,5000,0);
 	}
 	
 	/**
@@ -140,14 +140,14 @@ public class Banner {
 	 * int chanId: 频道在数据库中的ID
 	 * int DurationInSecond: 显示时长MS
 	 * */
-	public void show(int chanId,int Duration) {
+	public void show(int chanId,int Duration,int adv_pos) {
 		Log.i(TAG, "show bar>> chanId==" + chanId+",Duration="+Duration);
 		
 		initViewInBar();	
 		channelInBar = sysApplication.dvbDatabase.getChannel(chanId);		
 		updatePFInfo();
 		updateBanner();
-		updateChannelStatus(channelInBar,true);
+		updateChannelStatus(channelInBar,true,adv_pos);
 		updateDateTime();
 		bannerToast.setView(bannerView);
 		
@@ -194,7 +194,7 @@ public class Banner {
 		if(volume_bar!=null && volume_bar.getVisibility()==View.VISIBLE){
 			volume_bar.setVisibility(View.INVISIBLE);
 		}
-		if(banner_p!=null && banner_p.getVisibility()!=View.VISIBLE)	{	
+		if(banner_p!=null && banner_p.getVisibility()!=View.VISIBLE){	
 			banner_p.setVisibility(View.VISIBLE);
 			banner_f.setVisibility(View.VISIBLE);
 		}
@@ -243,7 +243,7 @@ public class Banner {
 		
 		updatePFInfo();
 		updateBanner();
-		updateChannelStatus(channelInBar,false);
+		updateChannelStatus(channelInBar,false,1);
 		updateDateTime();
 		bannerToast.setView(bannerView);
 		showToast(bannerView,5000);
@@ -303,7 +303,7 @@ public class Banner {
 		}
 	}
 
-	private void updateChannelStatus(Channel curChannel, boolean bAllowTtvTag) {
+	private void updateChannelStatus(Channel curChannel, boolean bAllowTtvTag,int adv_pos) {
 		
 		if(curChannel==null)
 			return;
@@ -376,7 +376,7 @@ public class Banner {
 		
 		//显示广告：
 		//adPlayer.setDefaultAd(R.drawable.default_img, 1); 
-		adPicDisplay.disADPic(0, curChannel, null);
+		adPicDisplay.disADPic(adv_pos, curChannel, null);
 
 	}
 	
@@ -583,6 +583,8 @@ public class Banner {
 		imageView_ad = (ImageView) bannerView.findViewById(R.id.adplayer2);
 		adPicDisplay=ADPicDisplay.getInstance();
 		adPicDisplay.addPicDisplayItem(0, imageView_ad);
+		adPicDisplay.addPicDisplayItem(1, imageView_ad);
+		adPicDisplay.addPicDisplayItem(2, imageView_ad);
 
 		channel_vid_3d = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_3d);		
 		channel_vid_hd = 	(ImageView) bannerView.findViewById(R.id.banner_channel_vid_hd);	

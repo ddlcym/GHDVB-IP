@@ -2,45 +2,41 @@
 <resources>
 
     <!-- epg_book time up start -->
-    <string name="str_EPGwarn">is about to play,watch now?</string>
-    <string name="str_EPGwarnTitle">REMINDER</string>
-    <string name="str_cancelButton">Cancel</string>
-    <string name="str_OKButton">OK</string>
+    <string name="str_EPGwarn">预定时间到,是否立即切换?</string>
+    <string name="str_EPGwarnTitle">温馨提示</string>
+    <string name="str_cancelButton">取消</string>
+    <string name="str_OKButton">确定</string>
     <!-- epg_book time up end -->
 
 
     <!-- liveTV info start -->
-    <string name="str_AutoSearchPrompt">Channel list is null, would you like to search and update it now?</string>
-    <string name="str_ChannelUpdatePrompt">Channel list is changed, would you like to search and update it now?</string>
-    <string name="str_zhn_nosignal">No signal found,lease check RF cable</string>
-    <string name="str_zhn_input_channel_logicnum_error">Incorrect channel number</string>
+    <string name="str_AutoSearchPrompt">频道列表为空,\n是否立即进行自动搜索?</string>
+    <string name="str_ChannelUpdatePrompt">发现频道变化,\n是否立即进行自动搜索?</string>
+    <string name="str_zhn_nosignal">未检测到信号</string>
+    <string name="str_zhn_input_channel_logicnum_error">输入频道号错误</string>
     <!-- liveTV info end -->
 
 
     <!-- time-shift info start -->
-    <string name="timeshift_support">Support timeshift</string>
-    <string name="timeshift_dissupport">Dont support timeshift</string>
-    <string name="timeshift_vodnotfound">Please install VOD moduel</string>
-    <string name="timeshift_fail">Enter timeshift failure, error code:</string>
-    <string name="replay">电视回看</string>
-    
-    <!-- timeshift -->
-    <string name="cur_program">Present</string>
-    <string name="next_program">Next</string>
-    <string name="replay_dialog_title">REMINDER</string>
-    <string name="back_shiftlist">Exit</string>
-    <string name="time_shift_list">Time-shift List</string>
-    <string name="play_completes">is finished.</string>
-    <string name="exit_timeshift">Exit</string>
-    <string name="dialog_replay">Replay</string>
-    <string name="isabout_to_begin">is about to play.</string>
-    <string name="confirm_play">Play</string>
-    <string name="play_the_last_program">Watch it!</string>
-    <string name="play_the_next_program">Watch it!</string>
-    <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_exit_sure">Are you sure to exit?</string>
-    <string name="main_backto_living">Back to living mode</string>
+    <string name="timeshift_support">支持时移</string>
+    <string name="timeshift_dissupport">此频道不支持时移</string>
+    <string name="timeshift_vodnotfound">请安装VOD模块应用</string>
+    <string name="timeshift_fail">进入时移失败。错误码:</string>
+    <string name="cur_program">当前节目</string>
+    <string name="next_program">下一节目</string>
+    <string name="replay_dialog_title">温馨提示</string>
+    <string name="back_shiftlist">退出时移列表</string>
+    <string name="time_shift_list">时移列表</string>
+    <string name="isabout_to_begin">即将开始</string>
+    <string name="confirm_play">确定播放</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_exit_sure">你确定退出时移电视？</string>
+    <string name="play_completes">播放结束</string>
+    <string name="exit_timeshift">退出时移</string>
+    <string name="dialog_replay">重新播放</string>
+    <string name="play_the_last_program">观看上一个节目</string>
+    <string name="play_the_next_program">观看下一个节目</string>
     <!-- time-shift info end -->
 
 
@@ -76,21 +72,21 @@
     <string name="MESSAGE_STBINIT_TYPE">机顶盒即将初始化</string>
     <!-- ca tip for novel end -->
 
-
     <!-- pf banner start -->
-    <string name="notimeinfo"></string>
-    <string name="banner_prompt_z1">Present</string>
-    <string name="banner_prompt_z2">Next</string>
-    <string name="banner_prompt_z3">Channel List</string>
-    <string name="banner_prompt_z4">Exit</string>
-    <string name="noprogrampfinfo">No program info</string>
+    <string name="notimeinfo">     </string>
+    <string name="banner_prompt_z1">当前节目</string>
+    <string name="banner_prompt_z2">下一节目</string>
+    <string name="banner_prompt_z3">频道列表</string>
+    <string name="banner_prompt_z4">退出</string>
+    <string name="noprogrampfinfo">无节目信息</string>
     <!-- pf banner end -->
 
     <string name="str_audio_playing">正在播放广播节目</string>
-    <string name="str_video_coming">Wonderful video coming soon</string>
+    <string name="str_video_coming">精彩视频  即将推出</string>
     <string name="str_zhn_yes">确定</string>
     <string name="str_zhn_no">取消</string>
-    <string name="app_name">Digital TV</string>
+    <string name="app_name">数字电视</string>
+<string name="btn_ok_timeout">确定(%ds)</string>
     
     <!-- CA extra  ipp节目 购买 -->
     <!-- CA buy IPPProgram  title -->
@@ -107,6 +103,7 @@
     <string name="IPPT_BUY_INFOR">自动购买IPPT节目，扣费间隔*分钟，扣费点数@，扣费钱包%</string>
     <string name="IPPT_BUY_SUCCESS">购买成功</string>
     <string name="IPPT_BUY_FAILED">购买失败</string>
+
     <!-- PIN码 -->
     <string name="ca_pin_invalid">PIN码无效</string>
     <string name="ca_pin_modify_success">PIN码修改成功</string>
@@ -115,6 +112,7 @@
     <!-- 高级预览 -->
     <string name="CA_CURTAIN_ENABLE_NOTICE">高级预览节目\n该阶段可以免费观看</string>
     <string name="CA_CURTAIN_DISENABLE_NOTICE">高级预览节目\n该阶段不能免费观看</string>
+
     <!-- 黑名单 -->
     <string name="CA_CONTINUE_BLACK_LIST">账户被锁定，请联系运营商</string>
     <!-- 连续观看 -->
@@ -126,4 +124,5 @@
     <string name="ca_progressstrip_upgrate_failed">智能卡升级成功！</string>
     <string name="ca_worktime_hint_threeline"> 【#】删除，【返回】返回</string>
     <string name="title_pin_ipp_">输入PIN码:</string>
+
 </resources>
