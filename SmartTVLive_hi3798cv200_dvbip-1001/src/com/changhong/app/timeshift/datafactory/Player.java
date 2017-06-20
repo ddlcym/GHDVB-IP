@@ -312,8 +312,8 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 				Log.i("mmmm", "Player-handleProgress" + handleProgress);
 				desPositon = Player.skbProgress.getProgress() + 30000;
 				if (IsOutOfTimes(desPositon)) {
+					Log.i("mmmm", "Player-handleProgress-LIVE_FAST_FORWARD-handlerFlag" + handlerFlag);
 					if (handlerFlag) {
-						Log.i("mmmm", "Player-handleProgress-LIVE_FAST_FORWARD-handlerFlag" + handlerFlag);
 						handlerFlag=false;
 						parentHandler
 								.sendEmptyMessage(Class_Constant.BACK_TO_LIVE);
@@ -366,6 +366,7 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 		int afmode = 99;
 		int result = 99;
 		handlerFlag = true;
+		Log.i("mmmm","playUrl-handlerFlag:"+handlerFlag);
 		if (null == mediaPlayer || null == videoUrl)
 			return;
 
@@ -716,10 +717,11 @@ public class Player implements MediaPlayer.OnBufferingUpdateListener,
 					mediaPlayer.start();
 				}
 			} else {
-
+				desPositon=skbProgress.getProgress();
 				Log.i("mmmm", "shiyi desPositon:" + desPositon);
 				Log.i("mmmm",
 						"shiyi skbProgress.getMax():" + skbProgress.getMax());
+				
 				if (desPositon > 0 && desPositon < skbProgress.getMax()) {
 					delayTime = getPlayDelayTimes();
 					playLiveBack(curChannel, delayTime);
