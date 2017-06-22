@@ -621,7 +621,8 @@ public class BannerDialog extends Dialog {
 				}
 				return false;
 			} else {
-				player.setLiveFlag(false);
+				//edit by cym 20170621 放到dismiss方法里
+//				player.setLiveFlag(false);
 				CommonMethod.saveMutesState((whetherMute + ""),
 						MyApp.getContext());
 				Message msg = new Message();
@@ -879,6 +880,7 @@ public class BannerDialog extends Dialog {
 	public void dismiss() {
 		// TODO Auto-generated method stub
 		super.dismiss();
+		player.setLiveFlag(false);
 		if(player!=null){
 			player.stopTimer();
 			player.stop();//KEVIN-yang
