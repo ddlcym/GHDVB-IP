@@ -880,7 +880,10 @@ public class BannerDialog extends Dialog {
 	public void dismiss() {
 		// TODO Auto-generated method stub
 		super.dismiss();
-		player.setLiveFlag(false);
+		L.i("bannerdialog-dismiss");
+		if(player!=null){
+			player.setLiveFlag(false);
+		}
 		if(player!=null){
 			player.stopTimer();
 			player.stop();//KEVIN-yang
